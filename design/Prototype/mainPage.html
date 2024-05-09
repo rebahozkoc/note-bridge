@@ -10,14 +10,14 @@
     <title>NodeBridgeMainPage</title>
     <style>
         #post{
-            position: relative;
-            /*border: 3px solid #73AD21;*/
+            z-index: 2;
+            position: absolute;
+            left: 400px;
         }
         #image{
-            position: absolute;
-            top: 0;
-            left: 20px;
-            /*border: 3px solid #73AD21;*/
+            z-index: 1;
+            position: relative;
+            left: 400px;
         }
     </style>
 
@@ -25,9 +25,9 @@
 <body>
 <h1>NoteBridge forum</h1>
 <div id="post">
-    <div id="image">
-        <img src="/design/images/bandExample.jpeg" height="250" width="250" alt="Band Example">
-    </div>
-    <img src="/design/images/post.png" height="300" width="300" alt="Image for Post Background">
+    <img src="/design/images/pageBorder3.png" height="300" width="300" alt="Image for Post Background">
+</div>
+<div id="image">
+    <img src="/design/images/examplePost.jpeg" height="300" width="300" alt="Band Example">
 </div>
 </body>

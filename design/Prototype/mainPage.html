@@ -10,24 +10,68 @@
     <title>NodeBridgeMainPage</title>
     <style>
         #post{
+            position: relative;
+            scale: 130%;
+            left: 250px;
+            top: 50px;
+        }
+        #postCard{
             z-index: 2;
             position: absolute;
-            left: 400px;
         }
         #image{
             z-index: 1;
-            position: relative;
-            left: 400px;
+            position: absolute;
+            /*left: 100px;*/
+            top: 20px;
+        }
+        #username{
+            z-index: 3;
+            position: absolute;
+            left: 15px;
+            /*top: 42px;*/
+        }
+        #description{
+            z-index: 3;
+            position: absolute;
+            left: 15px;
+            top: 300px;
+            height: 100px;
+            width: 280px;
+        }
+        .preference {
+            display: flex;
+            font: 21px "Arial Nova";
+        }
+        .titlePreference {
+            display: flex;
+            font: 50px Tahoma bold;
+        }
+        body {
+            background-image: url(/design/images/Background.png);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
         }
     </style>
 
 </head>
 <body>
-<h1>NoteBridge forum</h1>
+<h1 class="titlePreference">NoteBridge forum</h1>
+<form id="FormPost">
 <div id="post">
-    <img src="/design/images/pageBorder3.png" height="300" width="300" alt="Image for Post Background">
+    <div id="postCard">
+        <img src="/design/images/CardExample.png" height="400" width="300" alt="Image for Post Background">
+    </div>
+<div id="username">
+    <label class="preference">@Random band</label>
 </div>
+    <div id="description">
+        <label class="preference">Some random description of a band and what are doing.</label>
+    </div>
 <div id="image">
     <img src="/design/images/examplePost.jpeg" height="300" width="300" alt="Band Example">
 </div>
+</div>
+</form>
 </body>

@@ -1,0 +1,142 @@
+.navbar{
+   padding: 1em 3em;
+}
+
+.navigation-links{
+   display: flex;
+   gap: 2em;
+}
+
+.navigation-links a{
+   font-size: 1.5em;
+}
+
+.navbar-brand{
+   color: var(--bs-tertiary-bg);
+   font-size: 2rem;
+}
+
+h1{
+   font-weight: bold;
+   font-size: 5rem;
+   margin-bottom: 1em;
+}
+
+
+
+
+section{
+   padding: 6rem 3rem;
+   text-align: center;
+   
+   margin: 0 auto;
+}
+
+#card-section{
+   color: var(--bs-tertiary-bg);
+   background-color: var(--bs-body-color);
+   
+}
+
+#intro{
+   padding: 17rem 3rem;
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: center;
+   gap: 10rem;
+}
+#intro p{
+   font-size: 2rem;
+}
+
+
+.card-overview{
+   display:flex;
+   flex-direction: row;
+   justify-content: center;
+   gap: 3rem;
+   text-align: center;
+   margin: 2rem auto;
+   height: 500px;
+}
+.card{
+   
+   width: 30%;
+}
+.card-overview img{
+   width: 100%;          /* Ensures the image takes the full width of the card */
+   height: 40%;         /* Maintains aspect ratio */
+        /* Ensures images don’t exceed the specified height */
+   object-fit: cover;
+}
+
+.card-body{
+   flex-direction: column;
+   display: flex;
+   gap: 2rem;
+   height: 70%;
+   align-items: center;
+   background-color:var(--bs-tertiary-bg);
+}
+
+
+.card-body h2{
+   font-size: 3em;
+   font-weight: bold;
+}
+.card-body a{
+   font-size: 1.5em;
+   width: 60%;
+   display: block;
+  
+}
+.card-body p{
+   margin-top: 1rem;
+   font-size: 1.5rem;
+}
+
+#feedback-section{
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+}
+#feedback-section h1{
+   margin-bottom: 0.5rem;
+}
+
+#feedback-section .mb-3{
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   width: 60%;
+   justify-content: center;
+}
+
+#feedback-section label{
+   font-size: 2em;
+}
+
+#feedback-section a{
+   font-size: 1.5em;
+   width: 60%;
+}
+
+#feedback-section input, #feedback-section textarea{
+   width: 100%;
+   border-radius: 4px;
+   border-color: var(--bs-body-color);
+   border-width: 2px;
+}
+
+.footer {
+   background-color: var(--bs-body-color);
+   color: var(--bs-tertiary-bg);
+   text-align: center;
+   padding: 20px;
+   font-family: Arial, sans-serif;
+}
+.footer p{
+   font-size: 1rem;
+}

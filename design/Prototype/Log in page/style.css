@@ -1,0 +1,49 @@
+.main-text {
+    font-style: italic;
+    font-size: 4vh;
+    color: lightyellow;
+}
+
+.secondary-text {
+    font-style: italic;
+    font-size: 3vh;
+    color: lightyellow;
+}
+
+.custom-background {
+    background: rgb(0,0,0);
+    background: linear-gradient(74deg, rgba(0,0,0,0.5377800778514531) 100%, rgba(242,244,255,1) 100%);
+    width: 53vh;
+    height: 40vh;
+    border-radius: 50%;
+    text-align: center;
+    align-content: center;
+}
+
+#first-page {
+    width: 100vh;
+    height: 15vh;
+    border-radius: 95vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3vh;
+}
+
+#second-page {
+    margin-right: 50vh;
+    margin-bottom: 37vh;
+}
+
+#third-page {
+    margin-left: 85vh;
+    margin-bottom: 15vh;
+}
+
+.logo {
+    border-radius: 85%;
+    margin-bottom: 40vh;
+}
+
+#nav-notebridge {
+    font-weight: bold;
+}

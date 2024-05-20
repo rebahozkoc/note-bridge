@@ -18,6 +18,11 @@
             background-size: cover;
         }
         .contacts{
+            /*float: left;*/
+            /*display: flex;*/
+            /*margin: 70px;*/
+        }
+        .contacts > .contact{
 
         }
         .messageSpace{
@@ -37,8 +42,8 @@
     <div class="d-flex align-items-start"><img src="/design/images/note-bridge-logo.png" width="200" height="60" alt="Logo"></div>
     <div class="navbar-collapse collapse" id="navbar">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item"><a href="mainPage.html" class="nav-link">Home</a></li>
-            <li class="nav-item"><a href="testPage.html" class="nav-link">About</a></li>
+            <li class="nav-item"><a href="/design/Prototype/mainPage.html" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="/design/Prototype/testPage.html" class="nav-link">About</a></li>
             <li class="nav-item"><a href="Messenger.html" class="nav-link">Messages</a></li>
         </ul>
         <form class="d-flex" role="search">
@@ -48,6 +53,42 @@
     </div>
 </nav>
 </div>
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+        <div class="contacts">
+            <ul class="list-group">
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 1
+                        <span class="badge rounded-pill bg-primary">14</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 2
+                        <span class="badge rounded-pill bg-primary">2</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 3
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8">
 
+    </div>
+</div>
+<script>
+    function turnGrey(x) {
+        x.className = "list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center"
+    }
+    function turnWhite(x) {
+        x.className = "list-group-item d-flex justify-content-between align-items-center"
+    }
+</script>
 </body>
 </html>

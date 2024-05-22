@@ -16,24 +16,72 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;
+            margin: 0;
+        }
+        .header{
+            background: white;
+            display: flex;
+            justify-content: space-between;
+        }
+        .chat{
+
+        }
+        .row {
+            position: relative;
+            display: flex;
+        }
+        .chat-box{
+            height: 77.5vh;
+            overflow-y: scroll;
+        }
+        .message{
+            border-radius: 25px;
+            background: #73AD;
+            padding: 20px;
+            width: 150px;
+        }
+        .left{
+
+        }
+        .right{
+            display: flex;
+            text-align: left;
+            justify-content: right;
         }
         .contacts{
-            /*float: left;*/
-            /*display: flex;*/
-            /*margin: 70px;*/
+            background: initial;
+            padding: 10px;
+            height: 89.5vh;
+            overflow-y: scroll;
         }
-        .contacts > .contact{
+        .contact{
+            border-radius: 10px;
+            background: white;
+            padding: 5px;
+        }
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
 
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
-        .messageSpace{
 
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
         }
-        .text{
 
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
-        .messageSpace > .message{
+        a:link {
+            color: #000000;
+        }
 
-        }
     </style>
 </head>
 <body>
@@ -53,8 +101,8 @@
     </div>
 </nav>
 </div>
-<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+<div class="row g-0">
+    <div class="col-3 g-0">
         <div class="contacts">
             <ul class="list-group">
                 <div class="contact">
@@ -75,11 +123,100 @@
                         <span class="badge rounded-pill bg-primary">1</span>
                     </li>
                 </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 4
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 5
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 6
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 7
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 8
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 9
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
             </ul>
         </div>
     </div>
-    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8">
-
+    <div class="col-9 g-0">
+        <div class="chat">
+            <div class="header grid-container">
+                    <span style="font: 35px 'Arial Black';">Contact 1</span>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Sponsor
+                </button>
+            </div>
+            <div class="row g-0">
+                <div id="messageBox" class="chat-box g-0" style="background-color:white;">
+                    <div class="left">
+                        <span id="contact" style="font: 21px Arial Nova">Contact 1</span>
+                    </div>
+                    <div class="left">
+                        <p class="message">Some text..</p>
+                    </div>
+                    <div class="right">
+                        <span style="font: 21px Arial Nova">You</span>
+                    </div>
+                    <div class="right">
+                        <p class="message">Some text..</p>
+                    </div>
+                </div>
+                <div class="g-0">
+                    <form class="d-flex">
+                        <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message">
+                        <button class="btn btn-outline-success" type="submit" id="but">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sponsor this user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label for="sponsor_description">Describe your Proposition for sponsorship</label>
+                    <textarea class="form-control" id="sponsor_description" rows="3" placeholder="Proposition"></textarea>
+                </form>
+                <form>
+                    <label for="amount_of_money">Proposed amount in euro</label>
+                    <textarea class="form-control" id="amount_of_money" rows="1"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send Sponsor Message</button>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -89,6 +226,25 @@
     function turnWhite(x) {
         x.className = "list-group-item d-flex justify-content-between align-items-center"
     }
+    document.querySelector("form").addEventListener("submit",function(event) {
+        const element=document.getElementById("messageBox");
+        const name=document.createElement("div");
+        const message=document.createElement("div");
+        name.className="right";
+        message.className="right";
+        const name_inside=document.createElement("span");
+        name_inside.style.cssText="font: 21px Arial Nova";
+        name_inside.innerText="Contact 1";
+        name.appendChild(name_inside);
+        const message_inside=document.createElement("p");
+        message_inside.className="message";
+        message_inside.innerText=document.getElementById("message").value;
+        message.appendChild(message_inside);
+        element.appendChild(name);
+        element.appendChild(message);
+        event.stopImmediatePropagation();
+    });
+
 </script>
 </body>
 </html>

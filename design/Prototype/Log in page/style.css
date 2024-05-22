@@ -47,3 +47,10 @@
 #nav-notebridge {
     font-weight: bold;
 }
+
+.btn-go-to-forum {
+    font-style: italic;
+    font-size: 3vh;
+    padding: 1vh;
+    border-radius: 50vh;
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="white">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,12 +27,13 @@
             display: flex;
         }
         .chat-box{
-            height: 77.5vh;
+            height: 78.2vh;
             overflow-y: scroll;
+            background-color: initial;
         }
         .message{
             border-radius: 25px;
-            background-color: #73AD;
+            background-color: rgba(208, 9, 234,1);
             padding: 20px;
             width: 150px;
             color: #201d1d;
@@ -47,8 +48,8 @@
         }
         .contacts{
             background: initial;
-            padding: 10px;
-            height: 89.5vh;
+            padding: 5px;
+            height: 90vh;
             overflow-y: scroll;
         }
         .contact{
@@ -198,15 +199,9 @@
                 </button>
             </div>
             <div class="row g-0">
-                <div id="messageBox" class="chat-box g-0" style="background-color: initial;">
-                    <div class="left">
-                        <span id="contact" style="font: 21px Arial Nova">Contact 1</span>
-                    </div>
+                <div id="messageBox" class="chat-box g-0">
                     <div class="left">
                         <p class="message">Some text..</p>
-                    </div>
-                    <div class="right">
-                        <span style="font: 21px Arial Nova">You</span>
                     </div>
                     <div class="right">
                         <p class="message">Some text..</p>

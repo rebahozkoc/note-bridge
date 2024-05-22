@@ -1,0 +1,136 @@
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.profile {
+    border: 2px solid #ddd;
+    border-radius: 15px;
+}
+
+.profile-header {
+    background-image: url('/images/picture-2.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 50px 0;
+    text-align: center;
+    color: #201d1d;
+}
+
+.profile-details {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+
+.profile-details .section {
+    margin-bottom: 20px;
+}
+
+.profile-details h3 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.profile-details p, .profile-details ul {
+    margin-bottom: 10px;
+}
+
+.schedule {
+    border-top: 2px solid #ddd;
+    padding-top: 20px;
+}
+
+.schedule h3 {
+    color: #1c75a1;
+    margin-bottom: 10px;
+}
+
+.btn-save {
+    background-color: #1c75a1;
+    color: white;
+}
+
+.month {
+    position: relative;
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.month ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.month ul li {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.month ul li.prev {
+    float: left;
+    padding-right: 10px;
+}
+
+.month ul li.next {
+    float: right;
+    padding-left: 10px;
+}
+
+.weekdays {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #1c75a1;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.weekdays li {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.days {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.days li {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    margin: 2px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.days li.active {
+    background-color: #1c75a1;
+    color: #fff;
+}
+
+.modal-content {
+    border-radius: 15px;
+}
+
+.modal-header {
+    background-color: #1c75a1;
+    color: #fff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.modal-body, .modal-footer {
+    padding: 20px;
+}

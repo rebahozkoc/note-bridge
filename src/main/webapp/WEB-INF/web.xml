@@ -8,7 +8,7 @@
   <display-name>di.bookQuote</display-name>
   
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
+    <welcome-file>/Home-Login-Combined/combined-home.html</welcome-file>
   </welcome-file-list>
   <servlet>
     <description>BookQuote Servlet</description>

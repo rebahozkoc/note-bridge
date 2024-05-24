@@ -18,7 +18,6 @@
             background: white;
             display: flex;
             justify-content: space-between;
-            border-radius: 5px;
         }
         .chat{
 
@@ -34,10 +33,11 @@
         }
         .message{
             border-radius: 25px;
-            background-color: rgba(208, 9, 234,1);
+            background-color: #34A1FD;
             padding: 20px;
             width: 150px;
             color: #201d1d;
+            box-shadow: 2px 2px black;
         }
         .left{
 
@@ -54,9 +54,9 @@
             overflow-y: scroll;
         }
         .contact{
-            border-radius: 10px;
-            background: initial;
-            padding: 2px;
+            border-radius: 5px;
+            margin: 5px;
+            box-shadow: 2px 2px grey;
         }
         /* width */
         ::-webkit-scrollbar {
@@ -186,8 +186,8 @@
         <div class="chat">
             <div class="header grid-container">
                     <span style="font: 35px 'Arial Black';color: #201d1d">Contact 1</span>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Sponsor
+                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Invite +
                 </button>
             </div>
             <div class="row g-0">
@@ -201,8 +201,8 @@
                 </div>
                 <div class="g-0">
                     <form class="d-flex">
-                        <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message">
-                        <button class="btn btn-outline-success" type="submit" id="but">Send</button>
+                        <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: #34A1FD">
+                        <button class="btn btn-outline-dark" type="submit" id="but">Send</button>
                     </form>
                 </div>
             </div>

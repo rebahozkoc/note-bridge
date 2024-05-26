@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="white">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Messenger</title>
+    <style>
+        body {
+            background-image: url("../mainImageFile/Background.png");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            margin: 0;
+        }
+        .header{
+            background: white;
+            display: flex;
+            justify-content: space-between;
+        }
+        .chat{
+
+        }
+        .row {
+            position: relative;
+            display: flex;
+        }
+        .chat-box{
+            height: 76.5vh;
+            overflow-y: scroll;
+            background-color: initial;
+        }
+        .message{
+            border-radius: 25px;
+            background-color: #34A1FD;
+            padding: 20px;
+            width: 150px;
+            color: #201d1d;
+            box-shadow: 2px 2px black;
+        }
+        .left{
+
+        }
+        .right{
+            display: flex;
+            text-align: left;
+            justify-content: right;
+        }
+        .contacts{
+            background:white;
+            padding: 5px;
+            height: 88.5vh;
+            overflow-y: scroll;
+        }
+        .contact{
+            border-radius: 5px;
+            margin: 5px;
+            box-shadow: 2px 2px grey;
+        }
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        a:link {
+            color: #000000;
+        }
+
+    </style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<div class="Header">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <nav class="navbar bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="http://localhost:8080/temperature/Home-Login-Combined/combined-home.html">
+                        <img src="http://localhost:8080/temperature/mainImageFile/note-bridge-logo.png" alt="Logo" width="150" height="40" class="d-inline-block align-text-top" style="margin-right: 8px" >
+                    </a>
+                </div>
+            </nav>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost:8080/temperature/Cards Page/forumPage.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:8080/temperature/Messenger and Sponsor/Messenger.html">Messages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:8080/temperature/Profile Page/ProfilePage.html">Profile</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit" style="margin-right: 10px">Search</button>
+                </form>
+                <button type="button" class="btn btn-outline-warning" style="margin-left: 5px; margin-right: 5px">Login</button>
+                <button type="button" class="btn btn-outline-primary" style="margin-left: 5px; margin-right: 5px">Sign-up</button>
+
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="row g-0">
+    <div class="col-3 g-0">
+        <div class="contacts">
+            <ul class="list-group">
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 1
+                        <span class="badge rounded-pill bg-primary">14</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 2
+                        <span class="badge rounded-pill bg-primary">2</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 3
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 4
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 5
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 6
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 7
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 8
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+                <div class="contact">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)">
+                        Contact 9
+                        <span class="badge rounded-pill bg-primary">1</span>
+                    </li>
+                </div>
+            </ul>
+        </div>
+    </div>
+    <div class="col-9 g-0">
+        <div class="chat">
+            <div class="header grid-container">
+                    <span style="font: 35px 'Arial Black';color: #201d1d">Contact 1</span>
+                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Invite +
+                </button>
+            </div>
+            <div class="row g-0">
+                <div id="messageBox" class="chat-box g-0">
+                    <div class="left">
+                        <p class="message">Some text..</p>
+                    </div>
+                    <div class="right">
+                        <p class="message">Some text..</p>
+                    </div>
+                </div>
+                <div class="g-0">
+                    <form class="d-flex">
+                        <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: #34A1FD">
+                        <button class="btn btn-outline-dark" type="submit" id="but">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sponsor this user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label for="sponsor_description">Describe your Proposition for sponsorship</label>
+                    <textarea class="form-control" id="sponsor_description" rows="3" placeholder="Proposition"></textarea>
+                </form>
+                <form>
+                    <label for="amount_of_money">Proposed amount in euro</label>
+                    <textarea class="form-control" id="amount_of_money" rows="1"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send Sponsor Message</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function turnGrey(x) {
+        x.className = "list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center"
+    }
+    function turnWhite(x) {
+        x.className = "list-group-item d-flex justify-content-between align-items-center"
+    }
+    document.querySelector("form").addEventListener("submit",function(event) {
+        const element=document.getElementById("messageBox");
+        const name=document.createElement("div");
+        const message=document.createElement("div");
+        name.className="right";
+        message.className="right";
+        const name_inside=document.createElement("span");
+        name_inside.style.cssText="font: 21px Arial Nova";
+        name_inside.innerText="Contact 1";
+        name.appendChild(name_inside);
+        const message_inside=document.createElement("p");
+        message_inside.className="message";
+        message_inside.innerText=document.getElementById("message").value;
+        message.appendChild(message_inside);
+        element.appendChild(name);
+        element.appendChild(message);
+        event.stopImmediatePropagation();
+    });
+
+</script>
+</body>
+</html>

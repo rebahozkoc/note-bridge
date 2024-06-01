@@ -12,7 +12,7 @@ import java.io.IOException;
 public class InitializationListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		System.out.println("Initializing PokeApp...");
+		System.out.println("Initializing Notebridge...");
 		try {
 			PostDao.INSTANCE.load();
 			UserDao.INSTANCE.load();
@@ -20,12 +20,12 @@ public class InitializationListener implements ServletContextListener {
 			System.err.println("Error while loading data.");
 			e.printStackTrace();
 		}
-		System.out.println("PokeApp initialized.");
+		System.out.println("Notebridge initialized.");
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		System.out.println("Shutting down PokeApp...");
+		System.out.println("Shutting down Notebridge...");
 		try {
 			PostDao.INSTANCE.save();
 			UserDao.INSTANCE.save();
@@ -33,6 +33,6 @@ public class InitializationListener implements ServletContextListener {
 			System.err.println("Error while saving data.");
 			e.printStackTrace();
 		}
-		System.out.println("PokeApp shutdown.");
+		System.out.println("Notebridge shutdown.");
 	}
 }

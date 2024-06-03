@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Post extends BaseEntity {
 
-	private int ownerId;//owner needs to be added
+	private String ownerId;//owner needs to be added
 	private String title;
 	private String description;
 	private int likeCount;
@@ -15,11 +15,11 @@ public class Post extends BaseEntity {
 	private String location;
 	private String message;
 
-	public int getOwnerId() {
+	public String getOwnerId() {
 		return ownerId;
 	}
 
-	public void setOwnerId(int ownerId) {
+	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
 	}
 

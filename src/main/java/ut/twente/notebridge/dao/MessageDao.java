@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
-import ut.twente.notebridge.Utils;
-import ut.twente.notebridge.model.BaseEntity;
+import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Message;
 
 public enum MessageDao {

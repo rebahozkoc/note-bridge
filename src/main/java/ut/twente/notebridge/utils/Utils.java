@@ -1,4 +1,4 @@
-package ut.twente.notebridge;
+package ut.twente.notebridge.utils;
 
 import java.util.List;
 import java.util.Objects;

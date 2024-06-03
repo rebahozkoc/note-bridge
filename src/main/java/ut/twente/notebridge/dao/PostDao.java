@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
-import ut.twente.notebridge.Utils;
+import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
 import java.io.File;

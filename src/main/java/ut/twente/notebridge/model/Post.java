@@ -5,16 +5,23 @@ import java.util.List;
 
 public class Post extends BaseEntity {
 
-	//owner needs to be added
+	private int ownerId;//owner needs to be added
 	private String title;
 	private String description;
 	private int likeCount;
 	private int commentCount;
 	private String sponsoredBy; // Optional
-	private List<String> pictures; // Assuming pictures are stored as URLs or file paths
 	private String eventType;
 	private String location;
 	private String message;
+
+	public int getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(int ownerId) {
+		this.ownerId = ownerId;
+	}
 
 	public String getTitle() {
 		return title;
@@ -56,13 +63,6 @@ public class Post extends BaseEntity {
 		this.sponsoredBy = sponsoredBy;
 	}
 
-	public List<String> getPictures() {
-		return pictures;
-	}
-
-	public void setPictures(List<String> pictures) {
-		this.pictures = pictures;
-	}
 
 	public String getEventType() {
 		return eventType;
@@ -90,12 +90,12 @@ public class Post extends BaseEntity {
 
 	public Post() {
 		super();
+		ownerId=0;
 		title=null;
 		description=null;
 		likeCount=0;
 		commentCount=0;
 		sponsoredBy=null;
-		pictures=null;
 		eventType=null;
 		location=null;
 		message=null;

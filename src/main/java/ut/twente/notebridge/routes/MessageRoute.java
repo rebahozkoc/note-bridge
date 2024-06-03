@@ -41,13 +41,7 @@ public class MessageRoute {
         MessageDao.INSTANCE.delete(id);
     }
 
-    @PUT
-    @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void deleteMessage(@PathParam("id") String user, String message) {
-        MessageDao.INSTANCE.deleteMessage(user,message);
-    }
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

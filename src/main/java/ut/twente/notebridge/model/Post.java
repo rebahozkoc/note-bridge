@@ -1,26 +1,36 @@
 package ut.twente.notebridge.model;
 
-import java.util.Date;
-import java.util.List;
+import java.sql.Timestamp;
 
 public class Post extends BaseEntity {
 
-	private String ownerId;//owner needs to be added
+	private int personId;
 	private String title;
 	private String description;
-	private int likeCount;
-	private int commentCount;
-	private String sponsoredBy; // Optional
+	private int sponsoredBy;
+	private Timestamp sponsoredFrom;
+	private Timestamp sponsoredUntil;
 	private String eventType;
 	private String location;
-	private String message;
 
-	public String getOwnerId() {
-		return ownerId;
+	public Post() {
+		super();
+		this.personId = 0;
+		this.title = null;
+		this.description = null;
+		this.sponsoredBy = 0;
+		this.sponsoredFrom = null;
+		this.sponsoredUntil = null;
+		this.eventType = null;
+		this.location = null;
 	}
 
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
+	public int getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(int personId) {
+		this.personId = personId;
 	}
 
 	public String getTitle() {
@@ -39,30 +49,29 @@ public class Post extends BaseEntity {
 		this.description = description;
 	}
 
-	public int getLikeCount() {
-		return likeCount;
-	}
-
-	public void setLikeCount(int likeCount) {
-		this.likeCount = likeCount;
-	}
-
-	public int getCommentCount() {
-		return commentCount;
-	}
-
-	public void setCommentCount(int commentCount) {
-		this.commentCount = commentCount;
-	}
-
-	public String getSponsoredBy() {
+	public int getSponsoredBy() {
 		return sponsoredBy;
 	}
 
-	public void setSponsoredBy(String sponsoredBy) {
+	public void setSponsoredBy(int sponsoredBy) {
 		this.sponsoredBy = sponsoredBy;
 	}
 
+	public Timestamp getSponsoredFrom() {
+		return sponsoredFrom;
+	}
+
+	public void setSponsoredFrom(Timestamp sponsoredFrom) {
+		this.sponsoredFrom = sponsoredFrom;
+	}
+
+	public Timestamp getSponsoredUntil() {
+		return sponsoredUntil;
+	}
+
+	public void setSponsoredUntil(Timestamp sponsoredUntil) {
+		this.sponsoredUntil = sponsoredUntil;
+	}
 
 	public String getEventType() {
 		return eventType;
@@ -78,27 +87,5 @@ public class Post extends BaseEntity {
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public Post() {
-		super();
-		ownerId=null;
-		title=null;
-		description=null;
-		likeCount=0;
-		commentCount=0;
-		sponsoredBy=null;
-		eventType=null;
-		location=null;
-		message=null;
-
 	}
 }

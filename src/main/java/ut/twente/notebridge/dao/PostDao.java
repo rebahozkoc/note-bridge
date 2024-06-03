@@ -11,6 +11,7 @@ import ut.twente.notebridge.model.Post;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,9 +25,9 @@ public enum PostDao {
 	private static final String ORIGINAL_POSTS = Utils.getAbsolutePathToResources() + "/mock-post-dataset.json";
 	private static final String UPDATED_POSTS = Utils.getAbsolutePathToResources() + "/updated-mock-post-dataset.json";
 
-	private final HashMap<String, Post> posts = new HashMap<>();
+	private final HashMap<Integer, Post> posts = new HashMap<>();
 
-	public void delete(String id) {
+	public void delete(int id) {
 		if(posts.containsKey(id)) {
 			posts.remove(id);
 		} else {
@@ -38,16 +39,16 @@ public enum PostDao {
 		List<Post> list = new ArrayList<>(posts.values());
 
 		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
-			list.sort((pt1, pt2) -> Utils.compare(Integer.parseInt(pt1.getId()), Integer.parseInt(pt2.getId())));
+			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
 		else if ("lastUpDate".equals(sortBy))
-			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpDate(), pt2.getLastUpDate()));
+			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
 		else
 			throw new NotSupportedException("Sort field not supported");
 
 		return (List<Post>) Utils.pageSlice(list,pageSize,pageNumber);
 	}
 
-	public Post getPost(String id) {
+	public Post getPost(int id) {
 		var pt = posts.get(id);
 
 		if (pt == null) {
@@ -81,20 +82,19 @@ public enum PostDao {
 	}
 
 	public Post create(Post newPost) {
-		String nextId = "" + (getMaxId() + 1);
+		int nextId = getMaxId() + 1;
 
 		newPost.setId(nextId);
-		newPost.setCreateDate(Instant.now().toString());
-		newPost.setLastUpDate(Instant.now().toString());
+		newPost.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
+		newPost.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
 		posts.put(nextId,newPost);
 
 		return newPost;
 	}
 
 	private int getMaxId() {
-		Set<String> ids = posts.keySet();
+		Set<Integer> ids = posts.keySet();
 		return ids.isEmpty() ? 0 : ids.stream()
-				.map(Integer::parseInt)
 				.max(Integer::compareTo)
 				.get();
 	}
@@ -105,7 +105,7 @@ public enum PostDao {
 		if(posts.get(updated.getId()) == null)
 			throw new NotFoundException("Post id '" + updated.getId() + "' not found.");
 
-		updated.setLastUpDate(Instant.now().toString());
+		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
 		posts.put(updated.getId(),updated);
 
 		return updated;

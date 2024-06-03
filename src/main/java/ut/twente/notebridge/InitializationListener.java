@@ -5,7 +5,7 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ut.twente.notebridge.dao.MessageDao;
 import ut.twente.notebridge.dao.PostDao;
-import ut.twente.notebridge.dao.UserDao;
+import ut.twente.notebridge.dao.PersonDao;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class InitializationListener implements ServletContextListener {
 		System.out.println("Initializing Notebridge...");
 		try {
 			PostDao.INSTANCE.load();
-			UserDao.INSTANCE.load();
+			PersonDao.INSTANCE.load();
 			MessageDao.INSTANCE.load();
 		} catch (IOException e) {
 			System.err.println("Error while loading data.");
@@ -30,7 +30,7 @@ public class InitializationListener implements ServletContextListener {
 		System.out.println("Shutting down Notebridge...");
 		try {
 			PostDao.INSTANCE.save();
-			UserDao.INSTANCE.save();
+			PersonDao.INSTANCE.save();
 			MessageDao.INSTANCE.save();
 		} catch (IOException e) {
 			System.err.println("Error while saving data.");

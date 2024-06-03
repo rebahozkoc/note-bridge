@@ -7,12 +7,12 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 import ut.twente.notebridge.Utils;
+import ut.twente.notebridge.model.BaseEntity;
 import ut.twente.notebridge.model.Message;
-import ut.twente.notebridge.model.Post;
-import ut.twente.notebridge.model.User;
 
 public enum MessageDao {
     INSTANCE;
@@ -22,15 +22,15 @@ public enum MessageDao {
     private static final String UPDATED_MESSAGES = Utils.getAbsolutePathToResources() + "/updated-mock-user-dataset.json";
 
 
-    private final HashMap<String,Message> messenger=new HashMap<>();
+    private final HashMap<Integer,Message> messenger=new HashMap<>();
 
     public List<Message> getMessages(int pageSize, int pageNumber, String sortBy) {
         List<Message> list = new ArrayList<>(messenger.values());
 
         if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
-            list.sort((pt1, pt2) -> Utils.compare(Integer.parseInt(pt1.getId()), Integer.parseInt(pt2.getId())));
+            list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
         else if ("lastUpDate".equals(sortBy))
-            list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpDate(), pt2.getLastUpDate()));
+            list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
         else
             throw new NotSupportedException("Sort field not supported");
 
@@ -90,20 +90,19 @@ public enum MessageDao {
     }
 
     public Message create(Message newMessageHistory) {
-        String nextId = "" + (getMaxId() + 1);
+        int nextId = (getMaxId() + 1);
 
         newMessageHistory.setId(nextId);
-        newMessageHistory.setCreateDate(Instant.now().toString());
-        newMessageHistory.setLastUpDate(Instant.now().toString());
+        newMessageHistory.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
+        newMessageHistory.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
         messenger.put(nextId,newMessageHistory);
 
         return newMessageHistory;
     }
 
     private int getMaxId() {
-        Set<String> ids = messenger.keySet();
+        Set<Integer> ids = messenger.keySet();
         return ids.isEmpty() ? 0 : ids.stream()
-                .map(Integer::parseInt)
                 .max(Integer::compareTo)
                 .get();
     }

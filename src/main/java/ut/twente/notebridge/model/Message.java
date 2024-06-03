@@ -1,29 +1,28 @@
 package ut.twente.notebridge.model;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class Message extends BaseEntity{
-    private User user1;
-    private User user2;
+public class Message extends BaseEntity {
+    private Person person1;
+    private Person person2;
     private List<String> messagesFromUser1;
     private List<String> messagesFromUser2;
 
-    public User getUser1() {
-        return user1;
+    public Person getUser1() {
+        return person1;
     }
 
-    public void setUser1(User user1) {
-        this.user1 = user1;
+    public void setUser1(Person person1) {
+        this.person1 = person1;
     }
 
-    public User getUser2() {
-        return user2;
+    public Person getUser2() {
+        return person2;
     }
 
-    public void setUser2(User user2) {
-        this.user2 = user2;
+    public void setUser2(Person person2) {
+        this.person2 = person2;
     }
 
     public List<String> getMessagesFromUser1() {
@@ -43,9 +42,9 @@ public class Message extends BaseEntity{
     }
 
     public List<String> getUserList(String user){
-        if (Objects.equals(user, user1.getUsername())) {
+        if (Objects.equals(user, person1.getUsername())) {
             return messagesFromUser1;
-        } else if (Objects.equals(user, user2.getUsername())) {
+        } else if (Objects.equals(user, person2.getUsername())) {
             return messagesFromUser2;
         }else {
             return null;
@@ -53,8 +52,9 @@ public class Message extends BaseEntity{
     }
 
     public Message() {
-        this.user1 = null;
-        this.user2 = null;
+        super();
+        this.person1 = null;
+        this.person2 = null;
         this.messagesFromUser1 = null;
         this.messagesFromUser2 = null;
     }

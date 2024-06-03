@@ -1,6 +1,6 @@
 [
   {
-    "id": 23,
+    "id": "23",
     "createDate": "2023-01-10T08:00:00Z",
     "lastUpDate": "2023-01-10T08:30:00Z",
     "username": "johndoe",
@@ -11,7 +11,7 @@
     "profilePicture": "http://example.com/images/profile/johndoe.jpg"
   },
   {
-    "id": 54,
+    "id": "54",
     "createDate": "2023-02-15T09:00:00Z",
     "lastUpDate": "2023-02-15T09:45:00Z",
     "username": "janesmith",
@@ -22,7 +22,7 @@
     "profilePicture": "http://example.com/images/profile/janesmith.jpg"
   },
   {
-    "id": 63,
+    "id": "64",
     "createDate": "2023-03-20T10:00:00Z",
     "lastUpDate": "2023-03-20T10:15:00Z",
     "username": "michaelbrown",
@@ -33,7 +33,7 @@
     "profilePicture": "http://example.com/images/profile/michaelbrown.jpg"
   },
   {
-    "id": 81,
+    "id": "81",
     "createDate": "2023-04-25T11:00:00Z",
     "lastUpDate": "2023-04-25T11:20:00Z",
     "username": "emilywhite",
@@ -44,7 +44,7 @@
     "profilePicture": "http://example.com/images/profile/emilywhite.jpg"
   },
   {
-    "id": 22,
+    "id": "22",
     "createDate": "2023-05-30T12:00:00Z",
     "lastUpDate": "2023-05-30T12:10:00Z",
     "username": "davidthompson",

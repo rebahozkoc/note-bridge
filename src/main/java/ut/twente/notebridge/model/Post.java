@@ -90,7 +90,7 @@ public class Post extends BaseEntity {
 
 	public Post() {
 		super();
-		ownerId=0;
+		ownerId=null;
 		title=null;
 		description=null;
 		likeCount=0;

@@ -3,6 +3,7 @@ package ut.twente.notebridge;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import ut.twente.notebridge.dao.MessageDao;
 import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.dao.UserDao;
 
@@ -16,6 +17,7 @@ public class InitializationListener implements ServletContextListener {
 		try {
 			PostDao.INSTANCE.load();
 			UserDao.INSTANCE.load();
+			MessageDao.INSTANCE.load();
 		} catch (IOException e) {
 			System.err.println("Error while loading data.");
 			e.printStackTrace();
@@ -29,6 +31,7 @@ public class InitializationListener implements ServletContextListener {
 		try {
 			PostDao.INSTANCE.save();
 			UserDao.INSTANCE.save();
+			MessageDao.INSTANCE.save();
 		} catch (IOException e) {
 			System.err.println("Error while saving data.");
 			e.printStackTrace();

@@ -1,16 +1,21 @@
 package ut.twente.notebridge.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
+import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,10 +33,14 @@ public enum PostDao {
 	private final HashMap<Integer, Post> posts = new HashMap<>();
 
 	public void delete(int id) {
-		if(posts.containsKey(id)) {
-			posts.remove(id);
-		} else {
-			throw new NotFoundException("Post '" + id + "' not found.");
+		// TODO: finish this method
+		String sql = ""; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			statement.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -42,10 +51,9 @@ public enum PostDao {
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
 		else if ("lastUpDate".equals(sortBy))
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
-		else
-			throw new NotSupportedException("Sort field not supported");
+		else throw new NotSupportedException("Sort field not supported");
 
-		return (List<Post>) Utils.pageSlice(list,pageSize,pageNumber);
+		return (List<Post>) Utils.pageSlice(list, pageSize, pageNumber);
 	}
 
 	public Post getPost(int id) {
@@ -60,9 +68,7 @@ public enum PostDao {
 
 	public void load() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		File source = existsPosts() ?
-				new File(UPDATED_POSTS) :
-				new File(ORIGINAL_POSTS);
+		File source = existsPosts() ? new File(UPDATED_POSTS) : new File(ORIGINAL_POSTS);
 		Post[] arr = mapper.readValue(source, Post[].class);
 
 		Arrays.stream(arr).forEach(pt -> posts.put(pt.getId(), pt));
@@ -82,31 +88,61 @@ public enum PostDao {
 	}
 
 	public Post create(Post newPost) {
-		int nextId = getMaxId() + 1;
+		String sql = """
+						INSERT INTO Post (createDate,
+						lastUpdate, personId,
+						title, description,
+						sponsoredBy, sponsoredFrom,
+						sponsoredUntil, eventType, location)
+						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+				""";
 
-		newPost.setId(nextId);
-		newPost.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
-		newPost.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		posts.put(nextId,newPost);
+		//Print the post object
+		//System.out.println(ToStringBuilder.reflectionToString(newPost));
 
-		return newPost;
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setTimestamp(1, Timestamp.from(Instant.now()));
+			statement.setTimestamp(2, Timestamp.from(Instant.now()));
+			statement.setInt(3, newPost.getPersonId());
+			statement.setString(4, newPost.getTitle());
+			statement.setString(5, newPost.getDescription());
+			statement.setInt(6, newPost.getSponsoredBy());
+			statement.setTimestamp(7, newPost.getSponsoredFrom());
+			statement.setTimestamp(8, newPost.getSponsoredUntil());
+			statement.setString(9, newPost.getEventType());
+			statement.setString(10, newPost.getLocation());
+
+			ResultSet resultSet = statement.executeQuery();
+			String json = "";
+
+			if (resultSet.next()) {
+				json = Utils.resultSetToJson(resultSet);
+
+			}
+			System.out.println(json);
+			// map the json to the new post object
+			ObjectMapper mapper = new ObjectMapper();
+			Post updatedPost = mapper.readValue(json, Post.class);
+
+			return updatedPost;
+
+		} catch (SQLException | JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private int getMaxId() {
 		Set<Integer> ids = posts.keySet();
-		return ids.isEmpty() ? 0 : ids.stream()
-				.max(Integer::compareTo)
-				.get();
+		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
 	}
 
 	public Post update(Post updated) {
-		if(!updated.isValid())
-			throw new BadRequestException("Invalid post.");
-		if(posts.get(updated.getId()) == null)
+		if (!updated.isValid()) throw new BadRequestException("Invalid post.");
+		if (posts.get(updated.getId()) == null)
 			throw new NotFoundException("Post id '" + updated.getId() + "' not found.");
 
 		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		posts.put(updated.getId(),updated);
+		posts.put(updated.getId(), updated);
 
 		return updated;
 	}

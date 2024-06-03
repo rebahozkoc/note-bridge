@@ -20,9 +20,9 @@ public class InitializationListener implements ServletContextListener {
 			//PostDao.INSTANCE.load();
 			//PersonDao.INSTANCE.load();
 			DatabaseConnection.INSTANCE.load();
-			MessageDao.INSTANCE.load();
+			//MessageDao.INSTANCE.load();
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.err.println("Error while loading data.");
 			e.printStackTrace();
 		}

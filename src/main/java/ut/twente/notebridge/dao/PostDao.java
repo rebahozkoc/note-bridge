@@ -106,13 +106,23 @@ public enum PostDao {
 			statement.setInt(3, newPost.getPersonId());
 			statement.setString(4, newPost.getTitle());
 			statement.setString(5, newPost.getDescription());
-			statement.setInt(6, newPost.getSponsoredBy());
+			if (newPost.getSponsoredBy() == null) {
+				statement.setNull(6, java.sql.Types.INTEGER);
+			} else {
+				statement.setInt(6, newPost.getSponsoredBy());
+			}
 			statement.setTimestamp(7, newPost.getSponsoredFrom());
 			statement.setTimestamp(8, newPost.getSponsoredUntil());
 			statement.setString(9, newPost.getEventType());
 			statement.setString(10, newPost.getLocation());
 
 			ResultSet resultSet = statement.executeQuery();
+
+			/*
+			need to run this query to get the new post object
+			SELECT row_to_json(post)
+			FROM Post post
+			WHERE id = 8;
 			String json = "";
 
 			if (resultSet.next()) {
@@ -124,9 +134,11 @@ public enum PostDao {
 			ObjectMapper mapper = new ObjectMapper();
 			Post updatedPost = mapper.readValue(json, Post.class);
 
-			return updatedPost;
+			 */
 
-		} catch (SQLException | JsonProcessingException e) {
+			return newPost;
+
+		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}

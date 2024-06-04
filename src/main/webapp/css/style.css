@@ -25,8 +25,7 @@
 
 .first-page-card {
     margin: 5vh 17vh 10vh;
-    align-items: center;
-    box-shadow: rgba(138,62,183,0.3) 1px -5px 15px 20px;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 35px;
     color: rgb(225, 225, 225);
 }
 

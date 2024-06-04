@@ -114,7 +114,7 @@ function hideCreatePostForm() {
 function showCategories() {
     mainContent.innerHTML = `
     <div class="container w-75" id="categories">
-        <h1 class="fw-bold text-primary-emphasis fs-2 my-5">Select a category!</h1>
+        <h1 class="fw-bold text-white fs-2 my-5">Select a category</h1>
         <div class="btn-group w-100" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-outline-light category-btn">Music events</button>
             <button type="button" class="btn btn-outline-light category-btn">Find band members</button>
@@ -159,10 +159,10 @@ function showImageSlider() {
                         <!-- First card -->
                         <div class="carousel-item active">
                             <div class="card first-page-card rounded-5">
-                                <img src="/images/main-picture.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
+                                <img src="/src/main/webapp/images/main-image-2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title">Find band members!</h5>
-                                    <p class="card-text">Are you looking for a new band member? Check the posts out!</p>
+                                    <h5 class="card-title">Are you looking for a new band member?</h5>
+                                    <p class="card-text">Get yourself ready to be connected with musicians from all over the world!</p>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +170,7 @@ function showImageSlider() {
                         <!-- Second card -->
                         <div class="carousel-item">
                             <div class="card first-page-card rounded-5">
-                                <img src="/images/main-picture.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
+                                <img src="/src/main/webapp/images/main-image-1.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">Discover multiple musical events</h5>
                                     <p class="card-text">Connect with other musicians to have jam sessions together!</p>
@@ -181,22 +181,14 @@ function showImageSlider() {
                         <!-- Third card -->
                         <div class="carousel-item">
                             <div class="card first-page-card rounded-5">
-                                <img src="/images/main-picture2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
+                                <img src="/src/main/webapp/images/main-image-3.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">Sell or buy instruments</h5>
-                                    <p class="card-text">Check out the posts to sell your instruments to other musicians or to buy more instruments!</p>
+                                    <p class="card-text">Are you interested to buy an instrument or do you want to sell one? Check out the posts out!</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
             </div>
         </div>

@@ -4,9 +4,8 @@
 }
 
 .page-settings {
-    background: url("/images/background2.png");
+    background-color : purple;
     font-family: Tahoma, serif;
-    background-size: cover;
 }
 
 .white-block {

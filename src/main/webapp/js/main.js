@@ -35,7 +35,7 @@ function displayCard(card) {
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <img src="background2.png" class="img-fluid rounded-end" alt="card-image">
+                        <img src="http://localhost:63342/design/src/main/webapp/images/background2.png" class="img-fluid rounded-end" alt="card-image">
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@ function showImageSlider() {
                         <!-- First card -->
                         <div class="carousel-item active">
                             <div class="card first-page-card rounded-5">
-                                <img src="/images/main-picture.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
+                                <img src="http://localhost:8080/design_war/images/main-picture.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">Find band members!</h5>
                                     <p class="card-text">Are you looking for a new band member? Check the posts out!</p>
@@ -161,7 +161,7 @@ function showImageSlider() {
                         <!-- Second card -->
                         <div class="carousel-item">
                             <div class="card first-page-card rounded-5">
-                                <img src="/images/main-picture.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
+                                <img src="http://localhost:8080/design_war/images/main-picture.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">Discover multiple musical events</h5>
                                     <p class="card-text">Connect with other musicians to have jam sessions together!</p>
@@ -172,7 +172,7 @@ function showImageSlider() {
                         <!-- Third card -->
                         <div class="carousel-item">
                             <div class="card first-page-card rounded-5">
-                                <img src="/images/main-picture2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
+                                <img src="http://localhost:8080/design_war/images/main-picture2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">Sell or buy instruments</h5>
                                     <p class="card-text">Check out the posts to sell your instruments to other musicians or to buy more instruments!</p>

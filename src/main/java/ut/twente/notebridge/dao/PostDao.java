@@ -2,8 +2,10 @@ package ut.twente.notebridge.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
@@ -45,7 +47,7 @@ public enum PostDao {
 
 	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy)  {
 		List<Post> list = new ArrayList<>(posts.values());
-
+		System.out.println("GET posts called");
 		try{
 			Statement statement=DatabaseConnection.INSTANCE.getConnection().createStatement();
 			String sql= """
@@ -53,14 +55,21 @@ public enum PostDao {
 				""";
 
 			ResultSet rs=statement.executeQuery(sql);
-			List<Post> l = new ArrayList<>();
-			ObjectMapper mapper = new ObjectMapper();
+
+			ObjectMapper mapper = JsonMapper.builder()
+					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+					.build();
+
 			if(rs.next()){
-				 t = (Post[]).getArray("json_agg");
-				for ()
+				// assing rs.getArray("json_agg") to a list of posts
+				System.out.println(rs.getString("json_agg"));
+				list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Post[].class));
+
 			}
 		}catch (SQLException e){
-
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
 		}
 
 
@@ -72,7 +81,7 @@ public enum PostDao {
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
 		else throw new NotSupportedException("Sort field not supported");
 		*/
-		return (List<Post>) Utils.pageSlice(list, pageSize, pageNumber);
+		return list;
 	}
 
 	public Post getPost(int id) {

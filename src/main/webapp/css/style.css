@@ -45,22 +45,20 @@
     background-image: url("../images/background2.png");
 }
 
-#createPostForm {
-    background: #11114a;
+.main-content {
     margin-top: 15vh;
+    border: 1px solid white;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
 }
 
 .category-btn {
     padding: 25vh 10vh;
     font-size: 3vh;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
 }
 
 .hide {
     display: none;
-}
-
-#main-content {
-    border: 10px black;
 }
 
 .card {

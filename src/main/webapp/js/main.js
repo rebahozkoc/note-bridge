@@ -68,7 +68,7 @@ function displayCard(card) {
 
 function showCreatePostForm() {
     mainContent.innerHTML = `
-    <h1 class="fw-bold text-white fs-2 my-5">Create a post!</h1>
+    <h1 class="fw-bold text-white fs-2 my-5">Create a post</h1>
     <form class="container w-50 bg-primary rounded-5 p-4 my-5" id="createPostForm" onsubmit="return sendRequestCreatePost()">
         <div class="form-floating mb-3">
             <textarea class="form-control" placeholder="Title" id="title" name="title"></textarea>

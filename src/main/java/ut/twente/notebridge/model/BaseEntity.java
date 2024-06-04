@@ -1,42 +1,44 @@
 package ut.twente.notebridge.model;
 
+import java.sql.Timestamp;
+
 public class BaseEntity {
+	private int id;
+	private Timestamp createDate;
+	private Timestamp lastUpdate;
 
-    private String id;
-    private String createDate;
-    private String lastUpDate;
+	public BaseEntity() {
+		super();
+		this.id = 0;
+		this.createDate = null;
+		this.lastUpdate = null;
+	}
 
-    public BaseEntity() {
-        id = null;
-        createDate = null;
-        lastUpDate = null;
-    }
+	public boolean isValid() {
+		return id != 0;
+	}
 
-    public boolean isValid() {
-        return id != null && !id.isEmpty();
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public Timestamp getCreateDate() {
+		return createDate;
+	}
 
-    public String getCreateDate() {
-        return createDate;
-    }
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
 
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
+	public Timestamp getLastUpdate() {
+		return lastUpdate;
+	}
 
-    public String getLastUpDate() {
-        return lastUpDate;
-    }
-
-    public void setLastUpDate(String lastUpDate) {
-        this.lastUpDate = lastUpDate;
-    }
+	public void setLastUpdate(Timestamp lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
 }

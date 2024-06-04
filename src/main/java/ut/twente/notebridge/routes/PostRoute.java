@@ -12,7 +12,7 @@ public class PostRoute {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post getPost(@PathParam("id") String id) {
+	public Post getPost(@PathParam("id") int id) {
 
 		return PostDao.INSTANCE.getPost(id);
 
@@ -28,7 +28,7 @@ public class PostRoute {
 
 	@DELETE
 	@Path("/{id}")
-	public void deletePost(@PathParam("id") String id) {
+	public void deletePost(@PathParam("id") int id) {
 		PostDao.INSTANCE.delete(id);
 	}
 

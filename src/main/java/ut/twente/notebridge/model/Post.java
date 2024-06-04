@@ -1,20 +1,37 @@
 package ut.twente.notebridge.model;
 
-import java.util.Date;
-import java.util.List;
+import java.sql.Timestamp;
 
 public class Post extends BaseEntity {
 
-	//owner needs to be added
+	private int personId;
 	private String title;
 	private String description;
-	private int likeCount;
-	private int commentCount;
-	private String sponsoredBy; // Optional
-	private List<String> pictures; // Assuming pictures are stored as URLs or file paths
+	private Integer sponsoredBy;
+	private Timestamp sponsoredFrom;
+	private Timestamp sponsoredUntil;
 	private String eventType;
 	private String location;
-	private String message;
+
+	public Post() {
+		super();
+		this.personId = 0;
+		this.title = null;
+		this.description = null;
+		this.sponsoredBy = null;
+		this.sponsoredFrom = null;
+		this.sponsoredUntil = null;
+		this.eventType = null;
+		this.location = null;
+	}
+
+	public int getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(int personId) {
+		this.personId = personId;
+	}
 
 	public String getTitle() {
 		return title;
@@ -32,36 +49,28 @@ public class Post extends BaseEntity {
 		this.description = description;
 	}
 
-	public int getLikeCount() {
-		return likeCount;
-	}
-
-	public void setLikeCount(int likeCount) {
-		this.likeCount = likeCount;
-	}
-
-	public int getCommentCount() {
-		return commentCount;
-	}
-
-	public void setCommentCount(int commentCount) {
-		this.commentCount = commentCount;
-	}
-
-	public String getSponsoredBy() {
+	public Integer getSponsoredBy() {
 		return sponsoredBy;
 	}
 
-	public void setSponsoredBy(String sponsoredBy) {
+	public void setSponsoredBy(Integer sponsoredBy) {
 		this.sponsoredBy = sponsoredBy;
 	}
 
-	public List<String> getPictures() {
-		return pictures;
+	public Timestamp getSponsoredFrom() {
+		return sponsoredFrom;
 	}
 
-	public void setPictures(List<String> pictures) {
-		this.pictures = pictures;
+	public void setSponsoredFrom(Timestamp sponsoredFrom) {
+		this.sponsoredFrom = sponsoredFrom;
+	}
+
+	public Timestamp getSponsoredUntil() {
+		return sponsoredUntil;
+	}
+
+	public void setSponsoredUntil(Timestamp sponsoredUntil) {
+		this.sponsoredUntil = sponsoredUntil;
 	}
 
 	public String getEventType() {
@@ -78,27 +87,5 @@ public class Post extends BaseEntity {
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public Post() {
-		super();
-		title=null;
-		description=null;
-		likeCount=0;
-		commentCount=0;
-		sponsoredBy=null;
-		pictures=null;
-		eventType=null;
-		location=null;
-		message=null;
-
 	}
 }

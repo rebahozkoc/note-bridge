@@ -81,62 +81,43 @@
         </div>
     </section>
 
-    <div class="month">
-        <div class="schedule mt-4">
-                <h3>Monthly Schedule of Lessons</h3>
-                <div id="calendar"></div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="calendar-container mb-4">
+                <header class="calendar-header">
+                    <h4>Monthly Schedule of Lessons</h4>
+                    <p class="calendar-current-date"></p>
+                    <div class="calendar-navigation">
+                        <span id="calendar-prev" class="material-symbols-rounded"> < </span>
+                        <span id="calendar-next" class="material-symbols-rounded"> > </span>
+                    </div>
+                </header>
+
+                <div class="calendar-body">
+                    <ul class="calendar-weekdays">
+                        <li>Sun</li>
+                        <li>Mon</li>
+                        <li>Tue</li>
+                        <li>Wed</li>
+                        <li>Thu</li>
+                        <li>Fri</li>
+                        <li>Sat</li>
+                    </ul>
+                    <ul class="calendar-dates"></ul>
+                </div>
+            </div>
         </div>
-        <ul>
-            <li>May<br><span style="font-size:18px">2024</span></li>
-            <li class="prev">&#10094;</li>
-            <li class="next">&#10095;</li>
-        </ul>
+        <div class="col-md-6">
+            <div class="schedule-container">
+                <div class="schedule">
+                    <h3>Daily Schedule <span id="selected-date"></span></h3>
+                    <div id="schedule-content">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-
-    <ul class="weekdays">
-        <li>Mo</li>
-        <li>Tu</li>
-        <li>We</li>
-        <li>Th</li>
-        <li>Fr</li>
-        <li>Sa</li>
-        <li>Su</li>
-    </ul>
-
-    <ul class="days">
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>7</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>11</li>
-        <li>12</li>
-        <li>13</li>
-        <li>14</li>
-        <li>15</li>
-        <li>16</li>
-        <li>17</li>
-        <li>18</li>
-        <li>19</li>
-        <li>20</li>
-        <li>21</li>
-        <li><span class="active">22</span></li>
-        <li>23</li>
-        <li>24</li>
-        <li>25</li>
-        <li>26</li>
-        <li>27</li>
-        <li>28</li>
-        <li>29</li>
-        <li>30</li>
-        <li>31</li>
-    </ul>
 
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -177,5 +158,88 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+<script>
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = date.getMonth();
+
+    const day = document.querySelector(".calendar-dates");
+    const currdate = document.querySelector(".calendar-current-date");
+    const prenexIcons = document.querySelectorAll(".calendar-navigation span");
+    const scheduleContent = document.getElementById("schedule-content");
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    // Function to generate the calendar
+    const manipulate = () => {
+        // Get the first day of the month
+        let dayone = new Date(year, month, 1).getDay();
+        // Get the last date of the month
+        let lastdate = new Date(year, month + 1, 0).getDate();
+        // Get the day of the last date of the month
+        let dayend = new Date(year, month, lastdate).getDay();
+        // Get the last date of the previous month
+        let monthlastdate = new Date(year, month, 0).getDate();
+        // Variable to store the generated calendar HTML
+        let lit = "";
+        // Loop to add the last dates of the previous month
+        for (let i = dayone; i > 0; i--) {
+            lit += `<li class="inactive">${monthlastdate - i + 1}</li>`;
+        }
+        // Loop to add the dates of the current month
+        for (let i = 1; i <= lastdate; i++) {
+            // Check if the current date is today
+            let isToday = i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? "active" : "";
+            lit += `<li class="${isToday}" onclick="updateDailySchedule(${i})">${i}</li>`;
+        }
+        // Loop to add the first dates of the next month
+        for (let i = dayend; i < 6; i++) {
+            lit += `<li class="inactive">${i - dayend + 1}</li>`
+        }
+        // Update the text of the current date element with the formatted current month and year
+        currdate.innerText = `${months[month]} ${year}`;
+        // update the HTML of the dates element with the generated calendar
+        day.innerHTML = lit;
+    }
+
+    // Function to update the daily schedule with the selected date
+    const updateDailySchedule = (selectedDate) => {
+        // Display the selected date in the title
+        document.getElementById("selected-date").innerText = `${months[month]} ${selectedDate}, ${year}`;
+        // Update the schedule content with the activities
+        scheduleContent.innerHTML = `
+    <ul class="schedule-daily">
+        <li>Jam session</li>
+        <li>Lecture</li>
+    </ul>`;
+    }
+
+
+    manipulate();
+
+    // Attach a click event listener to each icon
+    prenexIcons.forEach(icon => {
+        // When an icon is clicked
+        icon.addEventListener("click", () => {
+            // Check if the icon is "calendar-prev" or "calendar-next"
+            month = icon.id === "calendar-prev" ? month - 1 : month + 1;
+            // Check if the month is out of range
+            if (month < 0 || month > 11) {
+                // Set the date to the first day of the month with the new year
+                date = new Date(year, month, new Date().getDate());
+                // Set the year to the new year
+                year = date.getFullYear();
+                // Set the month to the new month
+                month = date.getMonth();
+            } else {
+                // Set the date to the current date
+                date = new Date();
+            }
+            // Call the manipulate function to update the calendar display
+            manipulate();
+        });
+    });
+</script>
+
 </body>
 </html>

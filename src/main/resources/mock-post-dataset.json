@@ -1,0 +1,72 @@
+[
+  {
+    "id": "1",
+    "createDate": "2023-05-01T12:00:00Z",
+    "lastUpDate": "2023-05-01T12:30:00Z",
+    "ownerId": 101,
+    "title": "Spring Festival",
+    "description": "Join us for a fun-filled day at the Spring Festival!",
+    "likeCount": 150,
+    "commentCount": 25,
+    "sponsoredBy": "Local Bakery",
+    "eventType": "Festival",
+    "location": "Central Park",
+    "message": "Don't miss out on the fun!"
+  },
+  {
+    "id": "2",
+    "createDate": "2023-06-10T09:00:00Z",
+    "lastUpDate": "2023-06-10T09:15:00Z",
+    "ownerId": 102,
+    "title": "Tech Conference 2023",
+    "description": "Annual tech conference with industry leaders.",
+    "likeCount": 230,
+    "commentCount": 40,
+    "sponsoredBy": "Tech Corp",
+    "eventType": "Conference",
+    "location": "Convention Center",
+    "message": "Register now for early bird discounts!"
+  },
+  {
+    "id": "3",
+    "createDate": "2023-07-15T14:00:00Z",
+    "lastUpDate": "2023-07-15T14:30:00Z",
+    "ownerId": 103,
+    "title": "Summer Beach Party",
+    "description": "Beach party with live music and food stalls.",
+    "likeCount": 300,
+    "commentCount": 60,
+    "sponsoredBy": "Beach Resort",
+    "eventType": "Party",
+    "location": "Sunny Beach",
+    "message": "Join us for a sunset celebration!"
+  },
+  {
+    "id": "4",
+    "createDate": "2023-08-20T18:00:00Z",
+    "lastUpDate": "2023-08-20T18:45:00Z",
+    "ownerId": 104,
+    "title": "Art Exhibition",
+    "description": "Exhibition featuring local artists.",
+    "likeCount": 120,
+    "commentCount": 30,
+    "sponsoredBy": null,
+    "eventType": "Exhibition",
+    "location": "Art Gallery",
+    "message": "Experience the best of local art."
+  },
+  {
+    "id": "5",
+    "createDate": "2023-09-05T11:00:00Z",
+    "lastUpDate": "2023-09-05T11:20:00Z",
+    "ownerId": 105,
+    "title": "Cooking Workshop",
+    "description": "Learn to cook gourmet meals.",
+    "likeCount": 180,
+    "commentCount": 20,
+    "sponsoredBy": "Gourmet Kitchen",
+    "eventType": "Workshop",
+    "location": "Community Center",
+    "message": "Reserve your spot now!"
+  }
+]

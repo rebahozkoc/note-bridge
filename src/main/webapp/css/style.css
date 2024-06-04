@@ -1,0 +1,91 @@
+.page-settings {
+    background: #0b032e;
+    font-family: Tahoma, serif;
+    background-size: cover;
+}
+
+.white-block {
+    overflow: hidden;
+    display: block;
+    font-size: 2.5vh;
+    color: darkslategrey;
+    border: 1px solid grey;
+    background-color: white;
+    padding: 4vh;
+    width: 90%;
+    border-radius: 0;
+}
+
+.black-block {
+    position: absolute;
+    background-color: black;
+    padding: 2.7vh 21vh;
+    border-radius: 0;
+    margin-top: 8.5vh;
+}
+
+.first-page-card {
+    margin: 5vh 17vh 10vh;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 35px;
+    color: rgb(225, 225, 225);
+}
+
+.image-first-page-card {
+    height: 50vh;
+}
+
+.card-btn {
+    border: none;
+    background: none;
+    font-size: 3vh;
+}
+
+.comment {
+    background-image: url("../images/background2.png");
+}
+
+.main-content {
+    margin-top: 15vh;
+    border: 1px solid white;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
+}
+
+.category-btn {
+    padding: 25vh 10vh;
+    font-size: 3vh;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
+}
+
+.hide {
+    display: none;
+}
+
+.card {
+    background-color:rgb(17, 24, 39);
+    color: rgb(225, 225, 225);
+}
+
+body,
+html {
+    height: 100%
+}
+
+#particles-js canvas {
+    display: block;
+    vertical-align: bottom;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+    -webkit-transition: opacity .8s ease, -webkit-transform 1.4s ease;
+    transition: opacity .8s ease, transform 1.4s ease
+}
+
+#particles-js {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -10;
+    top: 0;
+    left: 0
+}

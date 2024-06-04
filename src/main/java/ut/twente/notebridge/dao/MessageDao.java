@@ -11,8 +11,7 @@ import java.time.Instant;
 import java.util.*;
 import ut.twente.notebridge.Utils;
 import ut.twente.notebridge.model.Message;
-import ut.twente.notebridge.model.Post;
-import ut.twente.notebridge.model.User;
+import ut.twente.notebridge.model.MessageHistory;
 
 public enum MessageDao {
     INSTANCE;
@@ -22,15 +21,13 @@ public enum MessageDao {
     private static final String UPDATED_MESSAGES = Utils.getAbsolutePathToResources() + "/updated-mock-user-dataset.json";
 
 
-    private final HashMap<String,Message> messenger=new HashMap<>();
+    private final HashMap<String, MessageHistory> messenger=new HashMap<>();
 
-    public List<Message> getMessages(int pageSize, int pageNumber, String sortBy) {
-        List<Message> list = new ArrayList<>(messenger.values());
+    public List<Message> getMessages(int pageSize, int pageNumber, String sortBy, String user) {
+        List<Message> list = null;
 
         if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
-            list.sort((pt1, pt2) -> Utils.compare(Integer.parseInt(pt1.getId()), Integer.parseInt(pt2.getId())));
-        else if ("lastUpDate".equals(sortBy))
-            list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpDate(), pt2.getLastUpDate()));
+           list=messenger.get(user).getMessagesSortedOnTime();
         else
             throw new NotSupportedException("Sort field not supported");
 
@@ -44,19 +41,18 @@ public enum MessageDao {
         }
     }
 
-    public void deleteMessage(String user, String message){
-        if(messenger.containsKey(user)) {
-            List<String> messageHistory=messenger.get(user).getUserList(user);
-            if (messageHistory.contains(message)){
-                messageHistory.remove(message);
+    public void deleteMessage(String id , Message message){
+        if(messenger.containsKey(id)) {
+            if (messenger.get(id).getUserList(message.getUser()).contains(message)){
+                messenger.get(id).getUserList(message.getUser()).remove(message);
             }else {
                 throw new NotFoundException("Message '" + message + "' not found.");
             }
         } else {
-            throw new NotFoundException("Message History '" + user + "' not found.");
+            throw new NotFoundException("Message History '" + id + "' not found.");
         }
     }
-    public Message getMessages(String id) {
+    public MessageHistory getMessages(String id) {
         var pt = messenger.get(id);
 
         if (pt == null) {
@@ -68,28 +64,28 @@ public enum MessageDao {
 
     public void load() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        File source = existsPosts() ?
+        File source = existsMessages() ?
                 new File(UPDATED_MESSAGES) :
                 new File(ORIGINAL_MESSAGES);
-        Message[] arr = mapper.readValue(source, Message[].class);
+        MessageHistory[] arr = mapper.readValue(source, MessageHistory[].class);
 
-        Arrays.stream(arr).forEach(pt -> messenger.put(pt.getId(), pt));
+        Arrays.stream(arr).forEach(pt -> messenger.put(String.valueOf(pt.getIdOfMessageHistory()), pt));
     }
 
-    private boolean existsPosts() {
+    private boolean existsMessages() {
         File f = new File(UPDATED_MESSAGES);
         return f.exists() && !f.isDirectory();
     }
 
-    public void createNewMessage(String user, String message) {
-        if (messenger.containsKey(user)){
-            messenger.get(user).getUserList(user).add(message);
+    public void createNewMessage(String id, String message) {
+        if (messenger.containsKey(id)){
+            messenger.get(id).getUserList(id).add(new Message(id,message));
         }else {
-            throw new NotFoundException("Message History '" + user + "' not found.");
+            throw new NotFoundException("Message History '" + id + "' not found.");
         }
     }
 
-    public Message create(Message newMessageHistory) {
+    public MessageHistory create(MessageHistory newMessageHistory) {
         String nextId = "" + (getMaxId() + 1);
 
         newMessageHistory.setId(nextId);

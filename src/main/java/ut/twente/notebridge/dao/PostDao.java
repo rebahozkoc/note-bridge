@@ -7,16 +7,15 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
+import net.bytebuddy.asm.Advice;
+import org.postgresql.util.PSQLException;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,19 +43,40 @@ public enum PostDao {
 		}
 	}
 
-	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy) {
+	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy)  {
 		List<Post> list = new ArrayList<>(posts.values());
 
+		try{
+			Statement statement=DatabaseConnection.INSTANCE.getConnection().createStatement();
+			String sql= """
+				SELECT json_agg(post) FROM post
+				""";
+
+			ResultSet rs=statement.executeQuery(sql);
+			List<Post> l = new ArrayList<>();
+			ObjectMapper mapper = new ObjectMapper();
+			if(rs.next()){
+				 t = (Post[]).getArray("json_agg");
+				for ()
+			}
+		}catch (SQLException e){
+
+		}
+
+
+
+		/*
 		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
 		else if ("lastUpDate".equals(sortBy))
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
 		else throw new NotSupportedException("Sort field not supported");
-
+		*/
 		return (List<Post>) Utils.pageSlice(list, pageSize, pageNumber);
 	}
 
 	public Post getPost(int id) {
+
 		var pt = posts.get(id);
 
 		if (pt == null) {

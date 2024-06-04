@@ -16,6 +16,8 @@ showImageSlider();
 //         console.error(err);
 //     });
 
+
+
 function displayAllCards() {
     posts.innerHTML = `
         <h1 class="fw-bold text-primary-emphasis fs-2 my-5">Browse posts!</h1>
@@ -192,4 +194,9 @@ function showImageSlider() {
             </div>
         </div>
     `;
+
+    /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+    particlesJS.load('particles-js', 'js/particles.json', function() {
+        console.log('callback - particles.js config loaded');
+    });
 }

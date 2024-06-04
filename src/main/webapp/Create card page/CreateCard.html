@@ -72,27 +72,27 @@
                     <p style="font-family: Helvetica; font-size: 25px"><b>Create Card</b></p>
 
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Title</label>
-                        <input class="form-control" type="text" placeholder="Card Title" aria-label="Title">
+                        <label for="description" class="form-label">Title</label>
+                        <input id='card-title' class="form-control" type="text" placeholder="Card Title" aria-label="Title">
                     </div>
 
 
-                    <label for="exampleFormControlTextarea1" class="form-label">Email</label>
+                    <label for="description" class="form-label">Email</label>
                     <div class="input-group mb-3" style="margin-bottom: 10px">
-                        <input type="text" class="form-control" placeholder="Your email here" aria-label="Your email here" aria-describedby="basic-addon2">
+                        <input id='email' type="text" class="form-control" placeholder="Your email here" aria-label="Your email here" aria-describedby="basic-addon2">
                         <span class="input-group-text" id="basic-addon2">@example.com</span>
                     </div>
 
-                    <select class="form-select" aria-label="Type of Event" style="margin-bottom: 10px; margin-top: 10px;">
+                    <select id='event' class="form-select" aria-label="Type of Event" style="margin-bottom: 10px; margin-top: 10px;">
                         <option selected>Type of Event</option>
-                        <option value="1">Tutoring</option>
-                        <option value="2">Looking for tutor</option>
-                        <option value="3">Live Event</option>
+                        <option value="Tutoring">Tutoring</option>
+                        <option value="Looking for tutor">Looking for tutor</option>
+                        <option value="Live Event">Live Event</option>
                     </select>
 
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" rows="5"></textarea>
                     </div>
 
                     <div class="form-check" style="margin-bottom: 10px">
@@ -109,10 +109,11 @@
                         <input class="form-control" type="file" id="formFileMultiple" multiple>
                     </div>
 
-
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-primary" type="button">Submit</button>
-                    </div>
+                    <form id="new-post">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn btn-primary" type="button" onclick="">Submit</button>
+                        </div>
+                    </form>
 
 
                 </div>
@@ -136,6 +137,59 @@
             document.getElementById("sponsorName").value = "";
         }
     }
+</script>
+<script>
+    let basePost={
+        "personId": null,
+        "title": null,
+        "description": null,
+        "sponsoredBy": null,
+        "sponsoredFrom": null,
+        "sponsoredUntil": null,
+        "eventType": null,
+        "location": null
+    }
+    let allPosts = {};
+    function getPosts() {
+        return fetch('./posts')
+            .then(res => res.json())
+            .then(data => {
+                allPosts = data;
+            })
+            .catch(err => {
+                console.error(`Unable to fetch Posts: ${err.status}`);
+                console.error(err);
+            });
+    }
+    function getPersonId(email){
+        email=document.getElementById("email").value;
+    }
+
+    const form = document.getElementById("new-post");
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let newPost = JSON.parse(JSON.stringify(basePost));
+        newPost.title=document.getElementById("card-title").value;
+        newPost.description=document.getElementById("description").value;
+        newPost.eventType=document.getElementById("event").value;
+        if (document.getElementById("sponsorName").value !== "Event Sponsor") {
+            newPost.sponsoredBy = document.getElementById("sponsorName").value;
+        }else{
+            newPost.sponsoredBy = null;
+        }
+
+        let newId;
+        fetch(`./post`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newPost, null, 2)
+        }).then(res => res.json())
+            .then(data => {
+                newId = data.id;
+                return getPosts();
+            })
+    })
 </script>
 
 </body>

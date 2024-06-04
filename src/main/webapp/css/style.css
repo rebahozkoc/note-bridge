@@ -1,10 +1,5 @@
-.navbar-color {
-    background: rgb(18,30,124);
-    background: linear-gradient(185deg, rgba(18,30,124,1) 19%, rgba(10,14,28,1) 98%);
-}
-
 .page-settings {
-    background: url("/images/background2.png");
+    background: #0b032e;
     font-family: Tahoma, serif;
     background-size: cover;
 }
@@ -50,7 +45,8 @@
 }
 
 #createPostForm {
-    background-image: url("../images/background2.png");
+    background: #11114a;
+    margin-top: 15vh;
 }
 
 .category-btn {

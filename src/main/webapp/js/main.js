@@ -159,7 +159,7 @@ function showImageSlider() {
                         <!-- First card -->
                         <div class="carousel-item active">
                             <div class="card first-page-card rounded-5">
-                                <img src="/src/main/webapp/images/main-image-2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
+                                <img src="/src/main/webapp/images/main-image-2.jpg" class="card-img-top image-first-page-card rounded-top-5">
                                 <div class="card-body">
                                     <h5 class="card-title">Are you looking for a new band member?</h5>
                                     <p class="card-text">Get yourself ready to be connected with musicians from all over the world!</p>

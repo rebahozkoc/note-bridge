@@ -4,17 +4,21 @@ const createPostForm = document.querySelector("#createPostForm");
 let cards = {};
 
 showImageSlider();
+fetchPosts();
+displayAllCards();
 
-// fetch('/notebridge/api/posts')
-//     .then(res => res.json())
-//     .then(data => {
-//         cards = data;
-//         displayAllCards();
-//     })
-//     .catch(err => {
-//         console.error(`Unable to fetch cards: ${err.status}`);
-//         console.error(err);
-//     });
+function fetchPosts() {
+    fetch('/notebridge/api/posts')
+        .then(res => res.json())
+        .then(data => {
+            cards = data;
+            displayAllCards();
+        })
+        .catch(err => {
+            console.error(`Unable to fetch cards: ${err.status}`);
+            console.error(err);
+        });
+}
 
 function displayAllCards() {
     posts.innerHTML = `
@@ -68,8 +72,8 @@ function displayCard(card) {
 
 function showCreatePostForm() {
     mainContent.innerHTML = `
-    <form class="container w-50 bg-primary rounded-5 p-4" id="createPostForm" onsubmit="return sendRequestCreatePost()">
-        <h1 class="fw-bold text-white py-2 fs-2">Create a post!</h1>
+    <form class="container main-content w-75 rounded-5 p-5" onsubmit="return sendRequestCreatePost()">
+        <h1 class="fw-bold text-white py-2 fs-2">Create a post</h1>
         <div class="form-floating mb-3">
             <textarea class="form-control" placeholder="Title" id="title" name="title"></textarea>
             <label for="title">Title</label>
@@ -80,12 +84,12 @@ function showCreatePostForm() {
         </div>
         <div class="row">
             <div class="col-6">
-                Type of post
-                <select class="form-select mt-1" aria-label="Default select example" name="type">
-                    <option selected>Other</option>
-                    <option value="1">Music event</option>
-                    <option value="2">Search band members</option>
-                    <option value="3">Sell instrument</option>
+                <h6 class="text-white">Select the type of post you create.</h6>
+                <select class="form-select mt-1" aria-label="Default select example" name="eventType">
+                    <option selected>jam</option>
+                    <option value="1">music event</option>
+                    <option value="2">search band members</option>
+                    <option value="3">sell instrument</option>
                 </select>
             </div>
             <div class="col-6">
@@ -96,10 +100,10 @@ function showCreatePostForm() {
             </div>
         </div>
         <div class="my-2">
-            <label for="formFileMultiple" class="form-label">Add pictures</label>
-            <input class="form-control" type="file" id="formFileMultiple" multiple name="pictures">
+            <label for="formFileMultiple" class="form-label text-white">Add pictures.</label>
+            <input class="form-control" type="file" id="formFileMultiple" multiple> <!-- name="pictures" -->
         </div>
-        <button type="submit" class="btn btn-outline-light mt-3 rounded-4" onclick="hideCreatePostForm()">Create post</button>
+        <button type="submit" class="btn btn-outline-light mt-3 px-3 py-2 rounded-4" onclick="hideCreatePostForm()">Create post</button>
     </form>
     `;
 }
@@ -123,11 +127,14 @@ function showCategories() {
 function sendRequestCreatePost() {
     const form = document.getElementById("createPostForm");
     const data = new FormData(form);
-    const dataObject = {};
+    let dataObject = {};
+    dataObject.personId = 123;
 
     for (const [key, value] of data.entries()) {
         dataObject[key] = value;
     }
+
+    console.log("Sent: " + JSON.stringify(dataObject));
 
     fetch("/notebridge/api/posts", {
         method: "POST",
@@ -136,6 +143,8 @@ function sendRequestCreatePost() {
             "Content-type": "application/json"
         }
     }).then(r => {
+        console.log("Received: " + JSON.stringify(r));
+        fetchPosts();
         displayAllCards();
     });
     return false;
@@ -144,7 +153,7 @@ function sendRequestCreatePost() {
 function showImageSlider() {
     mainContent.innerHTML = `
     <h1 class="fw-bold text-white fs-2 m-5">Capture the feeling of a vibrant music community!</h1>
-                <div id="carousel" class="carousel carousel-dark slide carousel-fade" data-bs-ride="carousel">
+                <div id="carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                     <div class="carousel-inner">
 
                         <!-- First card -->
@@ -191,5 +200,28 @@ function showImageSlider() {
                 </div>
             </div>
         </div>
+    `;
+}
+
+function showContactUsForm() {
+    mainContent.innerHTML = `
+    <div class="container main-content w-75 rounded-5 p-5">
+        <h1 class="fw-bold text-white py-2 fs-2">Contact Us</h1>
+        <form>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label text-white">Email address</label>
+              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlTextarea1" class="form-label text-white">Message</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <a href="" class="btn btn-outline-light mt-1 px-3 py-2 rounded-4">Send message</a>
+        </form>
+        <footer class="footer mt-4">
+          <p class="text-white">&copy; 2024 NoteBridge © All rights reserved.</p>
+          <p class="text-white">Designed by UT students.</p>
+        </footer>
+    </div>
     `;
 }

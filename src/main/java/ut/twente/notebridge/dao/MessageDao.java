@@ -7,6 +7,7 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 import ut.twente.notebridge.Utils;
@@ -88,9 +89,8 @@ public enum MessageDao {
     public MessageHistory create(MessageHistory newMessageHistory) {
         String nextId = "" + (getMaxId() + 1);
 
-        newMessageHistory.setId(nextId);
-        newMessageHistory.setCreateDate(Instant.now().toString());
-        newMessageHistory.setLastUpDate(Instant.now().toString());
+        newMessageHistory.setId(Integer.parseInt(nextId));
+        newMessageHistory.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
         messenger.put(nextId,newMessageHistory);
 
         return newMessageHistory;

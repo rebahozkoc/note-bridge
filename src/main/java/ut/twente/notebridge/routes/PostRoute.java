@@ -6,8 +6,17 @@ import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
 
+import java.util.List;
+
 @Path("/posts")
 public class PostRoute {
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Post> getPosts() {
+		System.out.println("HELOO");
+		return PostDao.INSTANCE.getPosts(5,5,"123");
+	}
 
 	@GET
 	@Path("/{id}")
@@ -31,6 +40,7 @@ public class PostRoute {
 		PostDao.INSTANCE.delete(id);
 	}
 
+	/*
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceCollection<Post> getPosts(
@@ -44,7 +54,7 @@ public class PostRoute {
 		var total = PostDao.INSTANCE.getTotalPosts();
 
 		return new ResourceCollection<>(resources, ps, pn, total);
-	}
+	}*/
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

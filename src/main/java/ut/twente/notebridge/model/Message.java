@@ -1,61 +1,54 @@
 package ut.twente.notebridge.model;
 
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 public class Message extends BaseEntity {
-    private Person person1;
-    private Person person2;
-    private List<String> messagesFromUser1;
-    private List<String> messagesFromUser2;
+    private int idOfMessageHistory;
+    private String user;
+    private LocalDateTime date;
+    private String message;
 
-    public Person getUser1() {
-        return person1;
+    public String getMessage() {
+        return message;
     }
 
-    public void setUser1(Person person1) {
-        this.person1 = person1;
-    }
-
-    public Person getUser2() {
-        return person2;
-    }
-
-    public void setUser2(Person person2) {
-        this.person2 = person2;
-    }
-
-    public List<String> getMessagesFromUser1() {
-        return messagesFromUser1;
-    }
-
-    public void setMessagesFromUser1(List<String> messagesFromUser1) {
-        this.messagesFromUser1 = messagesFromUser1;
-    }
-
-    public List<String> getMessagesFromUser2() {
-        return messagesFromUser2;
-    }
-
-    public void setMessagesFromUser2(List<String> messagesFromUser2) {
-        this.messagesFromUser2 = messagesFromUser2;
-    }
-
-    public List<String> getUserList(String user){
-        if (Objects.equals(user, person1.getUsername())) {
-            return messagesFromUser1;
-        } else if (Objects.equals(user, person2.getUsername())) {
-            return messagesFromUser2;
-        }else {
-            return null;
-        }
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Message() {
-        super();
-        this.person1 = null;
-        this.person2 = null;
-        this.messagesFromUser1 = null;
-        this.messagesFromUser2 = null;
+        idOfMessageHistory=0;
+        user=null;
+        date=null;
+        message=null;
+    }
+
+    public Message(String user, String message) {
+        this.user=user;
+        this.message=message;
+    }
+
+    public int getIdForMessage() {
+        return idOfMessageHistory;
+    }
+
+    public void setIdForMessage(int id) {
+        this.idOfMessageHistory = id;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }

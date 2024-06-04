@@ -7,7 +7,7 @@ public class Post extends BaseEntity {
 	private int personId;
 	private String title;
 	private String description;
-	private int sponsoredBy;
+	private Integer sponsoredBy;
 	private Timestamp sponsoredFrom;
 	private Timestamp sponsoredUntil;
 	private String eventType;
@@ -18,7 +18,7 @@ public class Post extends BaseEntity {
 		this.personId = 0;
 		this.title = null;
 		this.description = null;
-		this.sponsoredBy = 0;
+		this.sponsoredBy = null;
 		this.sponsoredFrom = null;
 		this.sponsoredUntil = null;
 		this.eventType = null;
@@ -49,11 +49,11 @@ public class Post extends BaseEntity {
 		this.description = description;
 	}
 
-	public int getSponsoredBy() {
+	public Integer getSponsoredBy() {
 		return sponsoredBy;
 	}
 
-	public void setSponsoredBy(int sponsoredBy) {
+	public void setSponsoredBy(Integer sponsoredBy) {
 		this.sponsoredBy = sponsoredBy;
 	}
 

@@ -1,5 +1,10 @@
 package ut.twente.notebridge.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,4 +31,24 @@ public class Utils {
 		return list.subList(firstIndex,lastIndex);
 	}
 
+	public static String resultSetToJson(ResultSet resultSet) throws SQLException, JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		int columnCount = resultSet.getMetaData().getColumnCount();
+
+		// Create a JSON object for the current row
+		StringBuilder jsonBuilder = new StringBuilder("{");
+		for (int i = 1; i <= columnCount; i++) {
+			String columnName = resultSet.getMetaData().getColumnName(i);
+			Object columnValue = resultSet.getObject(i);
+			String jsonValue = objectMapper.writeValueAsString(columnValue);
+
+			jsonBuilder.append("\"").append(columnName).append("\":").append(jsonValue);
+			if (i < columnCount) {
+				jsonBuilder.append(",");
+			}
+		}
+		jsonBuilder.append("}");
+
+		return jsonBuilder.toString();
+	}
 }

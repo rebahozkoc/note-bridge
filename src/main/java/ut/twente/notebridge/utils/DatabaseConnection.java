@@ -11,7 +11,7 @@ public enum DatabaseConnection {
 
 	INSTANCE;
 
-	public static Connection connection;
+	private Connection connection;
 
 	public void load(){
 
@@ -41,5 +41,9 @@ public enum DatabaseConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Connection getConnection() {
+		return connection;
 	}
 }

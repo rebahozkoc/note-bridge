@@ -1,17 +1,23 @@
 package ut.twente.notebridge.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
+import net.bytebuddy.asm.Advice;
+import org.postgresql.util.PSQLException;
+import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,27 +34,58 @@ public enum PostDao {
 	private final HashMap<Integer, Post> posts = new HashMap<>();
 
 	public void delete(int id) {
-		if(posts.containsKey(id)) {
-			posts.remove(id);
-		} else {
-			throw new NotFoundException("Post '" + id + "' not found.");
+		// TODO: finish this method
+		String sql = ""; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			statement.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy) {
+	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy)  {
 		List<Post> list = new ArrayList<>(posts.values());
+		System.out.println("GET posts called");
+		try{
+			Statement statement=DatabaseConnection.INSTANCE.getConnection().createStatement();
+			String sql= """
+				SELECT json_agg(post) FROM post
+				""";
 
+			ResultSet rs=statement.executeQuery(sql);
+
+			ObjectMapper mapper = JsonMapper.builder()
+					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+					.build();
+
+			if(rs.next()){
+				// assing rs.getArray("json_agg") to a list of posts
+				System.out.println(rs.getString("json_agg"));
+				list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Post[].class));
+
+			}
+		}catch (SQLException e){
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+
+
+		/*
 		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
 		else if ("lastUpDate".equals(sortBy))
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
-		else
-			throw new NotSupportedException("Sort field not supported");
-
-		return (List<Post>) Utils.pageSlice(list,pageSize,pageNumber);
+		else throw new NotSupportedException("Sort field not supported");
+		*/
+		return list;
 	}
 
 	public Post getPost(int id) {
+
 		var pt = posts.get(id);
 
 		if (pt == null) {
@@ -60,9 +97,7 @@ public enum PostDao {
 
 	public void load() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		File source = existsPosts() ?
-				new File(UPDATED_POSTS) :
-				new File(ORIGINAL_POSTS);
+		File source = existsPosts() ? new File(UPDATED_POSTS) : new File(ORIGINAL_POSTS);
 		Post[] arr = mapper.readValue(source, Post[].class);
 
 		Arrays.stream(arr).forEach(pt -> posts.put(pt.getId(), pt));
@@ -82,31 +117,73 @@ public enum PostDao {
 	}
 
 	public Post create(Post newPost) {
-		int nextId = getMaxId() + 1;
+		String sql = """
+						INSERT INTO Post (createDate,
+						lastUpdate, personId,
+						title, description,
+						sponsoredBy, sponsoredFrom,
+						sponsoredUntil, eventType, location)
+						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+				""";
 
-		newPost.setId(nextId);
-		newPost.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
-		newPost.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		posts.put(nextId,newPost);
+		//Print the post object
+		//System.out.println(ToStringBuilder.reflectionToString(newPost));
 
-		return newPost;
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setTimestamp(1, Timestamp.from(Instant.now()));
+			statement.setTimestamp(2, Timestamp.from(Instant.now()));
+			statement.setInt(3, newPost.getPersonId());
+			statement.setString(4, newPost.getTitle());
+			statement.setString(5, newPost.getDescription());
+			if (newPost.getSponsoredBy() == null) {
+				statement.setNull(6, java.sql.Types.INTEGER);
+			} else {
+				statement.setInt(6, newPost.getSponsoredBy());
+			}
+			statement.setTimestamp(7, newPost.getSponsoredFrom());
+			statement.setTimestamp(8, newPost.getSponsoredUntil());
+			statement.setString(9, newPost.getEventType());
+			statement.setString(10, newPost.getLocation());
+
+			ResultSet resultSet = statement.executeQuery();
+
+			/*
+			need to run this query to get the new post object
+			SELECT row_to_json(post)
+			FROM Post post
+			WHERE id = 8;
+			String json = "";
+
+			if (resultSet.next()) {
+				json = Utils.resultSetToJson(resultSet);
+
+			}
+			System.out.println(json);
+			// map the json to the new post object
+			ObjectMapper mapper = new ObjectMapper();
+			Post updatedPost = mapper.readValue(json, Post.class);
+
+			 */
+
+			return newPost;
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private int getMaxId() {
 		Set<Integer> ids = posts.keySet();
-		return ids.isEmpty() ? 0 : ids.stream()
-				.max(Integer::compareTo)
-				.get();
+		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
 	}
 
 	public Post update(Post updated) {
-		if(!updated.isValid())
-			throw new BadRequestException("Invalid post.");
-		if(posts.get(updated.getId()) == null)
+		if (!updated.isValid()) throw new BadRequestException("Invalid post.");
+		if (posts.get(updated.getId()) == null)
 			throw new NotFoundException("Post id '" + updated.getId() + "' not found.");
 
 		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		posts.put(updated.getId(),updated);
+		posts.put(updated.getId(), updated);
 
 		return updated;
 	}

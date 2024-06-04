@@ -2,6 +2,7 @@ package ut.twente.notebridge.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -75,6 +76,36 @@ public enum PostDao {
 
 	public Post getPost(int id) {
 
+		String sql = "SELECT row_to_json(Post) FROM Post WHERE id=?"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+
+			if(rs.next()){
+				String json=rs.getString("row_to_json");;
+
+				System.out.println(json);
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				Post postFound = mapper.readValue(json,Post.class);
+				System.out.println(rs.getString("row_to_json"));
+				return postFound;
+
+			}else{
+				//no rows returned, post with that id does not exist
+				throw new NotFoundException();
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonMappingException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+		/*
 		var pt = posts.get(id);
 
 		if (pt == null) {
@@ -82,6 +113,8 @@ public enum PostDao {
 		}
 
 		return pt;
+
+		 */
 	}
 
 	public void load() throws IOException {

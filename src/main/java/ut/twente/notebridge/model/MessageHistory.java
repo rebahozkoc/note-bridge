@@ -5,24 +5,24 @@ import java.util.*;
 
 public class MessageHistory extends BaseEntity{
     int id;
-    private User user1;
-    private User user2;
+    private BaseUser user1;
+    private BaseUser user2;
     private List<Message> messagesFromUser1;
     private List<Message> messagesFromUser2;
 
-    public User getUser1() {
+    public BaseUser getUser1() {
         return user1;
     }
 
-    public void setUser1(User user1) {
+    public void setUser1(BaseUser user1) {
         this.user1 = user1;
     }
 
-    public User getUser2() {
+    public BaseUser getUser2() {
         return user2;
     }
 
-    public void setUser2(User user2) {
+    public void setUser2(BaseUser user2) {
         this.user2 = user2;
     }
 

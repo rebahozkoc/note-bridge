@@ -24,7 +24,6 @@ public class PostRoute {
 	public Post getPost(@PathParam("id") int id) {
 
 		return PostDao.INSTANCE.getPost(id);
-
 	}
 
 	@PUT

@@ -1,0 +1,68 @@
+.page-settings {
+    background: #0b032e;
+    font-family: Tahoma, serif;
+    background-size: cover;
+}
+
+.white-block {
+    display: block;
+    font-size: 2.5vh;
+    color: darkslategrey;
+    border: 1px solid grey;
+    background-color: white;
+    padding: 4vh;
+    width: 90%;
+    border-radius: 0;
+}
+
+.black-block {
+    position: absolute;
+    background-color: black;
+    padding: 2.7vh 21vh;
+    border-radius: 0;
+    margin-top: 8.5vh;
+}
+
+.first-page-card {
+    margin: 5vh 17vh 10vh;
+    align-items: center;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 15px 20px;
+    color: rgb(225, 225, 225);
+}
+
+.image-first-page-card {
+    height: 50vh;
+}
+
+.card-btn {
+    border: none;
+    background: none;
+    font-size: 3vh;
+}
+
+.comment {
+    background-image: url("../images/background2.png");
+}
+
+#createPostForm {
+    background: #11114a;
+    margin-top: 15vh;
+}
+
+.category-btn {
+    padding: 25vh 10vh;
+    font-size: 3vh;
+}
+
+.hide {
+    display: none;
+}
+
+#main-content {
+    border: 10px black;
+}
+
+.card {
+    background-color:rgb(17, 24, 39);
+    color: rgb(225, 225, 225);
+}

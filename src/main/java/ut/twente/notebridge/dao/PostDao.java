@@ -76,24 +76,22 @@ public enum PostDao {
 
 	public Post getPost(int id) {
 
-		String sql = "SELECT row_to_json(Post) FROM Post WHERE id=?"; // Assuming delete_post takes one parameter
+		String sql = "SELECT row_to_json(t) post FROM(SELECT * FROM Post WHERE id=?) t"; // Assuming delete_post takes one parameter
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, id);
 			ResultSet rs = statement.executeQuery();
 
-			if(rs.next()){
-				String json=rs.getString("row_to_json");;
+			if (rs.next()) {
+				String json = rs.getString("post");
 
 				System.out.println(json);
 				ObjectMapper mapper = JsonMapper.builder()
 						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 						.build();
-				Post postFound = mapper.readValue(json,Post.class);
-				System.out.println(rs.getString("row_to_json"));
-				return postFound;
+				return mapper.readValue(json, Post.class);
 
-			}else{
+			} else {
 				//no rows returned, post with that id does not exist
 				throw new NotFoundException();
 			}

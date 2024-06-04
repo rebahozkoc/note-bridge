@@ -10,14 +10,14 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
-import ut.twente.notebridge.Utils;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.MessageHistory;
+import ut.twente.notebridge.utils.Utils;
 
 public enum MessageDao {
     INSTANCE;
 
-    private static final String ORIGINAL_MESSAGES = Utils.getAbsolutePathToResources() + "/mock-messages-dataset.json";
+    private static final String ORIGINAL_MESSAGES = Utils.getAbsolutePathToResources() + "/mock-post-dataset.json";
 
     private static final String UPDATED_MESSAGES = Utils.getAbsolutePathToResources() + "/updated-mock-user-dataset.json";
 

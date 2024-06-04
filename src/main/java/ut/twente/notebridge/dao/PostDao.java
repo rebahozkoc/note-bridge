@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.NotSupportedException;
-import net.bytebuddy.asm.Advice;
-import org.postgresql.util.PSQLException;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
@@ -45,34 +42,26 @@ public enum PostDao {
 		}
 	}
 
-	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy)  {
+	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy) {
 		List<Post> list = new ArrayList<>(posts.values());
 		System.out.println("GET posts called");
-		try{
-			Statement statement=DatabaseConnection.INSTANCE.getConnection().createStatement();
-			String sql= """
-				SELECT json_agg(post) FROM post
-				""";
+		try {
+			Statement statement = DatabaseConnection.INSTANCE.getConnection().createStatement();
+			String sql = """
+					SELECT json_agg(post) FROM post
+					""";
 
-			ResultSet rs=statement.executeQuery(sql);
-
+			ResultSet rs = statement.executeQuery(sql);
 			ObjectMapper mapper = JsonMapper.builder()
 					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 					.build();
-
-			if(rs.next()){
-				// assing rs.getArray("json_agg") to a list of posts
-				System.out.println(rs.getString("json_agg"));
+			if (rs.next()) {
 				list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Post[].class));
-
 			}
-		}catch (SQLException e){
+		} catch (SQLException | JsonProcessingException e) {
 			e.printStackTrace();
-		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
-
-
 
 		/*
 		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
@@ -81,7 +70,7 @@ public enum PostDao {
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
 		else throw new NotSupportedException("Sort field not supported");
 		*/
-		return list;
+		return (List<Post>) Utils.pageSlice(list, pageSize, pageNumber);
 	}
 
 	public Post getPost(int id) {
@@ -126,45 +115,55 @@ public enum PostDao {
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 				""";
 
-		//Print the post object
-		//System.out.println(ToStringBuilder.reflectionToString(newPost));
 
-		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			statement.setTimestamp(1, Timestamp.from(Instant.now()));
-			statement.setTimestamp(2, Timestamp.from(Instant.now()));
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+			Timestamp currentTime = Timestamp.from(Instant.now());
+			newPost.setCreateDate(currentTime);
+			newPost.setLastUpdate(currentTime);
+			statement.setTimestamp(1, currentTime);
+			statement.setTimestamp(2, currentTime);
 			statement.setInt(3, newPost.getPersonId());
 			statement.setString(4, newPost.getTitle());
-			statement.setString(5, newPost.getDescription());
+			if (newPost.getDescription() == null) {
+				statement.setNull(5, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(5, newPost.getDescription());
+			}
 			if (newPost.getSponsoredBy() == null) {
 				statement.setNull(6, java.sql.Types.INTEGER);
 			} else {
 				statement.setInt(6, newPost.getSponsoredBy());
 			}
-			statement.setTimestamp(7, newPost.getSponsoredFrom());
-			statement.setTimestamp(8, newPost.getSponsoredUntil());
-			statement.setString(9, newPost.getEventType());
-			statement.setString(10, newPost.getLocation());
-
-			ResultSet resultSet = statement.executeQuery();
-
-			/*
-			need to run this query to get the new post object
-			SELECT row_to_json(post)
-			FROM Post post
-			WHERE id = 8;
-			String json = "";
-
-			if (resultSet.next()) {
-				json = Utils.resultSetToJson(resultSet);
-
+			if (newPost.getSponsoredFrom() == null) {
+				statement.setNull(7, java.sql.Types.TIMESTAMP);
+			} else {
+				statement.setTimestamp(7, newPost.getSponsoredFrom());
 			}
-			System.out.println(json);
-			// map the json to the new post object
-			ObjectMapper mapper = new ObjectMapper();
-			Post updatedPost = mapper.readValue(json, Post.class);
+			if (newPost.getSponsoredUntil() == null) {
+				statement.setNull(8, java.sql.Types.TIMESTAMP);
+			} else {
+				statement.setTimestamp(8, newPost.getSponsoredUntil());
+			}
+			statement.setString(9, newPost.getEventType());
+			if (newPost.getLocation() == null) {
+				statement.setNull(10, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(10, newPost.getLocation());
+			}
 
-			 */
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Creating post failed, no rows affected.");
+			}
 
+			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					newPost.setId(generatedKeys.getInt(1));
+				} else {
+					throw new SQLException("Creating post failed, no ID obtained.");
+				}
+			}
 			return newPost;
 
 		} catch (SQLException e) {

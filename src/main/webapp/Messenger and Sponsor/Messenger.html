@@ -124,9 +124,9 @@
                     </div>
                 </div>
                 <div class="g-0">
-                    <form class="d-flex">
+                    <form id='newMessage' class="d-flex" onsubmit="newPost()">
                         <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: #34A1FD">
-                        <button class="btn btn-outline-dark" type="submit" id="but">Send</button>
+                        <button class="btn btn-outline-dark" type="submit" id="but" onsubmit="clearQuery()">Send</button>
                     </form>
                 </div>
             </div>
@@ -164,25 +164,27 @@
     function turnWhite(x) {
         x.className = "list-group-item d-flex justify-content-between align-items-center"
     }
-    document.querySelector("form").addEventListener("submit",function(event) {
-        const element=document.getElementById("messageBox");
-        const name=document.createElement("div");
-        const message=document.createElement("div");
-        name.className="right";
-        message.className="right";
-        const name_inside=document.createElement("span");
-        name_inside.style.cssText="font: 21px Arial Nova";
-        name_inside.innerText="Contact 1";
-        name.appendChild(name_inside);
-        const message_inside=document.createElement("p");
-        message_inside.className="message";
-        message_inside.innerText=document.getElementById("message").value;
-        message.appendChild(message_inside);
-        element.appendChild(name);
-        element.appendChild(message);
-        event.stopImmediatePropagation();
-    });
 
+    const message=document.getElementById('but')
+    message.addEventListener('click',newPost)
+    function newPost(event) {
+        let message = document.createElement("div");
+        message.className = "right";
+        let message_inside = document.createElement("p");
+        message_inside.className = "message";
+        message_inside.innerText = document.getElementById("message").value;
+        message.appendChild(message_inside);
+        document.getElementById('messageBox').appendChild(message);
+        // document.getElementById('messageBox').preventDefault();
+        event.preventDefault();
+
+    }
+
+    message.addEventListener('click',clearQuery)
+    function clearQuery(event){
+        let textbox=document.getElementById("message");
+        textbox.value='';
+    }
 </script>
 </body>
 </html>

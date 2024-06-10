@@ -30,12 +30,16 @@ public class AuthRoute{
 			session.setAttribute("username", username);
 
 			NewCookie cookie = new NewCookie.Builder("JSESSIONID")
-					.value("sessionIdValue") // Set the value of the cookie
-					.sameSite(NewCookie.SameSite.LAX)
+					.value(session.getId())
+					.path("/notebridge/")
+					.secure(true)
+					.sameSite(NewCookie.SameSite.LAX)// Set the value of the cookie
 					.httpOnly(true) // Optional, adds the HttpOnly attribute
-					.secure(true)   // Optional, adds the Secure attribute
 					.maxAge(3600)   // Optional, sets the max age of the cookie in seconds
 					.build();
+
+			System.out.println(session.getAttribute("username"));
+			System.out.println(session.getId());
 			return Response.ok("Login successful").cookie(cookie).build();
 		} else {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
@@ -47,8 +51,8 @@ public class AuthRoute{
 	@Path("/loggedintest")
 	public Response welcome(@Context HttpServletRequest request) {
 		HttpSession session = request.getSession(false); // Get existing session, do not create new
-
-		if (session != null && session.getAttribute("JSESSIONID") != null) {
+		System.out.println(session.getAttribute("username"));
+		if (session != null && session.getAttribute("username") != null) {
 			String username = (String) session.getAttribute("username");
 			return Response.ok("Welcome, " + username).build();
 		} else {

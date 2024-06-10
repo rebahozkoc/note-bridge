@@ -2,6 +2,8 @@ package ut.twente.notebridge.dao;
 
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Security;
+import ut.twente.notebridge.utils.Utils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,8 +41,7 @@ public enum BaseUserDao {
 			} else {
 				statement.setString(5, newUser.getPhoneNumber());
 			}
-			// TODO hash password
-			statement.setString(6, newUser.getPassword());
+			statement.setString(6, Security.hashPassword(newUser.getPassword()));
 			statement.setString(7, newUser.getEmail());
 
 			int affectedRows = statement.executeUpdate();
@@ -61,4 +62,6 @@ public enum BaseUserDao {
 			throw new RuntimeException(e);
 		}
 	}
+
+
 }

@@ -28,7 +28,13 @@ public class PostRoute {
 	@DELETE
 	@Path("/{id}")
 	public void deletePost(@PathParam("id") int id) {
-		PostDao.INSTANCE.delete(id);
+		try{
+			PostDao.INSTANCE.delete(id);
+
+		} catch (Exception e) {
+			throw new NotFoundException("Post '" + id + "' not found!");
+		}
+
 	}
 
 

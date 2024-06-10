@@ -33,7 +33,10 @@ public enum PostDao {
 
 	public void delete(int id) {
 		// TODO: finish this method
-		String sql = ""; // Assuming delete_post takes one parameter
+		String sql = """
+				DELETE FROM post WHERE id=?
+				
+		"""; // Assuming delete_post takes one parameter
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, id);

@@ -2,7 +2,9 @@ package ut.twente.notebridge.routes;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.SponsorDao;
+import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Sponsor;
 
 @Path("/sponsors")
@@ -10,8 +12,17 @@ public class SponsorRoute {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Sponsor createSponsor(Sponsor person) {
-        return SponsorDao.INSTANCE.create(person);
+    public Sponsor createSponsor(Sponsor sponsor) {
+            System.out.println("PersonRoute.createPerson is called");
+            try {
+                BaseUser baseUser = BaseUserDao.INSTANCE.create(sponsor);
+                sponsor.setBaseUser(baseUser);
+                return SponsorDao.INSTANCE.create(sponsor);
+            } catch (Exception e) {
+                System.out.println("Error while creating sponsor user");
+                e.printStackTrace();
+                throw new BadRequestException("Error while creating sponsor user");
+            }
     }
 
     @GET

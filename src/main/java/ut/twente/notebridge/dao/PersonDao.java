@@ -45,8 +45,7 @@ public enum PersonDao {
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
 		else if ("lastUpDate".equals(sortBy))
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
-		else
-			throw new NotSupportedException("Sort field not supported");
+		else throw new NotSupportedException("Sort field not supported");
 
 		return (List<Person>) Utils.pageSlice(list, pageSize, pageNumber);
 	}
@@ -63,9 +62,7 @@ public enum PersonDao {
 
 	public void load() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		File source = existsUsers() ?
-				new File(UPDATED_USERS) :
-				new File(ORIGINAL_USERS);
+		File source = existsUsers() ? new File(UPDATED_USERS) : new File(ORIGINAL_USERS);
 		Person[] arr = mapper.readValue(source, Person[].class);
 
 		Arrays.stream(arr).forEach(pt -> users.put(pt.getId(), pt));
@@ -85,44 +82,41 @@ public enum PersonDao {
 	}
 
 	public Person create(Person newPerson) {
-			String sql = """
+		String sql = """
 						INSERT INTO Person (id,
 						name, lastname)
 						VALUES (?, ?, ?);
 				""";
 
-			try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-				statement.setInt(1, newPerson.getId());
-				if (newPerson.getName() == null) {
-					statement.setNull(2, java.sql.Types.VARCHAR);
-				} else {
-					statement.setString(2, newPerson.getName());
-				}
-				if (newPerson.getLastname() == null) {
-					statement.setNull(3, java.sql.Types.VARCHAR);
-				} else {
-					statement.setString(3, newPerson.getLastname());
-				}
-
-				statement.executeUpdate();
-
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, newPerson.getId());
+			if (newPerson.getName() == null) {
+				statement.setNull(2, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(2, newPerson.getName());
 			}
+			if (newPerson.getLastname() == null) {
+				statement.setNull(3, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(3, newPerson.getLastname());
+			}
+
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 		return newPerson;
 	}
 
 	private int getMaxId() {
 		Set<Integer> ids = users.keySet();
-		return ids.isEmpty() ? 0 : ids.stream()
-				.max(Integer::compareTo)
-				.get();
+		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
 	}
 
 	public Person update(Person updated) {
-		if (!updated.isValid())
-			throw new BadRequestException("Invalid user.");
+		if (!updated.isValid()) throw new BadRequestException("Invalid user.");
 		if (users.get(updated.getId()) == null)
 			throw new NotFoundException("Person id '" + updated.getId() + "' not found.");
 

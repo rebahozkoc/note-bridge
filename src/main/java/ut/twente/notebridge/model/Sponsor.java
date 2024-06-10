@@ -25,4 +25,15 @@ public class Sponsor extends BaseUser {
 	public void setWebsiteURL(String websiteURL) {
 		this.websiteURL = websiteURL;
 	}
+
+	public void setBaseUser(BaseUser baseUser) {
+		this.setId(baseUser.getId());
+		this.setCreateDate(baseUser.getCreateDate());
+		this.setLastUpdate(baseUser.getLastUpdate());
+		this.setUsername(baseUser.getUsername());
+		this.setPicture(baseUser.getPicture());
+		this.setPhoneNumber(baseUser.getPhoneNumber());
+		this.setPassword(baseUser.getPassword());
+		this.setEmail(baseUser.getEmail());
+	}
 }

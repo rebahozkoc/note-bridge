@@ -7,6 +7,7 @@ import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.PersonDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Person;
+import ut.twente.notebridge.utils.Security;
 
 @Path("/persons")
 public class PersonRoute {
@@ -18,9 +19,16 @@ public class PersonRoute {
     public Person createPerson(Person person) {
         System.out.println("PersonRoute.createPerson is called");
         try {
-            BaseUser baseUser = BaseUserDao.INSTANCE.create(person);
-            person.setBaseUser(baseUser);
-            return PersonDao.INSTANCE.create(person);
+
+            if(Security.checkPasswordValidity(person.getPassword())){
+               throw new BadRequestException("Password is not valid");
+            }else{
+                BaseUser baseUser = BaseUserDao.INSTANCE.create(person);
+                person.setBaseUser(baseUser);
+                return PersonDao.INSTANCE.create(person);
+            }
+
+
         } catch (Exception e) {
             System.out.println("Error while creating user");
             e.printStackTrace();

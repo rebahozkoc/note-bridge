@@ -6,6 +6,7 @@ import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.SponsorDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Sponsor;
+import ut.twente.notebridge.utils.Security;
 
 @Path("/sponsors")
 public class SponsorRoute {
@@ -15,9 +16,16 @@ public class SponsorRoute {
     public Sponsor createSponsor(Sponsor sponsor) {
             System.out.println("PersonRoute.createPerson is called");
             try {
-                BaseUser baseUser = BaseUserDao.INSTANCE.create(sponsor);
-                sponsor.setBaseUser(baseUser);
-                return SponsorDao.INSTANCE.create(sponsor);
+
+                if(Security.checkPasswordValidity(sponsor.getPassword())){
+                   throw new BadRequestException("Password is not valid");
+                }else{
+                    BaseUser baseUser = BaseUserDao.INSTANCE.create(sponsor);
+                    sponsor.setBaseUser(baseUser);
+                    return SponsorDao.INSTANCE.create(sponsor);
+                }
+                
+
             } catch (Exception e) {
                 System.out.println("Error while creating sponsor user");
                 e.printStackTrace();

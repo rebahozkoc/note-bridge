@@ -104,7 +104,7 @@ public enum PersonDao {
 					statement.setString(3, newPerson.getLastname());
 				}
 
-				statement.executeQuery();
+				statement.executeUpdate();
 
 			} catch (SQLException e) {
 				throw new RuntimeException(e);

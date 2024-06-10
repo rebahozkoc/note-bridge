@@ -1,8 +1,11 @@
 package ut.twente.notebridge.routes;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import ut.twente.notebridge.dao.MessageDao;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.MessageHistory;
@@ -12,7 +15,7 @@ import ut.twente.notebridge.model.ResourceCollection;
 public class MessageRoute {
 
     @GET
-    @Path("/{user}")
+    @Path("/messages{user}")
     @Produces(MediaType.APPLICATION_JSON)
     public MessageHistory getMessageHistory(@PathParam("user") String user) {
 
@@ -20,37 +23,49 @@ public class MessageRoute {
 
     }
 
-    @POST
+    @GET
+    @Path("/contacts{user}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public MessageHistory newMessageHistory(MessageHistory message) {
-        return MessageDao.INSTANCE.create(message);
+    public List<String> getContacts(@PathParam("user") String user) {
+        return MessageDao.INSTANCE.getContacts(user);
+
     }
 
     @PUT
-    @Path("/add{id}{message}{time}")
+    @Path("/newhistory{user1}{user2}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void addMessage(@PathParam("id") String user, @PathParam("message") String message, @PathParam("time") String time) {
-        MessageDao.INSTANCE.createNewMessage(user,message);
+    public void newMessageHistory(@PathParam("user1") String user1, @PathParam("user2") String user2) {
+        MessageDao.INSTANCE.create(user1, user2);
+    }
+
+    @PUT
+    @Path("/newmessage{user}{contact}{message}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void addMessage(@PathParam("user") String user, @PathParam("contact") String contact, @PathParam("message") String message) {
+        Message m=new Message();
+        m.setUser(user);
+        m.setMessage(message);
+        MessageDao.INSTANCE.createNewMessage(contact,m);
     }
 
     @DELETE
-    @Path("/{id}")
-    public void deleteMessageHistory(@PathParam("id") String id) {
-        MessageDao.INSTANCE.delete(id);
+    @Path("/deletehistory{id}{user}")
+    public void deleteMessageHistory(@PathParam("id") Integer id, @PathParam("user") Integer user) {
+        MessageDao.INSTANCE.delete(id, user);
     }
 
     @PUT
-    @Path("/delete{id}{message}{time}")
+    @Path("/deletemessage{user}{message}{time}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void deleteMessage(@PathParam("id") String user, @PathParam("message") String message, @PathParam("time") String time) {
+    public void deleteMessage(@PathParam("user") String user, @PathParam("message") String message, @PathParam("time") String time) {
         Message m=new Message();
-        m.setDate(LocalDateTime.parse(time));//probably will need adjusting
+        m.setDate(Timestamp.valueOf(time));//probably will need adjusting
         m.setUser(user);
         m.setMessage(message);
-        MessageDao.INSTANCE.deleteMessage(user,m);
+        MessageDao.INSTANCE.deleteMessage(m);
     }
 
     @GET

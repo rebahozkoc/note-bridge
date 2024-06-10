@@ -1,5 +1,6 @@
 package ut.twente.notebridge.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -72,9 +73,9 @@ public class MessageHistory extends BaseEntity{
         List<Message> sorted=new ArrayList<>();
         for (Message message1:messagesFromUser1){
             for(Message message2:messagesFromUser2){
-                LocalDateTime date1=message1.getDate();
-                LocalDateTime date2=message2.getDate();
-                if (date1.isAfter(date2)){
+                Timestamp date1=message1.getDate();
+                Timestamp date2=message2.getDate();
+                if (date1.after(date2)){
                     sorted.add(message1);
                 }else {
                     sorted.add(message2);

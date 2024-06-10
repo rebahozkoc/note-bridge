@@ -1,17 +1,28 @@
 package ut.twente.notebridge.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.NotSupportedException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.MessageHistory;
+import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 
 public enum MessageDao {
@@ -26,32 +37,121 @@ public enum MessageDao {
 
     public List<Message> getMessages(int pageSize, int pageNumber, String sortBy, String user) {
         List<Message> list = null;
-
-        if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
-           list=messenger.get(user).getMessagesSortedOnTime();
-        else
-            throw new NotSupportedException("Sort field not supported");
-
+        System.out.println("GET messages called");
+        try {
+            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+					SELECT json_agg(privatemessage)
+					FROM notebridge.privatemessage, notebridge.privatemessagehistory
+					WHERE notebridge.privatemessagehistory.user1=? OR notebridge.privatemessagehistory.user2=?;
+					""");
+            ps.setInt(1, Integer.parseInt(user));
+            ps.setInt(2, Integer.parseInt(user));
+            ResultSet rs = ps.executeQuery();
+            ObjectMapper mapper = JsonMapper.builder()
+                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                    .build();
+            if (rs.next()) {
+                list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Message[].class));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+//        List<Message> list = null;
+//
+//        if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
+//           list=messenger.get(user).getMessagesSortedOnTime();
+//        else
+//            throw new NotSupportedException("Sort field not supported");
+//
         return (List<Message>) Utils.pageSlice(list,pageSize,pageNumber);
     }
-    public void delete(String id) {
-        if(messenger.containsKey(id)) {
-            messenger.remove(id);
-        } else {
-            throw new NotFoundException("Message History '" + id + "' not found.");
+
+    public List<String> getContacts(String user){
+        List<String> contacts=null;
+        try {
+            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+     
+					SELECT json_agg(u.username)
+					FROM baseuser u,
+					privatemessagehistory h
+					WHERE (h.user1=? OR h.user2=?) AND (u.id=user1 OR u.id=user2) AND u.id!=?;
+					""");
+            ps.setInt(1, Integer.parseInt(user));
+            ps.setInt(2, Integer.parseInt(user));
+            ps.setInt(3, Integer.parseInt(user));
+            ResultSet rs = ps.executeQuery();
+            ObjectMapper mapper = JsonMapper.builder()
+                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                    .build();
+            if (rs.next()) {
+                contacts = Arrays.asList(mapper.readValue(rs.getString("json_agg"), String[].class));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
+        return contacts;
     }
 
-    public void deleteMessage(String id , Message message){
-        if(messenger.containsKey(id)) {
-            if (messenger.get(id).getUserList(message.getUser()).contains(message)){
-                messenger.get(id).getUserList(message.getUser()).remove(message);
-            }else {
-                throw new NotFoundException("Message '" + message + "' not found.");
-            }
-        } else {
-            throw new NotFoundException("Message History '" + id + "' not found.");
+    public void delete(Integer id, Integer user) {
+        try {
+            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+					UPDATE notebridge.privatemessagehistory
+					SET user1 = CASE WHEN user1 = ? THEN NULL ELSE user1 END,
+					user2 = CASE WHEN user2 = ? THEN NULL ELSE user2 END
+					WHERE id = ? AND (user1 = ? OR user2 = ?);
+					""");
+        ps.setInt(1, user);
+        ps.setInt(2, user);
+        ps.setInt(3, user);
+        ps.setInt(4, id);
+        ps.setInt(5, user);
+        ps.executeQuery();
+        ps.close();
+            PreparedStatement ps1 = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+     
+					DELETE FROM notebridge.privatemessagehistory
+					WHERE user1 IS NULL AND user2 IS NULL;
+					""");
+            ps1.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+//        if(messenger.containsKey(id)) {
+//            messenger.remove(id);
+//        } else {
+//            throw new NotFoundException("Message History '" + id + "' not found.");
+//        }
+    }
+
+    public void deleteMessage(Message message){
+        try {
+            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+					DELETE FROM privatemessage
+					WHERE user_id=? AND content=? AND createddate=?
+					""");
+            ps.setInt(1, Integer.parseInt(message.getUser()));
+            ps.setString(2, message.getMessage());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            String string  = dateFormat.format(message.getDate());
+            ps.setString(3, string);
+            ps.executeQuery();
+            ps.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+//        if(messenger.containsKey(id)) {
+//            if (messenger.get(id).getUserList(message.getUser()).contains(message)){
+//                messenger.get(id).getUserList(message.getUser()).remove(message);
+//            }else {
+//                throw new NotFoundException("Message '" + message + "' not found.");
+//            }
+//        } else {
+//            throw new NotFoundException("Message History '" + id + "' not found.");
+//        }
     }
     public MessageHistory getMessages(String id) {
         var pt = messenger.get(id);
@@ -78,22 +178,48 @@ public enum MessageDao {
         return f.exists() && !f.isDirectory();
     }
 
-    public void createNewMessage(String id, String message) {
-        if (messenger.containsKey(id)){
-            messenger.get(id).getUserList(id).add(new Message(id,message));
-        }else {
-            throw new NotFoundException("Message History '" + id + "' not found.");
+    public void createNewMessage(String contact, Message message) {
+        try {
+            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+				INSERT INTO privatemessage(content,createddate,user_id,messagehistory_id)
+				VALUES(?,current_timestamp,?,get_history_id(?,?));
+					""");
+            ps.setString(1,message.getMessage());
+            ps.setInt(2, Integer.parseInt(message.getUser()));
+            ps.setInt(3, Integer.parseInt(message.getUser()));
+            ps.setInt(4, Integer.parseInt(contact));
+            ps.executeQuery();
+            ps.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+//        if (messenger.containsKey(id)){
+//            messenger.get(id).getUserList(id).add(new Message(id,message));
+//        }else {
+//            throw new NotFoundException("Message History '" + id + "' not found.");
+//        }
     }
 
-    public MessageHistory create(MessageHistory newMessageHistory) {
-        String nextId = "" + (getMaxId() + 1);
-
-        newMessageHistory.setId(Integer.parseInt(nextId));
-        newMessageHistory.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
-        messenger.put(nextId,newMessageHistory);
-
-        return newMessageHistory;
+    public void create(String user1, String user2) {
+        try {
+            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+				INSERT INTO privatemessagehistory(user1,user2)
+				VALUES(?,?);
+					""");
+            ps.setInt(1, Integer.parseInt(user1));
+            ps.setInt(2, Integer.parseInt(user2));
+            ps.executeQuery();
+            ps.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+//        String nextId = "" + (getMaxId() + 1);
+//
+//        newMessageHistory.setId(Integer.parseInt(nextId));
+//        newMessageHistory.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
+//        messenger.put(nextId,newMessageHistory);
+//
+//        return newMessageHistory;
     }
 
     private int getMaxId() {

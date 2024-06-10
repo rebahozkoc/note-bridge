@@ -3,7 +3,9 @@ package ut.twente.notebridge.routes;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.PersonDao;
+import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Person;
 
 @Path("/persons")
@@ -14,7 +16,17 @@ public class PersonRoute {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Person createPerson(Person person) {
-        return PersonDao.INSTANCE.create(person);
+        System.out.println("PersonRoute.createPerson is called");
+        try {
+            BaseUser baseUser = BaseUserDao.INSTANCE.create(person);
+            person.setBaseUser(baseUser);
+            return PersonDao.INSTANCE.create(person);
+        } catch (Exception e) {
+            System.out.println("Error while creating user");
+            e.printStackTrace();
+            throw new BadRequestException("Error while creating user");
+
+        }
     }
 
     //When user wants to view their account

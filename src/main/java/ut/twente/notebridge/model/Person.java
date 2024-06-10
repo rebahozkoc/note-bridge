@@ -26,4 +26,15 @@ public class Person extends BaseUser {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
+
+	public void setBaseUser(BaseUser baseUser) {
+		this.setId(baseUser.getId());
+		this.setCreateDate(baseUser.getCreateDate());
+		this.setLastUpdate(baseUser.getLastUpdate());
+		this.setUsername(baseUser.getUsername());
+		this.setPicture(baseUser.getPicture());
+		this.setPhoneNumber(baseUser.getPhoneNumber());
+		this.setPassword(baseUser.getPassword());
+		this.setEmail(baseUser.getEmail());
+	}
 }

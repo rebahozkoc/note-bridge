@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
+import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Person;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public enum PersonDao {
 	private final HashMap<Integer, Person> users = new HashMap<>();
 
 	public void delete(String id) {
-		if(users.containsKey(id)) {
+		if (users.containsKey(id)) {
 			users.remove(id);
 		} else {
 			throw new NotFoundException("Person '" + id + "' not found.");
@@ -45,7 +48,7 @@ public enum PersonDao {
 		else
 			throw new NotSupportedException("Sort field not supported");
 
-		return (List<Person>) Utils.pageSlice(list,pageSize,pageNumber);
+		return (List<Person>) Utils.pageSlice(list, pageSize, pageNumber);
 	}
 
 	public Person getUser(int id) {
@@ -82,12 +85,30 @@ public enum PersonDao {
 	}
 
 	public Person create(Person newPerson) {
-		int nextId = (getMaxId() + 1);
+			String sql = """
+						INSERT INTO Person (id,
+						name, lastname)
+						VALUES (?, ?, ?);
+				""";
 
-		newPerson.setId(nextId);
-		newPerson.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
-		newPerson.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		users.put(nextId, newPerson);
+			try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+				statement.setInt(1, newPerson.getId());
+				if (newPerson.getName() == null) {
+					statement.setNull(2, java.sql.Types.VARCHAR);
+				} else {
+					statement.setString(2, newPerson.getName());
+				}
+				if (newPerson.getLastname() == null) {
+					statement.setNull(3, java.sql.Types.VARCHAR);
+				} else {
+					statement.setString(3, newPerson.getLastname());
+				}
+
+				statement.executeQuery();
+
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
 
 		return newPerson;
 	}
@@ -100,13 +121,13 @@ public enum PersonDao {
 	}
 
 	public Person update(Person updated) {
-		if(!updated.isValid())
+		if (!updated.isValid())
 			throw new BadRequestException("Invalid user.");
-		if(users.get(updated.getId()) == null)
+		if (users.get(updated.getId()) == null)
 			throw new NotFoundException("Person id '" + updated.getId() + "' not found.");
 
 		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		users.put(updated.getId(),updated);
+		users.put(updated.getId(), updated);
 
 		return updated;
 	}

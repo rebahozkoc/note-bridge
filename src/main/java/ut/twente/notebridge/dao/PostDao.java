@@ -1,11 +1,8 @@
 package ut.twente.notebridge.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
@@ -13,8 +10,6 @@ import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,13 +21,9 @@ import java.util.Set;
 public enum PostDao {
 	INSTANCE;
 
-	private static final String ORIGINAL_POSTS = Utils.getAbsolutePathToResources() + "/mock-post-dataset.json";
-	private static final String UPDATED_POSTS = Utils.getAbsolutePathToResources() + "/updated-mock-post-dataset.json";
-
 	private final HashMap<Integer, Post> posts = new HashMap<>();
 
 	public void delete(int id) {
-		// TODO: finish this method
 		String sql = """
 				DELETE FROM post WHERE id=?
 				
@@ -99,44 +90,9 @@ public enum PostDao {
 				throw new NotFoundException();
 			}
 
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (JsonProcessingException e) {
+		} catch (SQLException | JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
-		/*
-		var pt = posts.get(id);
-
-		if (pt == null) {
-			throw new NotFoundException("Post '" + id + "' not found!");
-		}
-
-		return pt;
-
-		 */
-	}
-
-	public void load() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		File source = existsPosts() ? new File(UPDATED_POSTS) : new File(ORIGINAL_POSTS);
-		Post[] arr = mapper.readValue(source, Post[].class);
-
-		Arrays.stream(arr).forEach(pt -> posts.put(pt.getId(), pt));
-	}
-
-	private boolean existsPosts() {
-		File f = new File(UPDATED_POSTS);
-		return f.exists() && !f.isDirectory();
-	}
-
-	public void save() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		File destination = new File(UPDATED_POSTS);
-
-		writer.writeValue(destination, posts.values());
 	}
 
 	public Post create(Post newPost) {
@@ -206,11 +162,15 @@ public enum PostDao {
 	}
 
 	private int getMaxId() {
+		// TODO delete this method if not used
+
 		Set<Integer> ids = posts.keySet();
 		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
 	}
 
 	public Post update(Post updated) {
+		// TODO delete this method if not used
+
 		if (!updated.isValid()) throw new BadRequestException("Invalid post.");
 		if (posts.get(updated.getId()) == null)
 			throw new NotFoundException("Post id '" + updated.getId() + "' not found.");
@@ -222,6 +182,8 @@ public enum PostDao {
 	}
 
 	public int getTotalPosts() {
+		// TODO delete this method if not used
+
 		return posts.keySet().size();
 	}
 }

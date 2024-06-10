@@ -2,8 +2,6 @@ package ut.twente.notebridge.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,28 +53,7 @@ public class Utils {
 		return jsonBuilder.toString();
 	}
 
-	public static Boolean checkPassword(String password) {
-		if (password.length() < 8 || password.length() > 64) {
-			return false;
-		}
 
-		boolean hasUppercase = false;
-		int digitCount = 0;
-		boolean hasSpecialChar = false;
-		String specialChars = "!@#$%^&*()-_+=";
-
-		for (char c : password.toCharArray()) {
-			if (Character.isUpperCase(c)) {
-				hasUppercase = true;
-			} else if (Character.isDigit(c)) {
-				digitCount++;
-			} else if (specialChars.indexOf(c) >= 0) {
-				hasSpecialChar = true;
-			}
-		}
-
-		return hasUppercase && digitCount >= 2 && hasSpecialChar;
-	}
 
 
 }

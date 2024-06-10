@@ -12,6 +12,29 @@ public class Security {
     private static final int MEMORY = 65536; // 64 MB
     private static final int PARALLELISM = 1;
 
+    public static Boolean checkPasswordValidity(String password) {
+        if (password.length() < 8 || password.length() > 64) {
+            return false;
+        }
+
+        boolean hasUppercase = false;
+        int digitCount = 0;
+        boolean hasSpecialChar = false;
+        String specialChars = "!@#$%^&*()-_+=.";
+
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUppercase = true;
+            } else if (Character.isDigit(c)) {
+                digitCount++;
+            } else if (specialChars.indexOf(c) >= 0) {
+                hasSpecialChar = true;
+            }
+        }
+
+        return hasUppercase && digitCount >= 2 && hasSpecialChar;
+    }
+
     public static String hashPassword(String password) {
         Argon2 argon2 = Argon2Factory.create();
 
@@ -23,7 +46,7 @@ public class Security {
             argon2.wipeArray(password.toCharArray()); // Clear the password from memory
         }
     }
-    public static boolean verifyPassword(String password, String hash) {
+    public static boolean verifyHashedPassword(String password, String hash) {
         Argon2 argon2 = Argon2Factory.create();
 
         try {
@@ -46,7 +69,7 @@ public class Security {
             if (rs.next()) {
                 System.out.println("User with the email exists, checking the password...");
                 String hashedPassword = rs.getString("password");
-                if (verifyPassword(password, hashedPassword)){
+                if (verifyHashedPassword(password, hashedPassword)){
                     System.out.println("User credentials are valid");
                     return true;
                 }

@@ -46,18 +46,18 @@ public class Security {
 		}
 	}
 
-	public static boolean verifyHashedPassword(String password, String hash) {
+	public static boolean verifyHashedPassword(char[] password, String hash) {
 		Argon2 argon2 = Argon2Factory.create();
 
 		try {
 			// Verify the password against the hash
-			return argon2.verify(hash, password.toCharArray());
+			return argon2.verify(hash, password);
 		} finally {
-			argon2.wipeArray(password.toCharArray()); // Clear the password from memory
+			argon2.wipeArray(password); // Clear the password from memory
 		}
 	}
 
-	public static Boolean checkCredentials(String email, String password) {
+	public static Boolean checkCredentials(String email, char[] password) {
 		String sql = """
 						SELECT password FROM BaseUser
 				  					WHERE email=?;

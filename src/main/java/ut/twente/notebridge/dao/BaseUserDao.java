@@ -1,5 +1,10 @@
 package ut.twente.notebridge.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import jakarta.ws.rs.NotFoundException;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Security;
@@ -64,5 +69,45 @@ public enum BaseUserDao {
 		}
 	}
 
+	public BaseUser getUserByEmail(String email) {
 
+		String sql = "SELECT row_to_json(t) baseuser FROM(SELECT * FROM BaseUser WHERE email=?) t"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setString(1, email);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				String json = rs.getString("baseuser");
+
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				return mapper.readValue(json, BaseUser.class);
+
+			} else {
+				//no rows returned, post with that id does not exist
+				throw new NotFoundException();
+			}
+
+		} catch (SQLException | JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Boolean isPerson(int id){
+		String sql = """
+					SELECT EXISTS(SELECT id FROM Person WHERE id=?);
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return rs.getBoolean(1);
+			}
+			return false;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -79,7 +79,6 @@ public enum PostDao {
 			if (rs.next()) {
 				String json = rs.getString("post");
 
-				System.out.println(json);
 				ObjectMapper mapper = JsonMapper.builder()
 						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 						.build();

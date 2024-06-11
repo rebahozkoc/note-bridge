@@ -72,11 +72,12 @@ public class Security {
 				if (verifyHashedPassword(password, hashedPassword)) {
 					System.out.println("User credentials are valid");
 					return true;
+				}else{
+					System.out.println("User with the email exists, but password is incorrect.");
 				}
-				System.out.println("User with the email exists, but password is incorrect.");
-
+			}else{
+				System.out.println("User with the email does not exist.");
 			}
-			System.out.println("User with the email does not exist.");
 			return false;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

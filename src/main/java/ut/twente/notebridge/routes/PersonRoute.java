@@ -59,7 +59,4 @@ public class PersonRoute {
     public void deletePerson(@PathParam("id") String id) {
         PersonDao.INSTANCE.delete(id);
     }
-
-
-
 }

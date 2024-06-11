@@ -1,11 +1,12 @@
 package ut.twente.notebridge.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Message extends BaseEntity {
     private int idOfMessageHistory;
     private String user;
-    private LocalDateTime date;
+    private Timestamp date;
     private String message;
 
     public String getMessage() {
@@ -44,11 +45,11 @@ public class Message extends BaseEntity {
         this.user = user;
     }
 
-    public LocalDateTime getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 }

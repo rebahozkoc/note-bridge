@@ -10,6 +10,7 @@ import java.util.Objects;
 
 public class Utils {
 
+
 	public static String getAbsolutePathToResources() {
 		return Objects.requireNonNull(Utils.class.getClassLoader().getResource("")).getPath();
 	}
@@ -51,4 +52,8 @@ public class Utils {
 
 		return jsonBuilder.toString();
 	}
+
+
+
+
 }

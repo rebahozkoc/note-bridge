@@ -37,6 +37,7 @@ public enum DatabaseConnection {
 		}
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			connection.setAutoCommit(true);
 			System.out.println("Database connection established");
 		} catch (SQLException e) {
 			e.printStackTrace();

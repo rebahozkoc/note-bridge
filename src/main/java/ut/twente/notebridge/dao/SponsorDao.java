@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
+import ut.twente.notebridge.model.Sponsor;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
-import ut.twente.notebridge.model.Person;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,30 +16,25 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public enum PersonDao {
+public enum SponsorDao {
 	INSTANCE;
+	private static final String ORIGINAL_SPONSORS = Utils.getAbsolutePathToResources() + "/mock-sponsor-dataset.json";
+	private static final String UPDATED_SPONSORS = Utils.getAbsolutePathToResources() + "/updated-mock-sponsor-dataset.json";
 
-	private static final String ORIGINAL_USERS = Utils.getAbsolutePathToResources() + "/mock-user-dataset.json";
-	private static final String UPDATED_USERS = Utils.getAbsolutePathToResources() + "/updated-mock-user-dataset.json";
-
-	private final HashMap<Integer, Person> users = new HashMap<>();
+	private final HashMap<Integer, Sponsor> sponsors = new HashMap<>();
 
 	public void delete(String id) {
-		if (users.containsKey(id)) {
-			users.remove(id);
+		if (sponsors.containsKey(id)) {
+			sponsors.remove(id);
 		} else {
 			throw new NotFoundException("Person '" + id + "' not found.");
 		}
 	}
 
-	public List<Person> getUsers(int pageSize, int pageNumber, String sortBy) {
-		List<Person> list = new ArrayList<>(users.values());
+	public List<Sponsor> getUsers(int pageSize, int pageNumber, String sortBy) {
+		List<Sponsor> list = new ArrayList<>(sponsors.values());
 
 		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
@@ -47,11 +42,11 @@ public enum PersonDao {
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
 		else throw new NotSupportedException("Sort field not supported");
 
-		return (List<Person>) Utils.pageSlice(list, pageSize, pageNumber);
+		return (List<Sponsor>) Utils.pageSlice(list, pageSize, pageNumber);
 	}
 
-	public Person getUser(int id) {
-		var pt = users.get(id);
+	public Sponsor getUser(int id) {
+		var pt = sponsors.get(id);
 
 		if (pt == null) {
 			throw new NotFoundException("Person '" + id + "' not found!");
@@ -62,43 +57,43 @@ public enum PersonDao {
 
 	public void load() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		File source = existsUsers() ? new File(UPDATED_USERS) : new File(ORIGINAL_USERS);
-		Person[] arr = mapper.readValue(source, Person[].class);
+		File source = existsUsers() ? new File(UPDATED_SPONSORS) : new File(ORIGINAL_SPONSORS);
+		Sponsor[] arr = mapper.readValue(source, Sponsor[].class);
 
-		Arrays.stream(arr).forEach(pt -> users.put(pt.getId(), pt));
+		Arrays.stream(arr).forEach(pt -> sponsors.put(pt.getId(), pt));
 	}
 
 	private boolean existsUsers() {
-		File f = new File(UPDATED_USERS);
+		File f = new File(UPDATED_SPONSORS);
 		return f.exists() && !f.isDirectory();
 	}
 
 	public void save() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		File destination = new File(UPDATED_USERS);
+		File destination = new File(UPDATED_SPONSORS);
 
-		writer.writeValue(destination, users.values());
+		writer.writeValue(destination, sponsors.values());
 	}
 
-	public Person create(Person newPerson) {
+	public Sponsor create(Sponsor newSponsor) {
 		String sql = """
-						INSERT INTO Person (id,
-						name, lastname)
+						INSERT INTO Sponsor (id,
+						companyname, websiteurl)
 						VALUES (?, ?, ?);
 				""";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			statement.setInt(1, newPerson.getId());
-			if (newPerson.getName() == null) {
+			statement.setInt(1, newSponsor.getId());
+			if (newSponsor.getCompanyName() == null) {
 				statement.setNull(2, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(2, newPerson.getName());
+				statement.setString(2, newSponsor.getCompanyName());
 			}
-			if (newPerson.getLastname() == null) {
+			if (newSponsor.getWebsiteURL() == null) {
 				statement.setNull(3, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(3, newPerson.getLastname());
+				statement.setString(3, newSponsor.getWebsiteURL());
 			}
 
 			statement.executeUpdate();
@@ -107,26 +102,26 @@ public enum PersonDao {
 			throw new RuntimeException(e);
 		}
 
-		return newPerson;
+		return newSponsor;
 	}
 
 	private int getMaxId() {
-		Set<Integer> ids = users.keySet();
+		Set<Integer> ids = sponsors.keySet();
 		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
 	}
 
-	public Person update(Person updated) {
+	public Sponsor update(Sponsor updated) {
 		if (!updated.isValid()) throw new BadRequestException("Invalid user.");
-		if (users.get(updated.getId()) == null)
+		if (sponsors.get(updated.getId()) == null)
 			throw new NotFoundException("Person id '" + updated.getId() + "' not found.");
 
 		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		users.put(updated.getId(), updated);
+		sponsors.put(updated.getId(), updated);
 
 		return updated;
 	}
 
 	public int getTotalUsers() {
-		return users.keySet().size();
+		return sponsors.keySet().size();
 	}
 }

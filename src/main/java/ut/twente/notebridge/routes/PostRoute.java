@@ -21,7 +21,7 @@ public class PostRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post addPost(@PathParam("id") String id, Post post) {
+	public Post updatePost(@PathParam("id") String id, Post post) {
 		return PostDao.INSTANCE.update(post);
 	}
 

@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.MessageHistory;
 import ut.twente.notebridge.utils.DatabaseConnection;
@@ -58,6 +59,7 @@ public enum MessageDao {
         } catch (SQLException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        return (List<Message>) Utils.pageSlice(list,pageSize,pageNumber);
 //        List<Message> list = null;
 //
 //        if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
@@ -65,15 +67,14 @@ public enum MessageDao {
 //        else
 //            throw new NotSupportedException("Sort field not supported");
 //
-        return (List<Message>) Utils.pageSlice(list,pageSize,pageNumber);
     }
 
-    public List<String> getContacts(String user){
-        List<String> contacts=null;
+    public List<BaseUser> getContacts(int pageSize, int pageNumber, String sortBy,String user){
+        List<BaseUser> contacts=null;
         try {
             PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
      
-					SELECT json_agg(u.username)
+					SELECT json_agg(u)
 					FROM baseuser u,
 					privatemessagehistory h
 					WHERE (h.user1=? OR h.user2=?) AND (u.id=user1 OR u.id=user2) AND u.id!=?;
@@ -86,14 +87,13 @@ public enum MessageDao {
                     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
                     .build();
             if (rs.next()) {
-                contacts = Arrays.asList(mapper.readValue(rs.getString("json_agg"), String[].class));
+                contacts = Arrays.asList(mapper.readValue(rs.getString("json_agg"), BaseUser[].class));
             }
-            ps.close();
-            rs.close();
+
         } catch (SQLException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return contacts;
+        return (List<BaseUser>) Utils.pageSlice(contacts,pageSize,pageNumber);
     }
 
     public void delete(Integer id, Integer user) {
@@ -153,14 +153,37 @@ public enum MessageDao {
 //            throw new NotFoundException("Message History '" + id + "' not found.");
 //        }
     }
-    public MessageHistory getMessages(String id) {
-        var pt = messenger.get(id);
-
-        if (pt == null) {
-            throw new NotFoundException("Message History '" + id + "' not found!");
+    public List<Message> getMessages(String user) {
+        List<Message> list = null;
+        System.out.println("GET messages called");
+        try {
+            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
+					SELECT json_agg(privatemessage)
+					FROM notebridge.privatemessage, notebridge.privatemessagehistory
+					WHERE notebridge.privatemessagehistory.user1=? OR notebridge.privatemessagehistory.user2=?;
+					""");
+            ps.setInt(1, Integer.parseInt(user));
+            ps.setInt(2, Integer.parseInt(user));
+            ResultSet rs = ps.executeQuery();
+            ObjectMapper mapper = JsonMapper.builder()
+                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                    .build();
+            if (rs.next()) {
+                list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Message[].class));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
-
-        return pt;
+        return list;
+//        var pt = messenger.get(id);
+//
+//        if (pt == null) {
+//            throw new NotFoundException("Message History '" + id + "' not found!");
+//        }
+//
+//        return pt;
     }
 
     public void load() throws IOException {

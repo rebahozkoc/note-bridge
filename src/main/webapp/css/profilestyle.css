@@ -5,7 +5,7 @@
 }
 
 .profile-header {
-    background-image: url('images/picture-2.jpg');
+    background-image: url('../assets/images/picture-2.jpg');
     background-size: cover;
     background-position: center;
     padding: 50px 0;

@@ -1,7 +1,6 @@
 package ut.twente.notebridge.routes;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
@@ -90,7 +89,7 @@ public class AuthRoute{
 			return Response.ok().entity(responseMap).build();
 
 		} else {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Please log in").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("not-logged-in").build();
 		}
 	}
 }

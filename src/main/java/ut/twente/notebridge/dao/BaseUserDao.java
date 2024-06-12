@@ -95,6 +95,32 @@ public enum BaseUserDao {
 		}
 	}
 
+	public BaseUser getUser(int id) {
+
+		String sql = "SELECT row_to_json(t) baseuser FROM(SELECT * FROM BaseUser WHERE id=?) t"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				String json = rs.getString("baseuser");
+
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				return mapper.readValue(json, BaseUser.class);
+
+			} else {
+				//no rows returned, post with that id does not exist
+				throw new NotFoundException();
+			}
+
+		} catch (SQLException | JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public Boolean isPerson(int id){
 		String sql = """
 					SELECT EXISTS(SELECT id FROM Person WHERE id=?);
@@ -106,6 +132,43 @@ public enum BaseUserDao {
 				return rs.getBoolean(1);
 			}
 			return false;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public BaseUser update(BaseUser user) {
+		String sql = """
+						UPDATE BaseUser
+						SET lastUpdate = ?, username = ?, picture = ?, phoneNumber = ?, email = ?
+						WHERE id = ?;
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			Timestamp currentTime = Timestamp.from(Instant.now());
+			user.setLastUpdate(currentTime);
+			statement.setTimestamp(1, currentTime);
+			statement.setString(2, user.getUsername());
+			if (user.getPicture() == null) {
+				statement.setNull(3, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(3, user.getPicture());
+			}
+			if (user.getPhoneNumber() == null) {
+				statement.setNull(4, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(4, user.getPhoneNumber());
+			}
+			statement.setString(5, user.getEmail());
+			statement.setInt(6, user.getId());
+
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Updating user failed, no rows affected.");
+			}
+
+			return user;
+
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

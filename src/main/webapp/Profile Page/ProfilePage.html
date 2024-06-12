@@ -100,24 +100,29 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="editProfileModalLabel">Edit Profile</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="name surname">
-                            <label for="floatingInput">Name Surname</label>
+                        <img src="../Profile Page/images/profile icon.png" alt="Profile Picture" class="profile-picture rounded-circle mb-3">
+                        <div class="form-floating mb-3 text-center">
+                            <input type="file" class="form-control" id="profilePictureInput" placeholder="Upload Photo">
+                            <label for="profilePictureInput">Update Profile Picture</label>
+                        </div>
+                        <div class="form-floating mb-3 text-center">
+                            <input type="file" class="form-control" id="headerPictureInput" placeholder="Upload Header Photo">
+                            <label for="headerPictureInput">Update Header Image</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="floatingInput2" placeholder="Email">
-                            <label for="floatingInput2">Email address</label>
+                            <input type="text" class="form-control" id="nameInput" placeholder="Name Surname">
+                            <label for="nameInput">Name Surname</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput3" placeholder="Address">
-                            <label for="floatingInput3">Address</label>
+                            <input type="email" class="form-control" id="emailInput" placeholder="Email">
+                            <label for="emailInput">Email address</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="file" class="form-control" id="floatingInput4" placeholder="Upload Photo">
-                            <label for="floatingInput4">Update Profile Picture</label>
+                            <input type="text" class="form-control" id="addressInput" placeholder="Address">
+                            <label for="addressInput">Address</label>
                         </div>
                     </div>
                     <div class="modal-footer">

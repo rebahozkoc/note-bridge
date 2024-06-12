@@ -11,6 +11,9 @@
     padding: 50px 0;
     text-align: center;
     color: #000;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    overflow: hidden;
 }
 
 .profile-picture {
@@ -18,8 +21,10 @@
     height: 125px;
     border-radius: 50%;
     object-fit: cover;
-    margin-top: -30px;
+    margin-top: 10px;
     background-color: black;
+    margin-bottom: 20px;
+    margin-left: 165px;
 }
 
 .profile-details {
@@ -40,14 +45,22 @@
     margin-bottom: 20px;
 }
 
+.btn-close-white {
+    filter: invert(1);
+}
+
 .btn-primary {
     background-color: #6332c5;
     border: none;
 }
 
 .btn-save {
-    background-color: #6332c5;
+    background-color: #0b032e;
     color: white;
+}
+
+.form-floating {
+    margin-bottom: 1rem;
 }
 
 .calendar-header {
@@ -55,9 +68,17 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
+    position: relative;
+}
+
+.calendar-header h4{
+    flex: 1;
+    text-align: center;
 }
 
 .calendar-current-date {
+    position: absolute;
+    right: 20px;
     font-weight: 500;
     font-size: 1.25rem;
     color: #fff;
@@ -169,7 +190,7 @@
     border: 2px solid #ddd;
     border-radius: 15px;
     color: #fff;
-    background-color: rgba(17, 24, 39, 0.8); /* Match background color */
+    background-color: rgba(17, 24, 39, 0.8);
 }
 
 .schedule-date {
@@ -184,14 +205,12 @@
     margin: 5px 0;
 }
 
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-}
 
 .calendar-navigation {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
 }
 

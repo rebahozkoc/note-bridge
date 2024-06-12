@@ -17,12 +17,6 @@ function showRegisterUserForm() {
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="mb-3">
-                        <label for="profilePicture" class="form-label text-white">Profile picture</label>
-                        <input class="form-control form-control-sm" type="file" id="profilePicture" name="picture">
-                    </div>
-                </div>
-                <div class="col-6">
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="phoneNumber" id="phoneNumber" name="phoneNumber"></textarea>
                         <label for="phoneNumber">Phone number</label>

@@ -2,7 +2,6 @@
     border: none;
     box-shadow: none;
     background-color: transparent;
-    color: #fff;
 }
 
 .profile-header {
@@ -11,22 +10,33 @@
     background-position: center;
     padding: 50px 0;
     text-align: center;
-    color: #fff;
+    color: #000;
 }
 
 .profile-picture {
-    border: 3px solid #fff;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: -30px;
+    background-color: black;
 }
 
 .profile-details {
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: none;
-    /*background-color: rgba(17, 24, 39, 0.8);  Match background color with calendar boxes */
+    background-color: rgba(17, 24, 39, 0.8);
     color: #fff;
 }
 
-.profile-details .section {
+.profile-details h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #ccc; /* Line under each title */
+    padding-bottom: 10px;
+}
+
+.profile-details p, .profile-details ul {
     margin-bottom: 20px;
 }
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
@@ -93,6 +94,37 @@ public enum PostDao {
 			throw new RuntimeException(e);
 		}
 	}
+	public CommentDtoList getComments(int id) {
+		String sql= """
+				SELECT jsonb_build_object(
+				           'comments', jsonb_agg(
+				                          jsonb_build_object(
+				                              'personId', b.id, 'username', b.username, 'picture', b.picture,
+				                              'content', c.content, 'createDate', c.createdate
+				                          ) ORDER BY c.createdate DESC)
+				       )
+				FROM BaseUser b, Comment c
+				WHERE b.id = c.personid AND c.postid =?
+				GROUP BY c.postid;	
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				String json = rs.getString("jsonb_build_object");
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				return mapper.readValue(json, CommentDtoList.class);
+			} else {
+				throw new NotFoundException();
+			}
+		} catch (SQLException | JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 	public Post create(Post newPost) {
 		String sql = """

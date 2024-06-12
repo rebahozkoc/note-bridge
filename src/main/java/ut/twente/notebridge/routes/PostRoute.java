@@ -3,6 +3,7 @@ package ut.twente.notebridge.routes;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import ut.twente.notebridge.dao.PostDao;
+import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
 
@@ -15,6 +16,13 @@ public class PostRoute {
 	public Post getPost(@PathParam("id") int id) {
 
 		return PostDao.INSTANCE.getPost(id);
+	}
+
+	@GET
+	@Path("/{id}/comments")
+	@Produces(MediaType.APPLICATION_JSON)
+	public CommentDtoList getComments(@PathParam("id") int id) {
+		return PostDao.INSTANCE.getComments(id);
 	}
 
 	@PUT

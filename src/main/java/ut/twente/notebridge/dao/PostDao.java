@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import ut.twente.notebridge.dto.CommentDtoList;
+import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
@@ -125,6 +126,23 @@ public enum PostDao {
 		}
 	}
 
+	public Like beingLiked (Like like){
+		String sql = """
+				INSERT INTO personlikespost (personid, postid) VALUES (?, ?)
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, like.getPersonId());
+			statement.setInt(2, like.getPostId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 1) {
+				return like;
+			} else {
+				throw new BadRequestException("Like failed");
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public Post create(Post newPost) {
 		String sql = """

@@ -1,9 +1,9 @@
 const mainContent = document.querySelector("#main-content");
-let posts = document.querySelector("#posts");
 const createPostForm = document.querySelector("#createPostForm");
+let posts = document.querySelector("#posts");
 let cards = {};
 
-showImageSlider();
+console.log("HELLO");
 fetchPosts();
 displayAllCards();
 
@@ -12,6 +12,7 @@ function fetchPosts() {
         .then(res => res.json())
         .then(data => {
             cards = data;
+            console.log(cards.data)
             displayAllCards();
         })
         .catch(err => {
@@ -22,15 +23,15 @@ function fetchPosts() {
 
 function displayAllCards() {
     posts.innerHTML = `
-        <h1 class="fw-bold text-primary-emphasis fs-2 my-5">Browse posts!</h1>
+        <h1 class="fw-bold text-white fs-2 my-5">Browse posts</h1>
         ${cards.data.map(post => `${displayCard(post)}`).join("\n")}
     `;
 }
 
 function displayCard(card) {
     return `
-    <div class="m-3">
-            <div class="card">
+    <div class="m-5">
+            <div class="card card-background">
                 <div class="row g-0">
                     <div class="col-md-7">
                         <div class="card-body">
@@ -43,20 +44,20 @@ function displayCard(card) {
                     </div>
                 </div>
             </div>
-            <div class="mt-2 bg-white rounded-3 py-1 px-1">
+            <div class="mt-2 card-background rounded-3 py-1 px-1">
                 <button class="card-btn">&#128077;</button>
-                ${card.title}
+                143
                 <button class="card-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false" aria-controls="collapse">
                     &#128172;
                 </button>
-                ${card.title}
+                34
             </div>
             <div class="collapse mt-2" id="collapse">
                 <div class="card card-body">
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="Description" id="add-comment" style="height: 11vh"></textarea>
                         <label for="add-comment">Add a comment</label>
-                        <button type="submit" class="btn btn-primary mt-3 rounded-4">Send</button>
+                        <button type="submit" class="btn btn-outline-light rounded-4 py-2 my-2">Send</button>
                     </div>
                     <div class="comment rounded-3 mb-2 p-2">
                         <span>User 1</span> said:<br>Comment 1
@@ -107,6 +108,7 @@ function showCreatePostForm() {
     </form>
     `;
 }
+
 function hideCreatePostForm() {
     createPostForm.style.display = "none";
 }
@@ -134,8 +136,6 @@ function sendRequestCreatePost() {
         dataObject[key] = value;
     }
 
-    console.log("Sent: " + JSON.stringify(dataObject));
-
     fetch("/notebridge/api/posts", {
         method: "POST",
         body: JSON.stringify(dataObject),
@@ -143,56 +143,11 @@ function sendRequestCreatePost() {
             "Content-type": "application/json"
         }
     }).then(r => {
-        console.log("Received: " + JSON.stringify(r));
+        console.log(r);
         fetchPosts();
         displayAllCards();
     });
     return false;
-}
-
-function showImageSlider() {
-    mainContent.innerHTML = `
-    <h1 class="fw-bold text-white fs-2 m-5">Capture the feeling of a vibrant music community!</h1>
-                <div id="carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-
-                        <!-- First card -->
-                        <div class="carousel-item active">
-                            <div class="card first-page-card rounded-5">
-                                <img src="/src/main/webapp/images/main-image-2.jpg" class="card-img-top image-first-page-card rounded-top-5">
-                                <div class="card-body">
-                                    <h5 class="card-title">Are you looking for a new band member?</h5>
-                                    <p class="card-text">Get yourself ready to be connected with musicians from all over the world!</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Second card -->
-                        <div class="carousel-item">
-                            <div class="card first-page-card rounded-5">
-                                <img src="/src/main/webapp/images/main-image-1.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Discover multiple musical events</h5>
-                                    <p class="card-text">Connect with other musicians to have jam sessions together!</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Third card -->
-                        <div class="carousel-item">
-                            <div class="card first-page-card rounded-5">
-                                <img src="/src/main/webapp/images/main-image-3.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Sell or buy instruments</h5>
-                                    <p class="card-text">Are you interested to buy an instrument or do you want to sell one? Check out the posts out!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
 }
 
 function showContactUsForm() {
@@ -216,4 +171,8 @@ function showContactUsForm() {
         </footer>
     </div>
     `;
+}
+
+function showPosts() {
+    posts.style.display = "block";
 }

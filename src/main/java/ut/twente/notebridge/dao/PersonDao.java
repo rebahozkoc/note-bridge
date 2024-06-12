@@ -1,32 +1,24 @@
 package ut.twente.notebridge.dao;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import jakarta.ws.rs.BadRequestException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Person;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public enum PersonDao {
 	INSTANCE;
-
-	private static final String ORIGINAL_USERS = Utils.getAbsolutePathToResources() + "/mock-user-dataset.json";
-	private static final String UPDATED_USERS = Utils.getAbsolutePathToResources() + "/updated-mock-user-dataset.json";
 
 	private final HashMap<Integer, Person> users = new HashMap<>();
 
@@ -51,34 +43,30 @@ public enum PersonDao {
 	}
 
 	public Person getUser(int id) {
-		var pt = users.get(id);
+		String sql = "SELECT row_to_json(t) person FROM(SELECT * FROM person JOIN baseUser ON person.id = baseUser.id WHERE person.id=?) t"; // Assuming delete_post takes one parameter
 
-		if (pt == null) {
-			throw new NotFoundException("Person '" + id + "' not found!");
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				String json = rs.getString("person");
+
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				Person person = mapper.readValue(json, Person.class);
+				person.setPassword("hidden");
+				return person;
+
+			} else {
+				//no rows returned, post with that id does not exist
+				throw new NotFoundException();
+			}
+
+		} catch (SQLException | JsonProcessingException e) {
+			throw new RuntimeException(e);
 		}
-
-		return pt;
-	}
-
-	public void load() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		File source = existsUsers() ? new File(UPDATED_USERS) : new File(ORIGINAL_USERS);
-		Person[] arr = mapper.readValue(source, Person[].class);
-
-		Arrays.stream(arr).forEach(pt -> users.put(pt.getId(), pt));
-	}
-
-	private boolean existsUsers() {
-		File f = new File(UPDATED_USERS);
-		return f.exists() && !f.isDirectory();
-	}
-
-	public void save() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		File destination = new File(UPDATED_USERS);
-
-		writer.writeValue(destination, users.values());
 	}
 
 	public Person create(Person newPerson) {
@@ -110,23 +98,24 @@ public enum PersonDao {
 		return newPerson;
 	}
 
-	private int getMaxId() {
-		Set<Integer> ids = users.keySet();
-		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
-	}
-
 	public Person update(Person updated) {
-		if (!updated.isValid()) throw new BadRequestException("Invalid user.");
-		if (users.get(updated.getId()) == null)
-			throw new NotFoundException("Person id '" + updated.getId() + "' not found.");
-
-		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		users.put(updated.getId(), updated);
+		// TODO: add authentication layer
+		BaseUserDao.INSTANCE.update(updated);
+		String sql = """
+						UPDATE Person
+						SET name = ?,
+						lastname = ?
+						WHERE id = ?;
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setString(1, updated.getName());
+			statement.setString(2, updated.getLastname());
+			statement.setInt(3, updated.getId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 		return updated;
-	}
-
-	public int getTotalUsers() {
-		return users.keySet().size();
 	}
 }

@@ -3,7 +3,6 @@ const createPostForm = document.querySelector("#createPostForm");
 let posts = document.querySelector("#posts");
 let cards = {};
 
-console.log("HELLO");
 fetchPosts();
 displayAllCards();
 
@@ -12,7 +11,6 @@ function fetchPosts() {
         .then(res => res.json())
         .then(data => {
             cards = data;
-            console.log(cards.data)
             displayAllCards();
         })
         .catch(err => {
@@ -143,7 +141,6 @@ function sendRequestCreatePost() {
             "Content-type": "application/json"
         }
     }).then(r => {
-        console.log(r);
         fetchPosts();
         displayAllCards();
     });

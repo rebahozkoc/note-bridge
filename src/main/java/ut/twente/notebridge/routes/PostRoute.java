@@ -1,15 +1,21 @@
 package ut.twente.notebridge.routes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/posts")
 public class PostRoute {
@@ -19,6 +25,29 @@ public class PostRoute {
 	public Post getPost(@PathParam("id") int id) {
 
 		return PostDao.INSTANCE.getPost(id);
+	}
+
+	@GET
+	@Path("/{id}/like")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response didUserLike(@PathParam("id") int id, @Context HttpServletRequest request){
+		Map<String,String> responseObj = new HashMap<>();
+		// In case user is not authenticated, return unauthorized
+		if(request.getSession(false)==null){
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
+		}
+		int userId=(int) request.getSession().getAttribute("userId");
+		try{
+			// Check if user liked the post
+			Boolean isLiked = LikeDao.INSTANCE.isLiked(id,userId);
+			// Create the return Object & return as JSON
+			responseObj.put("isLiked", isLiked.toString());
+			ObjectMapper mapper = new ObjectMapper();
+			return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(responseObj)).build();
+		}catch (Exception e){
+			// In case there is an exception while checking if the user liked or not, return internal server error
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while checking if user liked the post").build();
+		}
 	}
 
 	@GET

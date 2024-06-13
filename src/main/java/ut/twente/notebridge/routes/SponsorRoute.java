@@ -15,7 +15,7 @@ public class SponsorRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createSponsor(Sponsor sponsor) {
-		System.out.println("PersonRoute.createPerson is called");
+		System.out.println("PersonRoute.createSponsor is called");
 		try {
 			if (Security.checkPasswordValidity(sponsor.getPassword())) {
 				BaseUser baseUser = BaseUserDao.INSTANCE.create(sponsor);

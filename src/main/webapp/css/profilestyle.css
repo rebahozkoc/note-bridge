@@ -1,30 +1,11 @@
-.profile {
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
+.profile-details-box{
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 50px;
+    box-shadow: 0 6px 8px #6332c5;
 }
-
-.profile-header {
-    background-image: url('../assets/images/picture-2.jpg');
-    background-size: cover;
-    background-position: center;
-    padding: 50px 0;
-    text-align: center;
-    color: #000;
-    border-top-left-radius: 50px;
-    border-top-right-radius: 50px;
-    overflow: hidden;
-}
-
-.profile-picture {
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-top: 10px;
-    background-color: black;
-    margin-bottom: 20px;
-    margin-left: 165px;
+.profile-details-box.profile-details{
+    padding-bottom: 10px;
 }
 
 .profile-details {
@@ -35,9 +16,32 @@
     color: #fff;
 }
 
+.profile-header {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    padding: 50px 0;
+    text-align: center;
+    color: #fff;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    overflow: hidden;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 10px;
+    background-color: black;
+    margin-bottom: 20px;
+    margin-left: 165px;
+}
+
 .profile-details h3 {
     margin-top: 0;
-    border-bottom: 1px solid #ccc; /* Line under each title */
+    border-bottom: 1px solid #ccc;
     padding-bottom: 10px;
 }
 
@@ -309,4 +313,22 @@
 
 footer {
     color: #fff;
+}
+
+.edit-icon {
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size:1.2em;
+}
+
+.edit-icon:hover {
+    color: #ccc;
+}
+
+.account-info{
+    font-size: 0.9em;
+    color: #bbb;
+    text-align: left;
+    margin-top:10px;
 }

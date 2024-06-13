@@ -15,46 +15,57 @@
 
     <main class="container mt-5">
         <section class="profile card">
-
             <div class="card-body">
 
                 <div class="profile-header text-center mb-4">
                     <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture" class="profile-picture rounded-circle mx-auto d-block mb-3">
                     <h2>Name Surname</h2>
-                    <p>Music Teacher</p>
+                    <p>@username</p>
                     <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
                 </div>
 
+                <div class="profile-details-box">
+                    <div class="profile-details">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3>Description</h3>
+                            <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editDescriptionModal">&#9998;</span>
+                        </div>
+                        <p>I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
+                    </div>
+                </div>
+
+                <div class="profile-details-box">
+                    <div class="profile-details">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3>Contact Information</h3>
+                            <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editContactModal">&#9998;</span>
+                        </div>
+                        <p>Email: example@example.com</p>
+                        <p>Phone: (123) 456-7890</p>
+                    </div>
+                </div>
+
+                <div class="profile-details-box">
+                    <div class="profile-details">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3>Instruments Interested In</h3>
+                            <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editInstrumentsModal">&#9998;</span>
+                        </div>
+                        <ul>
+                            <li>Piano</li>
+                            <li>Violin</li>
+                            <li>Guitar</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="profile-details">
-                    <h3>Description</h3>
-                    <p>I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
-
-                    <h3>Contact Information</h3>
-                    <p>Email: example@example.com</p>
-                    <p>Phone: (123) 456-7890</p>
-
-                    <h3>Specialties</h3>
-                    <ul>
-                        <li>Classical Piano</li>
-                        <li>Music Theory</li>
-                        <li>Composition</li>
-                    </ul>
-
-                    <h3>Instruments Interested In</h3>
-                    <ul>
-                        <li>Piano</li>
-                        <li>Violin</li>
-                        <li>Guitar</li>
-                    </ul>
-
-                    <h3>Account Information</h3>
-                    <p>Account Created On: January 15, 2022</p>
+                    <p class="account-info">Account Created On: January 15, 2022</p>
                 </div>
 
                 <div class="schedule mt-4">
                     <div id="calendar"></div>
                 </div>
-
             </div>
         </section>
 
@@ -95,6 +106,73 @@
             </div>
         </div>
 
+        <!-- Edit Description Modal -->
+        <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editDescriptionModalLabel">Edit Description</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating">
+                            <textarea class="form-control" id="descriptionInput" style="height: 150px;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
+                            <label for="descriptionInput">Description</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="saveDescription()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Contact Information Modal -->
+        <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editContactModalLabel">Edit Contact Information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="emailInput" value="example@example.com">
+                            <label for="emailInput">Email address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control" id="phoneInput" value="(123) 456-7890">
+                            <label for="phoneInput">Phone</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="saveContact()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Instruments Modal -->
+        <div class="modal fade" id="editInstrumentsModal" tabindex="-1" aria-labelledby="editInstrumentsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editInstrumentsModalLabel">Edit Instruments Interested In</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="instrumentsInput" value="Piano, Violin, Guitar">
+                            <label for="instrumentsInput">Instruments</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="saveInstruments()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -116,10 +194,10 @@
                             <input type="text" class="form-control" id="nameInput" placeholder="Name Surname">
                             <label for="nameInput">Name Surname</label>
                         </div>
-                        <div class="form-floating mb-3">
+                        <!--<div class="form-floating mb-3">
                             <input type="email" class="form-control" id="emailInput" placeholder="Email">
                             <label for="emailInput">Email address</label>
-                        </div>
+                        </div>-->
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="addressInput" placeholder="Address">
                             <label for="addressInput">Address</label>
@@ -131,6 +209,7 @@
                 </div>
             </div>
         </div>
+
     </main>
     <footer class="text-center py-3">
         <div class="container">
@@ -226,6 +305,29 @@
             manipulate();
         });
     });
+
+    // Functions to save edited content
+    const saveDescription = () => {
+        const description = document.getElementById("descriptionInput").value;
+        document.querySelector(".profile-details p").innerText = description;
+        document.getElementById("editDescriptionModal").querySelector(".btn-close").click();
+    }
+
+    const saveContact = () => {
+        const email = document.getElementById("emailInput").value;
+        const phone = document.getElementById("phoneInput").value;
+        document.querySelector(".profile-details p:nth-of-type(2)").innerText = `Email: ${email}`;
+        document.querySelector(".profile-details p:nth-of-type(3)").innerText = `Phone: ${phone}`;
+        document.getElementById("editContactModal").querySelector(".btn-close").click();
+    }
+
+    const saveInstruments = () => {
+        const instruments = document.getElementById("instrumentsInput").value.split(',').map(item => item.trim());
+        const instrumentsList = document.querySelector(".profile-details ul:nth-of-type(2)");
+        instrumentsList.innerHTML = instruments.map(item => `<li>${item}</li>`).join('');
+        document.getElementById("editInstrumentsModal").querySelector(".btn-close").click();
+    }
+
 </script>
 
 <script src="js/particles.js"></script>

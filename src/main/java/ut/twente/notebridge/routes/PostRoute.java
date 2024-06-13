@@ -27,6 +27,26 @@ public class PostRoute {
 		return PostDao.INSTANCE.getPost(id);
 	}
 
+	// Returns the like count for a post with a given id
+	@GET
+	@Path("/{id}/likes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getLikes(@PathParam("id") int id) {
+		Map<String,Integer> responseObj = new HashMap<>();
+
+		try{
+			int totalLikes = LikeDao.INSTANCE.getTotalLikes(id);
+			responseObj.put("totalLikes", totalLikes);
+			ObjectMapper mapper = new ObjectMapper();
+			return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(responseObj)).build();
+
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while getting total likes").build();
+		}
+
+	}
+
+	//Returns if the user liked the post with a given id
 	@GET
 	@Path("/{id}/like")
 	@Produces(MediaType.APPLICATION_JSON)

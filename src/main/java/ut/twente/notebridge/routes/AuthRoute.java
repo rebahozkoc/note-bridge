@@ -16,6 +16,7 @@ import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.utils.Security;
 
+import java.nio.channels.ScatteringByteChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,31 +31,40 @@ public class AuthRoute{
 	                      @Context HttpServletRequest request) {
 
 		// Simple authentication logic (replace with your own)
-		if (Security.checkCredentials(email, password.toCharArray())) {
-			BaseUser baseUser = BaseUserDao.INSTANCE.getUserByEmail(email);
-			HttpSession session = request.getSession(true);
-			session.setAttribute("email", email);
-			session.setAttribute("userId", baseUser.getId());
-			if (BaseUserDao.INSTANCE.isPerson(baseUser.getId())){
-				session.setAttribute("role", "person");
-			} else {
-				session.setAttribute("role", "sponsor");
-			}
-			NewCookie cookie = new NewCookie.Builder("JSESSIONID")
-					.value(session.getId())
-					.path("/notebridge/")
-					.secure(true)
-					.sameSite(NewCookie.SameSite.LAX)// Set the value of the cookie
-					.httpOnly(true) // Optional, adds the HttpOnly attribute
-					.maxAge(3600)   // Optional, sets the max age of the cookie in seconds
-					.build();
+		try {
+			if (Security.checkCredentials(email, password.toCharArray())) {
+				BaseUser baseUser = BaseUserDao.INSTANCE.getUserByEmail(email);
+				HttpSession session = request.getSession(true);
+				session.setAttribute("email", email);
+				session.setAttribute("userId", baseUser.getId());
+				if (BaseUserDao.INSTANCE.isPerson(baseUser.getId())){
+					session.setAttribute("role", "person");
+				} else {
+					session.setAttribute("role", "sponsor");
+				}
+				NewCookie cookie = new NewCookie.Builder("JSESSIONID")
+						.value(session.getId())
+						.path("/notebridge/")
+						.secure(true)
+						.sameSite(NewCookie.SameSite.LAX)// Set the value of the cookie
+						.httpOnly(true) // Optional, adds the HttpOnly attribute
+						.maxAge(3600)   // Optional, sets the max age of the cookie in seconds
+						.build();
 
-			System.out.println(session.getAttribute("email"));
-			System.out.println(session.getId());
-			return Response.ok("Login successful").cookie(cookie).build();
-		} else {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+				System.out.println(session.getAttribute("email"));
+				System.out.println(session.getId());
+				return Response.ok("Login successful").cookie(cookie).build();
+			} else {
+				return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+			}
+		} catch (Exception e) {
+
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Server not available").build();
 		}
+
+
+
+
 	}
 
 

@@ -1,21 +1,16 @@
 package ut.twente.notebridge.routes;
 
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
+
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.PersonDao;
-import ut.twente.notebridge.dao.SponsorDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Person;
 import ut.twente.notebridge.utils.Security;
-import ut.twente.notebridge.utils.Utils;
 
-import java.io.File;
-import java.io.InputStream;
 
 @Path("/persons")
 public class PersonRoute {
@@ -35,7 +30,6 @@ public class PersonRoute {
 				return Response.status(Response.Status.BAD_REQUEST).entity("Password is not valid").build();
 			}
 		} catch (Exception e) {
-			System.out.println("Error while creating user");
 			e.printStackTrace();
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}

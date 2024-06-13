@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
 public abstract class Utils {
 
@@ -57,11 +59,11 @@ public abstract class Utils {
 
 	public static void saveToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
 		try {
-			OutputStream out = null;
+			OutputStream out;
 			int read = 0;
 			byte[] bytes = new byte[1024];
 
-			out = new FileOutputStream(new File(uploadedFileLocation));
+			out = new FileOutputStream(uploadedFileLocation);
 			while ((read = uploadedInputStream.read(bytes)) != -1) {
 				out.write(bytes, 0, read);
 			}
@@ -71,5 +73,17 @@ public abstract class Utils {
 			System.out.println("Error while saving file");
 			e.printStackTrace();
 		}
+	}
+
+	public static String readFromProperties(String key) {
+		String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
+		String appConfigPath = rootPath + "app.properties";
+		Properties appProps = new Properties();
+		try {
+			appProps.load(new FileInputStream(appConfigPath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return appProps.getProperty(key);
 	}
 }

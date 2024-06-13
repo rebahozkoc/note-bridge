@@ -16,12 +16,11 @@ import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.utils.Security;
 
-import java.nio.channels.ScatteringByteChannel;
 import java.util.HashMap;
 import java.util.Map;
 
 @Path("/auth")
-public class AuthRoute{
+public class AuthRoute {
 
 	@POST
 	@Path("/login")
@@ -37,7 +36,7 @@ public class AuthRoute{
 				HttpSession session = request.getSession(true);
 				session.setAttribute("email", email);
 				session.setAttribute("userId", baseUser.getId());
-				if (BaseUserDao.INSTANCE.isPerson(baseUser.getId())){
+				if (BaseUserDao.INSTANCE.isPerson(baseUser.getId())) {
 					session.setAttribute("role", "person");
 				} else {
 					session.setAttribute("role", "sponsor");
@@ -61,8 +60,6 @@ public class AuthRoute{
 
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Server not available").build();
 		}
-
-
 
 
 	}

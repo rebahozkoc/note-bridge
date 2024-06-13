@@ -67,20 +67,19 @@ public class Security {
 			statement.setString(1, email);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				System.out.println("User with the email exists, checking the password...");
 				String hashedPassword = rs.getString("password");
 				if (verifyHashedPassword(password, hashedPassword)) {
-					System.out.println("User credentials are valid");
+
 					return true;
 				}else{
-					System.out.println("User with the email exists, but password is incorrect.");
+					return false;
 				}
 			}else{
-				System.out.println("User with the email does not exist.");
+				    return false;
 			}
-			return false;
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Server not available");
 		}
+
 	}
 }

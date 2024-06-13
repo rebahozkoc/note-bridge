@@ -1,11 +1,15 @@
 package ut.twente.notebridge.routes;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import ut.twente.notebridge.dao.PostDao;
+import ut.twente.notebridge.dto.CommentDtoList;
+import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
-
 
 @Path("/posts")
 public class PostRoute {
@@ -15,6 +19,13 @@ public class PostRoute {
 	public Post getPost(@PathParam("id") int id) {
 
 		return PostDao.INSTANCE.getPost(id);
+	}
+
+	@GET
+	@Path("/{id}/comments")
+	@Produces(MediaType.APPLICATION_JSON)
+	public CommentDtoList getComments(@PathParam("id") int id) {
+		return PostDao.INSTANCE.getComments(id);
 	}
 
 	@PUT
@@ -58,5 +69,20 @@ public class PostRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Post createPost(Post post) {
 		return PostDao.INSTANCE.create(post);
+	}
+
+
+	@POST
+	@Path("/{id}/likes")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Like likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		int personId = (int) session.getAttribute("userId");
+
+		Like like= new Like();
+		like.setPostId(postId);
+		like.setPersonId(personId);
+		return PostDao.INSTANCE.beingLiked(like);
 	}
 }

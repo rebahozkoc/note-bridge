@@ -19,7 +19,35 @@ import java.time.Instant;
 public enum BaseUserDao {
 	INSTANCE;
 
-	public BaseUser create(BaseUser newUser) {
+	public BaseUser create(BaseUser user) {
+		if (user.getEmail() == null) {
+			throw new IllegalArgumentException("Email is required");
+		}
+		if (user.getPassword() == null) {
+			throw new IllegalArgumentException("Password is required");
+		}
+		if (user.getUsername() == null) {
+			throw new IllegalArgumentException("Username is required");
+		}
+		try {
+			if (getUserByEmail(user.getEmail()) != null) {
+				throw new IllegalArgumentException("Email already exists");
+			}
+		} catch (NotFoundException e) {
+			//no user with that email exists, continue
+		}
+		try {
+			if (getUserByUsername(user.getUsername()) != null) {
+				throw new IllegalArgumentException("Username already exists");
+			}
+		} catch (NotFoundException e) {
+			//no user with that username exists, continue
+		}
+
+		return save(user);
+	}
+
+	public BaseUser save(BaseUser newUser) {
 		String sql = """
 						INSERT INTO BaseUser (createDate,
 						lastUpdate, username,
@@ -38,7 +66,7 @@ public enum BaseUserDao {
 			if (newUser.getPicture() == null) {
 				statement.setNull(4, java.sql.Types.VARCHAR);
 			} else {
-			statement.setString(4, newUser.getPicture());
+				statement.setString(4, newUser.getPicture());
 			}
 			if (newUser.getPhoneNumber() == null) {
 				statement.setNull(5, java.sql.Types.VARCHAR);
@@ -86,7 +114,32 @@ public enum BaseUserDao {
 				return mapper.readValue(json, BaseUser.class);
 
 			} else {
-				//no rows returned, post with that id does not exist
+				//no rows returned, user with that id does not exist
+				throw new NotFoundException();
+			}
+
+		} catch (SQLException | JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private BaseUser getUserByUsername(String username) {
+		String sql = "SELECT row_to_json(t) baseuser FROM(SELECT * FROM BaseUser WHERE username=?) t"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setString(1, username);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				String json = rs.getString("baseuser");
+
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				return mapper.readValue(json, BaseUser.class);
+
+			} else {
+				//no rows returned, user with that id does not exist
 				throw new NotFoundException();
 			}
 
@@ -121,7 +174,7 @@ public enum BaseUserDao {
 		}
 	}
 
-	public Boolean isPerson(int id){
+	public Boolean isPerson(int id) {
 		String sql = """
 					SELECT EXISTS(SELECT id FROM Person WHERE id=?);
 				""";

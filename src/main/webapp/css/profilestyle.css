@@ -1,3 +1,7 @@
+.card-body{
+    border: 2px solid #ddd;
+    border-radius: 50px;
+}
 .profile-details-box{
     margin: 20px auto;
     padding: 20px;

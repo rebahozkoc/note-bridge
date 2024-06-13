@@ -1,15 +1,22 @@
 package ut.twente.notebridge.routes;
 
 
-
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.PersonDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Person;
 import ut.twente.notebridge.utils.Security;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 @Path("/persons")
@@ -58,4 +65,51 @@ public class PersonRoute {
 	public void deletePerson(@PathParam("id") String id) {
 		PersonDao.INSTANCE.delete(id);
 	}
+
+	@POST
+	@Path("/image")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadFile(
+			@FormDataParam("file") InputStream uploadedInputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+		//Your local disk path where you want to store the file
+		System.out.println("PersonRoute.uploadFile is called");
+		String uploadedFileLocation = "D:/uploadedFiles/" + fileDetail.getFileName();
+		System.out.println(uploadedFileLocation);
+		// save it
+		File  objFile=new File(uploadedFileLocation);
+		if(objFile.exists())
+		{
+			objFile.delete();
+
+		}
+
+		saveToFile(uploadedInputStream, uploadedFileLocation);
+
+		String output = "File uploaded via Jersey based RESTFul Webservice to: " + uploadedFileLocation;
+
+		return Response.status(200).entity(output).build();
+
+	}
+	private void saveToFile(InputStream uploadedInputStream,
+	                        String uploadedFileLocation) {
+
+		try {
+			OutputStream out = null;
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			out = new FileOutputStream(new File(uploadedFileLocation));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
+			}
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+
 }

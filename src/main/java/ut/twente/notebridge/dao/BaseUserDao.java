@@ -20,13 +20,13 @@ public enum BaseUserDao {
 	INSTANCE;
 
 	public BaseUser create(BaseUser user) {
-		if (user.getEmail() == null) {
+		if (user.getEmail().isEmpty()) {
 			throw new IllegalArgumentException("Email is required");
 		}
-		if (user.getPassword() == null) {
+		if (user.getPassword().isEmpty()) {
 			throw new IllegalArgumentException("Password is required");
 		}
-		if (user.getUsername() == null) {
+		if (user.getUsername().isEmpty()) {
 			throw new IllegalArgumentException("Username is required");
 		}
 		try {
@@ -93,7 +93,8 @@ public enum BaseUserDao {
 			return newUser;
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Creating user failed, no ID obtained.");
 		}
 	}
 
@@ -115,11 +116,12 @@ public enum BaseUserDao {
 
 			} else {
 				//no rows returned, user with that id does not exist
-				throw new NotFoundException();
+				throw new NotFoundException("The user with email " + email + " does not exist.");
 			}
 
 		} catch (SQLException | JsonProcessingException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Could not get user by email.");
 		}
 	}
 
@@ -140,11 +142,12 @@ public enum BaseUserDao {
 
 			} else {
 				//no rows returned, user with that id does not exist
-				throw new NotFoundException();
+				throw new NotFoundException("The user with username " + username + " does not exist.");
 			}
 
 		} catch (SQLException | JsonProcessingException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Could not get user by username.");
 		}
 	}
 
@@ -166,11 +169,12 @@ public enum BaseUserDao {
 
 			} else {
 				//no rows returned, post with that id does not exist
-				throw new NotFoundException();
+				throw new NotFoundException("The user with id " + id + " does not exist.");
 			}
 
 		} catch (SQLException | JsonProcessingException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Could not get user by id.");
 		}
 	}
 
@@ -186,7 +190,8 @@ public enum BaseUserDao {
 			}
 			return false;
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Could not check if user is a person.");
 		}
 	}
 
@@ -223,7 +228,8 @@ public enum BaseUserDao {
 			return user;
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Updating user failed.");
 		}
 	}
 }

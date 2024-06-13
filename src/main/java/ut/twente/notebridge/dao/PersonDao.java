@@ -23,6 +23,7 @@ public enum PersonDao {
 	private final HashMap<Integer, Person> users = new HashMap<>();
 
 	public void delete(String id) {
+		// TODO implement delete
 		if (users.containsKey(id)) {
 			users.remove(id);
 		} else {
@@ -31,6 +32,7 @@ public enum PersonDao {
 	}
 
 	public List<Person> getUsers(int pageSize, int pageNumber, String sortBy) {
+		// TODO implement getUsers or delete
 		List<Person> list = new ArrayList<>(users.values());
 
 		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
@@ -65,7 +67,8 @@ public enum PersonDao {
 			}
 
 		} catch (SQLException | JsonProcessingException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting person user");
 		}
 	}
 
@@ -92,7 +95,8 @@ public enum PersonDao {
 			statement.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while creating person user");
 		}
 
 		return newPerson;
@@ -113,7 +117,8 @@ public enum PersonDao {
 			statement.setInt(3, updated.getId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while updating person user");
 		}
 
 		return updated;

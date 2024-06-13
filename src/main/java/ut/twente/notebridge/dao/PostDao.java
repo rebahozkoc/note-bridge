@@ -35,7 +35,8 @@ public enum PostDao {
 			statement.setInt(1, id);
 			statement.execute();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Could not delete post.");
 		}
 	}
 
@@ -57,7 +58,7 @@ public enum PostDao {
 			}
 		} catch (SQLException | JsonProcessingException e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			throw new RuntimeException("Could not get posts.");
 		}
 
 		/*
@@ -88,11 +89,12 @@ public enum PostDao {
 
 			} else {
 				//no rows returned, post with that id does not exist
-				throw new NotFoundException();
+				throw new NotFoundException("Post '" + id + "' not found.");
 			}
 
 		} catch (SQLException | JsonProcessingException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting post.");
 		}
 	}
 	public CommentDtoList getComments(int id) {
@@ -119,10 +121,11 @@ public enum PostDao {
 						.build();
 				return mapper.readValue(json, CommentDtoList.class);
 			} else {
-				throw new NotFoundException();
+				throw new NotFoundException("No comments found for post with id " + id);
 			}
 		} catch (SQLException | JsonProcessingException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting comments");
 		}
 	}
 
@@ -140,7 +143,8 @@ public enum PostDao {
 				throw new BadRequestException("Like failed");
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while liking post");
 		}
 	}
 
@@ -206,7 +210,8 @@ public enum PostDao {
 			return newPost;
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Creating post failed, no ID obtained.");
 		}
 	}
 

@@ -41,7 +41,8 @@ public enum CommentDao {
 
             return comment;
         }catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Creating comment failed, no ID obtained.");
         }
     }
 }

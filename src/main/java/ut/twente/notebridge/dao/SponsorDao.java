@@ -20,12 +20,11 @@ import java.util.*;
 
 public enum SponsorDao {
 	INSTANCE;
-	private static final String ORIGINAL_SPONSORS = Utils.getAbsolutePathToResources() + "/mock-sponsor-dataset.json";
-	private static final String UPDATED_SPONSORS = Utils.getAbsolutePathToResources() + "/updated-mock-sponsor-dataset.json";
 
 	private final HashMap<Integer, Sponsor> sponsors = new HashMap<>();
 
 	public void delete(String id) {
+		// TODO implement delete
 		if (sponsors.containsKey(id)) {
 			sponsors.remove(id);
 		} else {
@@ -34,6 +33,7 @@ public enum SponsorDao {
 	}
 
 	public List<Sponsor> getUsers(int pageSize, int pageNumber, String sortBy) {
+		// TODO implement getUsers or delete
 		List<Sponsor> list = new ArrayList<>(sponsors.values());
 
 		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
@@ -53,27 +53,6 @@ public enum SponsorDao {
 		}
 
 		return pt;
-	}
-
-	public void load() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		File source = existsUsers() ? new File(UPDATED_SPONSORS) : new File(ORIGINAL_SPONSORS);
-		Sponsor[] arr = mapper.readValue(source, Sponsor[].class);
-
-		Arrays.stream(arr).forEach(pt -> sponsors.put(pt.getId(), pt));
-	}
-
-	private boolean existsUsers() {
-		File f = new File(UPDATED_SPONSORS);
-		return f.exists() && !f.isDirectory();
-	}
-
-	public void save() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		File destination = new File(UPDATED_SPONSORS);
-
-		writer.writeValue(destination, sponsors.values());
 	}
 
 	public Sponsor create(Sponsor newSponsor) {
@@ -99,15 +78,11 @@ public enum SponsorDao {
 			statement.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while creating sponsor user");
 		}
 
 		return newSponsor;
-	}
-
-	private int getMaxId() {
-		Set<Integer> ids = sponsors.keySet();
-		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
 	}
 
 	public Sponsor update(Sponsor updated) {
@@ -119,9 +94,5 @@ public enum SponsorDao {
 		sponsors.put(updated.getId(), updated);
 
 		return updated;
-	}
-
-	public int getTotalUsers() {
-		return sponsors.keySet().size();
 	}
 }

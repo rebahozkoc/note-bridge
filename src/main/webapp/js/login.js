@@ -47,7 +47,14 @@ function showRegisterUserForm() {
                     </div>
                 </div>
                 <div id="passwordHelpBlock" class="form-text">
-                    <p class="text-white fs-6">The password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</p>
+                    <div >
+                        <ul>
+                            <li class="text-white fs-6"><strong>Length:</strong> Your password must be between 8 and 64 characters in length.</li>
+                            <li class="text-white fs-6"><strong>Uppercase Letters:</strong> At least one uppercase letter is required.</li>
+                            <li class="text-white fs-6"><strong>Digits:</strong> Your password must contain at least two digits.</li>
+                            <li class="text-white fs-6"><strong>Special Characters:</strong> At least one special character from the following set is required: !@#$%^&*()-_+=.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between">

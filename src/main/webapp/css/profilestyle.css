@@ -1,12 +1,14 @@
-.card-body{
-    border: 2px solid #ddd;
-    border-radius: 50px;
+.profile{
+    border:none;
+    box-shadow: none;
+    background-color: transparent;
 }
 .profile-details-box{
     margin: 20px auto;
     padding: 20px;
     border-radius: 50px;
     box-shadow: 0 6px 8px #6332c5;
+    background-color: rgba(17, 24, 39, 0.8);
 }
 .profile-details-box.profile-details{
     padding-bottom: 10px;
@@ -15,14 +17,11 @@
 .profile-details {
     padding: 20px;
     border-radius: 15px;
-    box-shadow: none;
-    background-color: rgba(17, 24, 39, 0.8);
     color: #fff;
 }
 
 .profile-header {
     position: relative;
-    background-size: cover;
     background-position: center;
     padding: 50px 0;
     text-align: center;
@@ -30,6 +29,8 @@
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
     overflow: hidden;
+    border: 2px solid #ddd;
+    border-radius: 15px;
 }
 
 .profile-picture {
@@ -173,11 +174,6 @@
 
 .modal-body, .modal-footer {
     padding: 20px;
-}
-
-.container {
-    display: flex;
-    flex-wrap: wrap;
 }
 
 .d-flex {

@@ -74,7 +74,7 @@ public class PersonRoute {
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		//Your local disk path where you want to store the file
 		System.out.println("PersonRoute.uploadFile is called");
-		String uploadedFileLocation = "D:/uploadedFiles/" + fileDetail.getFileName();
+		String uploadedFileLocation = "C:/uploadedFiles/" + fileDetail.getFileName();
 		System.out.println(uploadedFileLocation);
 		// save it
 		File  objFile=new File(uploadedFileLocation);

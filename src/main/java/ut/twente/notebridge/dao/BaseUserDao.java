@@ -44,7 +44,9 @@ public enum BaseUserDao {
 			//no user with that username exists, continue
 		}
 
-		return save(user);
+		BaseUser savedUser = save(user);
+		savedUser.setPassword("hidden");
+		return savedUser;
 	}
 
 	public BaseUser save(BaseUser newUser) {

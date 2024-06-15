@@ -64,17 +64,15 @@ public class PersonRoute {
 		PersonDao.INSTANCE.delete(id);
 	}
 
-	@POST
+	@PUT
 	@Path("{id}/image")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadFile(
+	public Response putImage(
 			@PathParam("id") Integer id,
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		try {
-			// TODO: Convert this to PUT method
-			//BaseUser baseUser = BaseUserDao.INSTANCE.getUser(id);
 			Person person = PersonDao.INSTANCE.getUser(id);
 			System.out.println("PersonRoute.uploadFile is called");
 			//Your local disk path where you want to store the file
@@ -94,6 +92,21 @@ public class PersonRoute {
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
+	}
+
+	@GET
+	@Path("{id}/image")
+	@Produces(MediaType.MULTIPART_FORM_DATA)
+	public Response getImage(@PathParam("id") Integer id) {
+		Person person = PersonDao.INSTANCE.getUser(id);
+		String fileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + person.getPicture();
+
+		File file = new File(fileLocation);
+
+		Response.ResponseBuilder response = Response.ok(file);
+		response.header("Content-Disposition",
+				"attachment; filename=profile_picture.png");
+		return response.build();
 	}
 
 

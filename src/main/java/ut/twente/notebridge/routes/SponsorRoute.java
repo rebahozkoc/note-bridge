@@ -34,8 +34,8 @@ public class SponsorRoute {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Sponsor getSponsor(@PathParam("id") int id) {
-		return SponsorDao.INSTANCE.getUser(id);
+	public Response getSponsor(@PathParam("id") int id) {
+		return Response.status(Response.Status.OK).entity(SponsorDao.INSTANCE.getSponsor(id)).build();
 	}
 
 	@PUT

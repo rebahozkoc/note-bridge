@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="upload-img">
+    <input type="file" name="file" id="file" accept="image/*">
+    <input type="submit" value="Upload">
+    <img id="img" src="" alt="Image preview...">
+</form>
+</body>
+
+<script>
+    document.getElementById('file').onchange = function () {
+        var img = document.getElementById('img');
+        var file = this.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    document.getElementById('upload-img').onsubmit = function (e) {
+        e.preventDefault();
+
+        var file = document.getElementById('file').files[0];
+
+        var formData = new FormData();
+        formData.append('file', file);
+        fetch('http://localhost:8080/notebridge/api/persons/image', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                alert('Image uploaded successfully!');
+            } else {
+                // write the error message to the console
+                alert('Image upload failed!');
+            }
+        });
+    };
+</script>
+
+</html>

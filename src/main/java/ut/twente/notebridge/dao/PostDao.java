@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import ut.twente.notebridge.dto.CommentDtoList;
+import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
@@ -33,7 +35,8 @@ public enum PostDao {
 			statement.setInt(1, id);
 			statement.execute();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Could not delete post.");
 		}
 	}
 
@@ -55,7 +58,7 @@ public enum PostDao {
 			}
 		} catch (SQLException | JsonProcessingException e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			throw new RuntimeException("Could not get posts.");
 		}
 
 		/*
@@ -79,7 +82,6 @@ public enum PostDao {
 			if (rs.next()) {
 				String json = rs.getString("post");
 
-				System.out.println(json);
 				ObjectMapper mapper = JsonMapper.builder()
 						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 						.build();
@@ -87,11 +89,62 @@ public enum PostDao {
 
 			} else {
 				//no rows returned, post with that id does not exist
-				throw new NotFoundException();
+				throw new NotFoundException("Post '" + id + "' not found.");
 			}
 
 		} catch (SQLException | JsonProcessingException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting post.");
+		}
+	}
+	public CommentDtoList getComments(int id) {
+		String sql= """
+				SELECT jsonb_build_object(
+				           'comments', jsonb_agg(
+				                          jsonb_build_object(
+				                              'personId', b.id, 'username', b.username, 'picture', b.picture,
+				                              'content', c.content, 'createDate', c.createdate
+				                          ) ORDER BY c.createdate DESC)
+				       )
+				FROM BaseUser b, Comment c
+				WHERE b.id = c.personid AND c.postid =?
+				GROUP BY c.postid;	
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				String json = rs.getString("jsonb_build_object");
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				return mapper.readValue(json, CommentDtoList.class);
+			} else {
+				throw new NotFoundException("No comments found for post with id " + id);
+			}
+		} catch (SQLException | JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting comments");
+		}
+	}
+
+	public Like beingLiked (Like like){
+		String sql = """
+				INSERT INTO personlikespost (personid, postid) VALUES (?, ?)
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, like.getPersonId());
+			statement.setInt(2, like.getPostId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 1) {
+				return like;
+			} else {
+				throw new BadRequestException("Like failed");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while liking post");
 		}
 	}
 
@@ -157,7 +210,8 @@ public enum PostDao {
 			return newPost;
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new RuntimeException("Creating post failed, no ID obtained.");
 		}
 	}
 

@@ -40,14 +40,31 @@
     font-size: 3vh;
 }
 
+#register-btn {
+    background: none;
+    border: none;
+    color: white;
+}
+
+#register-btn:hover {
+    color: lightgrey;
+    text-decoration: underline;
+}
+
 .comment {
     background-image: url("../images/background2.png");
+    color: black;
 }
 
 .main-content {
     margin-top: 15vh;
     border: 1px solid white;
     box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
+}
+
+.login-form {
+    margin-top: 25vh;
+    width: 35%;
 }
 
 .category-btn {
@@ -60,9 +77,11 @@
     display: none;
 }
 
-.card {
+.card,
+.card-background {
     background-color:rgb(17, 24, 39);
     color: rgb(225, 225, 225);
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 40px;
 }
 
 body,

@@ -3,12 +3,19 @@ package ut.twente.notebridge.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
-public class Utils {
+public abstract class Utils {
 
 
 	public static String getAbsolutePathToResources() {
@@ -16,12 +23,9 @@ public class Utils {
 	}
 
 	public static <T extends Comparable<T>> int compare(T o1, T o2) {
-		if (o1 == null && o2 == null)
-			return 0;
-		if (o1 == null)
-			return -1;
-		if (o2 == null)
-			return 1;
+		if (o1 == null && o2 == null) return 0;
+		if (o1 == null) return -1;
+		if (o2 == null) return 1;
 		return o1.compareTo(o2);
 	}
 
@@ -29,7 +33,7 @@ public class Utils {
 		int total = list.size();
 		int firstIndex = (pageNumber - 1) * pageSize;
 		int lastIndex = Math.min(pageNumber * pageSize, total);
-		return list.subList(firstIndex,lastIndex);
+		return list.subList(firstIndex, lastIndex);
 	}
 
 	public static String resultSetToJson(ResultSet resultSet) throws SQLException, JsonProcessingException {
@@ -53,7 +57,33 @@ public class Utils {
 		return jsonBuilder.toString();
 	}
 
+	public static void saveToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
+		try {
+			OutputStream out;
+			int read = 0;
+			byte[] bytes = new byte[1024];
 
+			out = new FileOutputStream(uploadedFileLocation);
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
+			}
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			System.out.println("Error while saving file");
+			e.printStackTrace();
+		}
+	}
 
-
+	public static String readFromProperties(String key) {
+		String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
+		String appConfigPath = rootPath + "app.properties";
+		Properties appProps = new Properties();
+		try {
+			appProps.load(new FileInputStream(appConfigPath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return appProps.getProperty(key);
+	}
 }

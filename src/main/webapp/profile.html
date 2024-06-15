@@ -83,7 +83,8 @@
 
             <div class="schedule-container">
                 <div class="schedule">
-                    <h3 class = "text-center">Daily Schedule <span id="selected-date"></span></h3>
+                    <h3 class = "text-center">Daily Schedule</h3>
+                    <h5 class = "text-center"><span id="selected-date"></span></h5>
                     <div id="schedule-date" class="schedule-date"></div>
                     <div id="schedule-content">
                          <!--schedule content will be dynamically generated-->
@@ -172,10 +173,6 @@
                             <input type="file" class="form-control" id="profilePictureInput" placeholder="Upload Photo">
                             <label for="profilePictureInput">Update Profile Picture</label>
                         </div>
-                        <div class="form-floating mb-3 text-center">
-                            <input type="file" class="form-control" id="headerPictureInput" placeholder="Upload Header Photo">
-                            <label for="headerPictureInput">Update Header Image</label>
-                        </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="nameInput" placeholder="Name Surname">
                             <label for="nameInput">Name Surname</label>
@@ -212,6 +209,7 @@
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth();
+    let today = date.getDate();
 
     const day = document.querySelector(".calendar-dates");
     const currdate = document.querySelector(".calendar-current-date");
@@ -253,6 +251,11 @@
         // update the HTML of the dates element with the generated calendar
         day.innerHTML = lit;
         monthNameElem.innerText = `${monthNames[month]} ${year}`;
+
+        const todayElement = document.querySelector('.date-item.active');
+        if (todayElement) {
+            updateDailySchedule(todayElement, today);
+        }
 
     }
 
@@ -298,7 +301,7 @@
     });
 
     // Functions to save edited content
-    const saveDescription = () => {
+    /*const saveDescription = () => {
         const description = document.getElementById("descriptionInput").value;
         document.querySelector(".profile-details p").innerText = description;
         document.getElementById("editDescriptionModal").querySelector(".btn-close").click();
@@ -317,7 +320,7 @@
         const instrumentsList = document.getElementById("instrumentsList");
         instrumentsList.innerHTML = instruments.map(item => `<li>${item}</li>`).join('');
         document.getElementById("editInstrumentsModal").querySelector(".btn-close").click();
-    }
+    }*/
 
 
 </script>

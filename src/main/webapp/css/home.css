@@ -1,184 +1,99 @@
-
-h1{
-   font-weight: bold;
-   font-size: 5rem;
-   margin-bottom: 1em;
+.page-settings {
+    background: #0b032e;
+    font-family: Tahoma, serif;
+    background-size: cover;
 }
 
-
-section{
-   padding: 6rem 3rem;
-   text-align: center;
-   
-   margin: 0 auto;
+.white-block {
+    overflow: hidden;
+    display: block;
+    font-size: 2.5vh;
+    color: darkslategrey;
+    border: 1px solid grey;
+    background-color: white;
+    padding: 4vh;
+    width: 90%;
+    border-radius: 0;
 }
 
-
-#card-section{
-   color: var(--bs-tertiary-bg);
-   background-color: var(--bs-body-color);
-   
+.black-block {
+    position: absolute;
+    background-color: black;
+    padding: 2.7vh 21vh;
+    border-radius: 0;
+    margin-top: 8.5vh;
 }
 
-#intro{
-   padding: 0;
-   display: flex;
-   flex-direction: row;
-   justify-content: center;
-   align-items: center;
-   gap: 10rem;
+.first-page-card {
+    margin: 5vh 17vh 10vh;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 35px;
+    color: rgb(225, 225, 225);
 }
 
-/* Alex's Part */
-.logo {
-   border-radius: 85%;
-   margin-bottom: 40vh;
+.image-first-page-card {
+    height: 50vh;
 }
 
-#nav-notebridge {
-   font-weight: bold;
-   font-size: 3rem;
+.card-btn {
+    border: none;
+    background: none;
+    font-size: 3vh;
 }
 
-
-.btn-go-to-forum {
-   font-style: italic;
-   font-size: 3vh;
-   padding: 1vh;
-   border-radius: 50vh;
+.comment {
+    background-image: url("../images/background2.png");
+    color: black;
 }
 
-
-.main-text {
-   font-style: italic;
-   font-size: 4vh;
-   color: lightyellow;
+.main-content {
+    margin-top: 15vh;
+    border: 1px solid white;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
 }
 
-.secondary-text {
-   font-style: italic;
-   font-size: 3vh;
-   color: lightyellow;
-}
-.custom-background {
-   background: rgb(0,0,0);
-   background: linear-gradient(74deg, rgba(0,0,0,0.5377800778514531) 100%, rgba(242,244,255,1) 100%);
-   width: 53vh;
-   height: 40vh;
-   border-radius: 50%;
-   text-align: center;
-   align-content: center;
-}
-#first-page {
-   width: 100vh;
-   height: 15vh;
-   border-radius: 95vh;
-   margin-left: auto;
-   margin-right: auto;
-   margin-bottom: 3vh;
+#login-form {
+    margin-top: 25vh;
+    width: 35%;
 }
 
-#second-page {
-   margin-right: 50vh;
-   margin-bottom: 37vh;
+.category-btn {
+    padding: 25vh 10vh;
+    font-size: 3vh;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
 }
 
-#third-page {
-   margin-left: 85vh;
-   margin-bottom: 15vh;
+.hide {
+    display: none;
 }
 
-
-/* Anil's Part */
-
-
-.card-overview{
-   display:flex;
-   flex-direction: row;
-   justify-content: center;
-   gap: 3rem;
-   text-align: center;
-   margin: 2rem auto;
-   height: 500px;
-}
-.card{
-   
-   width: 30%;
-}
-.card-overview img{
-   width: 100%;          /* Ensures the image takes the full width of the card */
-   height: 40%;         /* Maintains aspect ratio */
-        /* Ensures images don’t exceed the specified height */
-   object-fit: cover;
+.card,
+.card-background {
+    background-color:rgb(17, 24, 39);
+    color: rgb(225, 225, 225);
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 40px;
 }
 
-.card-body{
-   flex-direction: column;
-   display: flex;
-   gap: 2rem;
-   height: 70%;
-   align-items: center;
-   background-color:var(--bs-tertiary-bg);
+body,
+html {
+    height: 100%
 }
 
-
-.card-body h2{
-   font-size: 3em;
-   font-weight: bold;
-}
-.card-body a{
-   font-size: 1.5em;
-   width: 60%;
-   display: block;
-  
-}
-.card-body p{
-   margin-top: 1rem;
-   font-size: 1.5rem;
+#particles-js canvas {
+    display: block;
+    vertical-align: bottom;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+    -webkit-transition: opacity .8s ease, -webkit-transform 1.4s ease;
+    transition: opacity .8s ease, transform 1.4s ease
 }
 
-#feedback-section{
-   padding: 12rem 2rem;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
-}
-#feedback-section h1{
-   margin-bottom: 0.5rem;
-}
-
-#feedback-section .mb-3{
-   display: flex;
-   flex-direction: column;
-   align-items: flex-start;
-   width: 60%;
-   justify-content: center;
-}
-
-#feedback-section label{
-   font-size: 2em;
-}
-
-#feedback-section a{
-   font-size: 1.5em;
-   width: 60%;
-}
-
-#feedback-section input, #feedback-section textarea{
-   width: 100%;
-   border-radius: 4px;
-   border-color: var(--bs-body-color);
-   border-width: 2px;
-}
-
-.footer {
-   background-color: var(--bs-body-color);
-   color: var(--bs-tertiary-bg);
-   text-align: center;
-   padding: 20px;
-   font-family: Arial, sans-serif;
-}
-.footer p{
-   font-size: 1rem;
+#particles-js {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -10;
+    top: 0;
+    left: 0
 }

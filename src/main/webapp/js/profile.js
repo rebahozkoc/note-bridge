@@ -16,7 +16,7 @@ function loadUserData(){
     getStatus()
         .then(data=>{
 
-            if(data.role==="SPONSOR"){
+            if(data.role==="sponsor"){
                 fetch(`/notebridge/api/sponsors/${data.userId}`)
                     .then(res => res.json())
                     .then(data => {
@@ -26,7 +26,7 @@ function loadUserData(){
 
                         nameSurnameHeader.innerHTML= data.companyName;
                         const companyWebsite = document.createElement('h2');
-                        companyWebsite.innerHTML = `<a href="${data.websiteURL}" target="_blank">${data.websiteURL}</a>`;
+                        companyWebsite.innerHTML = `<a href="https://${data.websiteURL}" target="_blank">${data.websiteURL}</a>`;
                         nameSurnameHeader.parentNode.insertBefore(companyWebsite, nameSurnameHeader.nextSibling);
 
                         usernameHeader.innerHTML=`@${data.username}`;

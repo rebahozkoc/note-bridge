@@ -57,8 +57,28 @@ public class PersonRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Person updatePerson(@PathParam("id") Integer id, Person person) {
-		person.setId(id);
-		return PersonDao.INSTANCE.update(person);
+
+		//TODO: PREVENT UNAUTHORIZED UPDATE(USERS SHOULD BE ABLE TO UPDATE ONLY THEIR OWN ACCOUNT)
+
+		Person existingPerson = PersonDao.INSTANCE.getUser(id);
+		if(person.getUsername()!=null){
+			existingPerson.setUsername(person.getUsername());
+		}
+		if(person.getEmail()!=null){
+			existingPerson.setEmail(person.getEmail());
+		}
+		if(person.getPhoneNumber()!=null){
+			existingPerson.setPhoneNumber(person.getPhoneNumber());
+		}
+		if(person.getName()!=null){
+			existingPerson.setName(person.getName());
+		}
+		if(person.getLastname()!=null){
+			existingPerson.setLastname(person.getLastname());
+		}
+
+
+		return PersonDao.INSTANCE.update(existingPerson);
 	}
 
 	@DELETE

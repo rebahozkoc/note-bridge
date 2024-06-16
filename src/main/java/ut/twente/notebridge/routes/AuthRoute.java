@@ -64,6 +64,16 @@ public class AuthRoute {
 
 	}
 
+	@GET
+	@Path("/logout")
+	public Response logout(@Context HttpServletRequest request) {
+		HttpSession session = request.getSession(false); // Get existing session, do not create new
+		if (session != null) {
+			session.invalidate();
+		}
+		return Response.ok("Logged out").build();
+	}
+
 
 	@GET
 	@Path("/loggedintest")

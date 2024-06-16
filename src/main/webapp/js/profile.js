@@ -4,11 +4,54 @@ const createDateElement=document.getElementById("create-date");
 const description=document.getElementById("description");
 const email=document.getElementById("email");
 const phoneNumber=document.getElementById("phone-number");
+const profilePicture= document.getElementById("current-profile-picture");
+
+document.getElementById('file').onchange = function () {
+    var img = document.getElementById('img');
+    var file = this.files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+
+document.getElementById('upload-img').onsubmit = function (e) {
+    e.preventDefault();
+
+    var file = document.getElementById('file').files[0];
+
+    var formData = new FormData();
+
+    //TODO IN CASE USER IS A SPONSOR CHANGE THE URL
+    formData.append('file', file);
+    getStatus()
+        .then(data => {
+            fetch(`http://localhost:8080/notebridge/api/persons/${data.userId}/image`, {
+                method: 'PUT',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    alert('Image uploaded successfully!');
+                    // Optionally, update the main profile picture on the page
+                    profilePicture.src = document.getElementById('img').src;
+                    document.getElementById("editProfileModal").querySelector(".btn-close").click();
+                } else {
+                    console.error('Image upload failed!');
+                    alert('Image upload failed!');
+                }
+            });
 
 
+        })
+        .catch(error => console.error('Error:', error.toString()));
+
+
+};
 
 
 loadUserData();
+loadUserImage();
 
 
 function loadUserData(){
@@ -65,4 +108,25 @@ function loadUserData(){
     })
 
 
+}
+
+function loadUserImage(){
+    getStatus()
+        .then(data=>{
+            fetch(`/notebridge/api/persons/${data.userId}/image`)
+                .then(res => res.blob())
+                .then(blob => {
+                    const imageUrl = URL.createObjectURL(blob);
+                    // Set the src attribute of the img element
+                    profilePicture.src = imageUrl;
+                    document.getElementById("img").src=imageUrl;
+                })
+                .catch(error=>{
+                    console.error("Error", error.toString());
+                })
+
+        })
+        .catch(error=>{
+            console.error("Error", error.toString());
+        })
 }

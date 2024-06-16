@@ -14,7 +14,10 @@ import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 @Path("/persons")
@@ -96,17 +99,24 @@ public class PersonRoute {
 
 	@GET
 	@Path("{id}/image")
-	@Produces(MediaType.MULTIPART_FORM_DATA)
 	public Response getImage(@PathParam("id") Integer id) {
 		Person person = PersonDao.INSTANCE.getUser(id);
 		String fileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + person.getPicture();
-
 		File file = new File(fileLocation);
 
-		Response.ResponseBuilder response = Response.ok(file);
-		response.header("Content-Disposition",
-				"attachment; filename=profile_picture.png");
-		return response.build();
+		if (!file.exists()) {
+			return Response.status(Response.Status.NOT_FOUND).entity("Image not found").build();
+		}
+
+		try {
+			String mimeType = Files.probeContentType(Paths.get(fileLocation));
+			Response.ResponseBuilder response = Response.ok(file);
+			response.header("Content-Disposition", "inline; filename=" + file.getName());
+			response.type(mimeType);
+			return response.build();
+		} catch (IOException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading file").build();
+		}
 	}
 
 

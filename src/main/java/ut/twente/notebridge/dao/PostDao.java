@@ -215,6 +215,28 @@ public enum PostDao {
 		}
 	}
 
+	public List<Post> getPostsByPersonId(int personId) {
+		String sql = """
+				SELECT json_agg(post) FROM post WHERE personId=?
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, personId);
+			ResultSet rs = statement.executeQuery();
+			ObjectMapper mapper = JsonMapper.builder()
+					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+					.build();
+			if (rs.next()) {
+				return Arrays.asList(mapper.readValue(rs.getString("json_agg"), Post[].class));
+			} else {
+				throw new NotFoundException("No posts found for person with id " + personId);
+			}
+		} catch (SQLException | JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting posts");
+		}
+	}
+
 	private int getMaxId() {
 		// TODO delete this method if not used
 

@@ -46,13 +46,12 @@
 }
 
 .main-content {
-    margin-top: 15vh;
     border: 1px solid white;
     box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
+    margin: auto;
 }
 
 #login-form {
-    margin-top: 25vh;
     width: 35%;
 }
 

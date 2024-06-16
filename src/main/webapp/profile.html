@@ -17,8 +17,9 @@
 
             <div class="profile-header text-center mb-4">
                 <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture" class="profile-picture rounded-circle mx-auto d-block mb-3">
-                <h2>Name Surname</h2>
-                <p>@username</p>
+                <h2 id="name-surname">Name Surname</h2>
+                <p id="username">@username</p>
+                <p id="create-date">Account Created On: January 15, 2022</p>
                 <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
             </div>
 
@@ -27,7 +28,7 @@
                     <h3>Description</h3>
                     <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editDescriptionModal">&#9998;</span>
                 </div>
-                <p>I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
+                <p id="description">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
             </div>
 
             <div class="profile-details-box">
@@ -35,8 +36,8 @@
                     <h3>Contact Information</h3>
                     <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editContactModal">&#9998;</span>
                 </div>
-                <p>Email: example@example.com</p>
-                <p>Phone: (123) 456-7890</p>
+                <p id="email">Email: example@example.com</p>
+                <p id="phone-number">Phone: (123) 456-7890</p>
             </div>
 
             <div class="profile-details-box">
@@ -193,7 +194,6 @@
             </div>
         </div>
 
-        <p class="account-info">Account Created On: January 15, 2022</p>
 
     </main>
     <footer class="text-center py-3">
@@ -327,5 +327,6 @@
 
 <script src="js/particles.js"></script>
 <script src="js/app.js"></script>
+<script src="js/profile.js"></script>
 
 </html>

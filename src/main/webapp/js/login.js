@@ -142,6 +142,5 @@ function sendRequestCreateAccount() {
             "Content-type": "application/json"
         }
     })
-    location.reload();
     return false;
 }

@@ -104,12 +104,23 @@ public enum SponsorDao {
 	}
 
 	public Sponsor update(Sponsor updated) {
-		if (!updated.isValid()) throw new BadRequestException("Invalid user.");
-		if (sponsors.get(updated.getId()) == null)
-			throw new NotFoundException("Person id '" + updated.getId() + "' not found.");
-
-		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		sponsors.put(updated.getId(), updated);
+		// TODO: add authentication layer
+		BaseUserDao.INSTANCE.update(updated);
+		String sql = """
+						UPDATE Sponsor
+						SET companyname = ?,
+						websiteurl = ?
+						WHERE id = ?;
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setString(1, updated.getCompanyName());
+			statement.setString(2, updated.getWebsiteURL());
+			statement.setInt(3, updated.getId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while updating person user");
+		}
 
 		return updated;
 	}

@@ -7,6 +7,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.dto.CommentDtoList;
@@ -15,6 +17,7 @@ import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Path("/posts")
@@ -94,7 +97,6 @@ public class PostRoute {
 		} catch (Exception e) {
 			throw new NotFoundException("Post '" + id + "' not found!");
 		}
-
 	}
 
 
@@ -118,6 +120,24 @@ public class PostRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Post createPost(Post post) {
 		return PostDao.INSTANCE.create(post);
+	}
+
+	@POST
+	@Path("{id}/images")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response createImages(
+			@PathParam("id") Integer id,
+			FormDataMultiPart multiPart) {
+
+		try {
+			List<FormDataBodyPart> parts = multiPart.getFields("images");
+			Post post = PostDao.INSTANCE.getPost(id);
+			PostDao.INSTANCE.createImages(post, parts);
+
+			return Response.status(Response.Status.OK).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 
@@ -158,7 +178,6 @@ public class PostRoute {
 
 			}
 		}
-
 	}
 
 }

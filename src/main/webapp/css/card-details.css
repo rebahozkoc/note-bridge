@@ -18,3 +18,9 @@
 .small-opacity{
     opacity: 0.5;
 }
+
+.heart{
+    cursor: pointer;
+    transition: color 0.25s;
+    color:red;
+}

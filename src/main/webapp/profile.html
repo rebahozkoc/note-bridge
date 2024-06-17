@@ -25,29 +25,7 @@
         <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
     </div>
 
-    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editHeaderModalLabel">Edit Name Surname</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="nameInput" value="Name">
-                        <label for="nameInput">Name</label>
-                    </div>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="lastnameInput" value="Surname">
-                        <label for="lastnameInput">Surname</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <div class="profile-details-box">
         <div class="d-flex justify-content-between align-items-center">
@@ -86,6 +64,9 @@
             <li>Guitar</li>
         </ul>
     </div>
+
+
+    <!-------------------------------- Schedule -->
 
     <div class="schedule mt-4">
         <div id="calendar"></div>
@@ -129,13 +110,40 @@
         </div>
     </div>
 
+
+    <!------------------------------------- MODALS -->
+
+    <!-- Edit ProfileInfo Modal -->
+    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editHeaderModalLabel">Edit Name Surname</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="nameInput" value="Name">
+                        <label for="nameInput">Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="lastnameInput" value="Surname">
+                        <label for="lastnameInput">Surname</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Edit Description Modal -->
     <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editDescriptionModalLabel">Edit Description</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-floating">
@@ -156,7 +164,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editContactModalLabel">Edit Contact Information</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
@@ -181,7 +189,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editInstrumentsModalLabel">Edit Instruments Interested In</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">

@@ -1,7 +1,9 @@
 package ut.twente.notebridge.routes;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -56,7 +58,7 @@ public class PersonRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Person updatePerson(@PathParam("id") Integer id, Person person) {
+	public Response updatePerson(@PathParam("id") Integer id, Person person) {
 
 		//TODO: PREVENT UNAUTHORIZED UPDATE(USERS SHOULD BE ABLE TO UPDATE ONLY THEIR OWN ACCOUNT)
 
@@ -78,7 +80,11 @@ public class PersonRoute {
 		}
 
 
-		return PersonDao.INSTANCE.update(existingPerson);
+		try{
+			return Response.status(Response.Status.OK).entity(PersonDao.INSTANCE.update(existingPerson)).build();
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@DELETE

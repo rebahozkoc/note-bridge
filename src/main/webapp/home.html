@@ -10,19 +10,38 @@
 <body id="top-background" class="page-settings">
     <div id="particles-js"> </div>
 
-    <nav class="navbar">
-        <div class="container-fluid d-flex justify-content-between">
-            <button id="menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-                ☰
+    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
             <a class="navbar-brand" href="#">
                 <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
             </a>
-            <a href="login.html" class="btn btn-outline-light rounded-4 py-2">
-                Log in
-            </a>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Browse Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Messenger</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li>
+                        <a class="nav-link text-white" href="#"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-white mt-1" href="login.html">Log in</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
+
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
         <button class="btn btn-light white-block" style="border-top-right-radius: 10px">Search</button>
         <button class="btn btn-light white-block">Categories</button>
@@ -39,40 +58,18 @@
     <div class="container">
         <div id="top-content" class="row">
             <h1 class="title text-white fst-italic fs-1 mb-5">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
-            <button type="button" class="btn btn-outline-light fst-italic fs-4 w-25 rounded-5 p-2">Visit Forum</button>
         </div>
         <div class="row d-flex">
             <div id="left-content" class="col-6">
-                <div id="left-content-title" class="text-white fst-italic fs-2"></div>
-                <div id="left-content-description" class="text-white fst-italic fs-4"></div>
-            </div>
-            <div class="col-6">
-                <div id="carouselExampleIndicators" class="carousel slide">
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    </div>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="assets/images/main-image-2.jpg" class="d-block w-100" alt="band members">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="assets/images/main-image-1.jpg" class="d-block w-100" alt="jam session">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="assets/images/main-image-3.jpg" class="d-block w-100" alt="drums">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                <div id="left-content-title" class="text-white fst-italic fs-2">
+                    <p class="fade-in-text">Discover multiple musical events</p>
                 </div>
+                <div id="left-content-description" class="text-white fst-italic fs-4">
+                    <p class="fade-in-text">Connect with other musicians to have jam sessions together!</p>
+                </div>
+            </div>
+            <div id="right-content" class="col-6">
+                <img src="assets/images/main-image-1.jpg" class="d-block fade-in-image w-100 rounded-3">
             </div>
         </div>
         <div class="container w-75" id="categories">
@@ -82,56 +79,27 @@
                 <button type="button" id="btn3" class="btn btn-outline-light category-btn">Sell or buy instruments</button>
             </div>
         </div>
-        test
     </div>
 
-            <!-- Main content -->
-<!--            <div id="main-content" class="col-8 mb-4">-->
-<!--                <h1 class="fw-bold text-white fs-2 m-5">Capture the feeling of a vibrant music community!</h1>-->
-<!--                <div id="carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">-->
-<!--                    <div class="carousel-inner">-->
-
-<!--                        &lt;!&ndash; First card &ndash;&gt;-->
-<!--                        <div class="carousel-item active">-->
-<!--                            <div class="card first-page-card rounded-5">-->
-<!--                                <img src="assets/images/main-image-2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-1">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h5 class="card-title">Are you looking for a new band member?</h5>-->
-<!--                                    <p class="card-text">Get yourself ready to be connected with musicians from all over the world!</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-<!--                        &lt;!&ndash; Second card &ndash;&gt;-->
-<!--                        <div class="carousel-item">-->
-<!--                            <div class="card first-page-card rounded-5">-->
-<!--                                <img src="assets/images/main-image-1.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-2">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h5 class="card-title">Discover multiple musical events</h5>-->
-<!--                                    <p class="card-text">Connect with other musicians to have jam sessions together!</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-<!--                        &lt;!&ndash; Third card &ndash;&gt;-->
-<!--                        <div class="carousel-item">-->
-<!--                            <div class="card first-page-card rounded-5">-->
-<!--                                <img src="assets/images/main-image-3.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-3">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h5 class="card-title">Sell or buy instruments</h5>-->
-<!--                                    <p class="card-text">Are you interested to buy an instrument or do you want to sell one? Check the posts out!</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-    <!-- Posts -->
-    <div class="container w-75 hide" id="posts">
+    <div id="form" class="container main-content w-50 rounded-5 p-5">
+        <h1 class="fw-bold text-white py-2 fs-2">Contact Us</h1>
+        <form>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label text-white">Email address</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label text-white">Message</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <a href="" class="btn btn-outline-light mt-1 px-3 py-2 rounded-4">Send message</a>
+        </form>
+        <footer class="footer mt-4">
+            <p class="text-white">&copy; 2024 NoteBridge © All rights reserved.</p>
+            <p class="text-white">Designed by UT students.</p>
+        </footer>
     </div>
+    .
 
     <script src="js/home.js"></script>
     <script src="js/base.js"></script>

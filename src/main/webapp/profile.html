@@ -17,10 +17,32 @@
 
     <div class="profile-header text-center mb-4">
         <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture" class="profile-picture rounded-circle mx-auto d-block mb-3" id="current-profile-picture">
-        <h2 id="name-surname">Name Surname</h2>
+        <h2 id="name-surname">Name Surname <button class="btn p-0 edit-header-icon" data-bs-toggle="modal" data-bs-target="#editHeaderModal">
+            <span class="edit-icon">&#9998;</span>
+        </button></h2>
         <p id="username">@username</p>
         <p id="create-date">Account Created On: January 15, 2022</p>
         <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
+    </div>
+
+    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editHeaderModalLabel">Edit Name Surname</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="headerInput" value="Name Surname">
+                        <label for="headerInput">Name Surname</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="saveHeader()">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="profile-details-box">
@@ -309,6 +331,15 @@
         instrumentsList.innerHTML = instruments.map(item => `<li>${item}</li>`).join('');
         document.getElementById("editInstrumentsModal").querySelector(".btn-close").click();
     }*/
+
+    const saveHeader = () => {
+        const nameSurname = document.getElementById("headerInput").value;
+        document.getElementById("name-surname").innerHTML = `${nameSurname}
+            <button class="btn p-0 edit-header-icon" data-bs-toggle="modal" data-bs-target="#editHeaderModal">
+                <span class="edit-icon">&#9998;</span>
+            </button>`;
+        document.getElementById("editHeaderModal").querySelector(".btn-close").click();
+    }
 
 
 </script>

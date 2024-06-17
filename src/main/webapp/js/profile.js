@@ -33,7 +33,6 @@ document.getElementById('upload-img').onsubmit = function (e) {
             }).then(response => {
                 if (response.ok) {
                     alert('Image uploaded successfully!');
-                    // Optionally, update the main profile picture on the page
                     profilePicture.src = document.getElementById('img').src;
                     document.getElementById("editProfileModal").querySelector(".btn-close").click();
                 } else {

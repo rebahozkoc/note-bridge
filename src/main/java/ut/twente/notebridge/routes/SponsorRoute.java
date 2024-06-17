@@ -71,6 +71,9 @@ public class SponsorRoute {
 		if(sponsor.getWebsiteURL()!=null){
 			existingSponsor.setWebsiteURL(sponsor.getWebsiteURL());
 		}
+		if (sponsor.getDescription() != null) {
+			existingSponsor.setDescription(sponsor.getDescription());
+		}
 
 
 		try{

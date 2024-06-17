@@ -25,36 +25,23 @@
         <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
     </div>
 
-    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editHeaderModalLabel">Edit Name Surname</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="nameInput" value="Name">
-                        <label for="nameInput">Name</label>
-                    </div>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="lastnameInput" value="Surname">
-                        <label for="lastnameInput">Surname</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <div class="profile-details-box">
         <div class="d-flex justify-content-between align-items-center">
             <h3>Description</h3>
             <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editDescriptionModal">&#9998;</span>
         </div>
-        <p id="description">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
+        <textarea id="description" style=" width: 100%;);
+    border: none;
+    outline: none;
+    font: inherit;
+    padding: 50px 0; /* Adjust padding as needed */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+    overflow: hidden;
+    resize: none;
+    background: none;
+    color: white;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
     </div>
 
     <div class="profile-details-box">
@@ -77,6 +64,9 @@
             <li>Guitar</li>
         </ul>
     </div>
+
+
+    <!-------------------------------- Schedule -->
 
     <div class="schedule mt-4">
         <div id="calendar"></div>
@@ -120,6 +110,33 @@
         </div>
     </div>
 
+
+    <!------------------------------------- MODALS -->
+
+    <!-- Edit ProfileInfo Modal -->
+    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editHeaderModalLabel">Edit Name Surname</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="nameInput" value="Name">
+                        <label for="nameInput">Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="lastnameInput" value="Surname">
+                        <label for="lastnameInput">Surname</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Edit Description Modal -->
     <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -130,7 +147,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating">
-                        <textarea class="form-control" id="descriptionInput" style="height: 150px;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
+                        <textarea class="form-control" id="descriptionInput" maxlength="300" style="height: 150px;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
                         <label for="descriptionInput">Description</label>
                     </div>
                 </div>
@@ -160,7 +177,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="saveContact()">Save changes</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>

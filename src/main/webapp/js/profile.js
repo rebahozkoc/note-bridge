@@ -6,6 +6,7 @@ const emailElement=document.getElementById("email");
 const phoneNumberElement=document.getElementById("phone-number");
 const profilePicture= document.getElementById("current-profile-picture");
 
+const loadingScreen=document.getElementById("loading-screen");
 
 
 
@@ -258,7 +259,7 @@ function loadUserData(){
                     })
                     .catch(error=>{
                         console.error("Error", error);
-                    })
+                    });
             }else{
                 fetch(`/notebridge/api/persons/${data.userId}`)
                     .then(res => res.json())
@@ -279,7 +280,7 @@ function loadUserData(){
                     })
                     .catch(error=>{
                         console.error("Error", error);
-                    })
+                    });
             }
 
 
@@ -301,13 +302,16 @@ function loadUserImage(){
                     // Set the src attribute of the img element
                     profilePicture.src = imageUrl;
                     document.getElementById("img").src=imageUrl;
+                    loadingScreen.style.display="none";
                 })
                 .catch(error=>{
                     console.error("Error", error.toString());
-                })
+                    loadingScreen.style.display="none";
+                });
 
         })
         .catch(error=>{
             console.error("Error", error.toString());
-        })
+            loadingScreen.style.display="none";
+        });
 }

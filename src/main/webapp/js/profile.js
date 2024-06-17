@@ -8,6 +8,10 @@ const profilePicture= document.getElementById("current-profile-picture");
 
 
 
+
+
+
+
 //Name Lastname Input Modal
 nameLastnameModal=document.getElementById("editHeaderModal");
 //Description Input Modal
@@ -16,11 +20,24 @@ descriptionModal=document.getElementById("editDescriptionModal");
 contactInformationModal=document.getElementById("editContactModal");
 
 
+
+modifyPageIfSponsor();
+
 nameLastnameModal.querySelector(".btn-primary").addEventListener("click",saveChangesNameLastname);
 contactInformationModal.querySelector(".btn-primary").addEventListener("click",saveChangesContactInformation);
 
 
-
+function modifyPageIfSponsor(){
+    getStatus().then(data=>{
+        if(data.role==="sponsor"){
+            nameLastnameModal.querySelector("#editHeaderModalLabel").innerHTML="Edit Company Name & Website URL";
+            nameLastnameModal.querySelector("#nameInput").parentNode.querySelector("label").innerHTML="Company Name";
+            nameLastnameModal.querySelector("#lastnameInput").parentNode.querySelector("label").innerHTML="Website URL";
+        }
+    }).catch(error=>{
+        console.error("Error", error.toString());
+    })
+}
 
 
 
@@ -43,11 +60,10 @@ document.getElementById('upload-img').onsubmit = function (e) {
 
     var formData = new FormData();
 
-    //TODO IN CASE USER IS A SPONSOR CHANGE THE URL
     formData.append('file', file);
     getStatus()
         .then(data => {
-            fetch(`http://localhost:8080/notebridge/api/persons/${data.userId}/image`, {
+            fetch(`http://localhost:8080/notebridge/api/${data.role}s/${data.userId}/image`, {
                 method: 'PUT',
                 body: formData
             }).then(response => {
@@ -73,6 +89,40 @@ document.getElementById('upload-img').onsubmit = function (e) {
 loadUserData();
 loadUserImage();
 
+//MAKING PUT REQUEST TO UPDATE USER INFORMATION IN THE SERVER
+async function updateUserInformation(updatedInfo) {
+    try {
+        const data = await getStatus();
+        let response;
+        if (data.role === "sponsor") {
+            response= await fetch(`/notebridge/api/sponsors/${data.userId}`, {
+                method: 'PUT',
+                body: JSON.stringify(updatedInfo),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            });
+        } else {
+            response = await fetch(`/notebridge/api/persons/${data.userId}`, {
+                method: 'PUT',
+                body: JSON.stringify(updatedInfo),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            });
+        }
+        if (response.ok) {
+            return true;
+        } else {
+            console.error('Failed to update user information:', response.status);
+            return false;
+        }
+
+    } catch (error) {
+        console.error('Error:', error.toString());
+        return false;
+    }
+}
 
 
 //Function to save changes in name and lastname for NAME SURNAME MODAL
@@ -80,18 +130,39 @@ function saveChangesNameLastname(event){
     event.preventDefault();
     const name=nameLastnameModal.querySelector("#nameInput").value;
     const lastname=nameLastnameModal.querySelector("#lastnameInput").value;
-    const updatedInfo={
-        name:name,
-        lastname:lastname
-    }
-    if(updateUserInformation(updatedInfo)){
-        alert("Name and Lastname updated successfully");
-        nameSurnameSpan.innerHTML=name+" "+lastname;
-    }else{
-        alert("Name and Lastname update failed")
-        loadUserData();
-    }
-    nameLastnameModal.querySelector(".btn-close").click();
+
+    let updatedInfo;
+    getStatus().then(data=>{
+        if(data.role==="sponsor"){
+            updatedInfo={
+                companyName:name,
+                websiteURL:lastname
+            }
+        }else{
+            updatedInfo={
+                name:name,
+                lastname:lastname
+            }
+        }
+        if(updateUserInformation(updatedInfo)){
+            alert("Update successful");
+            if(data.role==="sponsor"){
+                nameSurnameSpan.innerHTML=name;
+                nameSurnameSpan.parentNode.nextSibling.innerHTML=`<a href="https://${lastname}" target="_blank">${lastname}</a>`;
+            }else{
+                nameSurnameSpan.innerHTML=name+" "+lastname;
+
+            }
+        }else{
+            alert("Update failed")
+            loadUserData();
+        }
+        nameLastnameModal.querySelector(".btn-close").click();
+
+    }).catch(error=>{
+        console.error("Error", error.toString());
+
+    })
 
 }
 
@@ -118,33 +189,6 @@ function saveChangesContactInformation(event){
 
 
 
-//MAKING PUT REQUEST TO UPDATE USER INFORMATION IN THE SERVER
-async function updateUserInformation(updatedInfo) {
-    try {
-        const data = await getStatus();
-        if (data.role === "sponsor") {
-            //TODO: DO SPONSOR
-            return false;
-        } else {
-            const response = await fetch(`/notebridge/api/persons/${data.userId}`, {
-                method: 'PUT',
-                body: JSON.stringify(updatedInfo),
-                headers: {
-                    "Content-type": "application/json"
-                }
-            });
-            if (response.ok) {
-                return true;
-            } else {
-                console.error('Failed to update user information:', response.status);
-                return false;
-            }
-        }
-    } catch (error) {
-        console.error('Error:', error.toString());
-        return false;
-    }
-}
 
 
 //TO UPDATE THE CHANGES INSIDE THE INPUT VALUES OF THE MODALS
@@ -152,11 +196,19 @@ function loadModalDataPerson(data){
     console.log(nameLastnameModal);
     nameLastnameModal.querySelector("#nameInput").value=data.name;
     nameLastnameModal.querySelector("#lastnameInput").value=data.lastname;
-    //TODO : ADJUST WHEN DESCRIPTION IS IN PLACE
     descriptionModal.querySelector("#descriptionInput").value=data.description;
     contactInformationModal.querySelector("#emailInput").value=data.email;
     contactInformationModal.querySelector("#phoneInput").value=data.phoneNumber;
 }
+function loadModalDataSponsor(data){
+    console.log(nameLastnameModal);
+    nameLastnameModal.querySelector("#nameInput").value=data.companyName;
+    nameLastnameModal.querySelector("#lastnameInput").value=data.websiteURL;
+    descriptionModal.querySelector("#descriptionInput").value=data.description;
+    contactInformationModal.querySelector("#emailInput").value=data.email;
+    contactInformationModal.querySelector("#phoneInput").value=data.phoneNumber;
+}
+
 
 function loadUserData(){
 
@@ -167,6 +219,9 @@ function loadUserData(){
                 fetch(`/notebridge/api/sponsors/${data.userId}`)
                     .then(res => res.json())
                     .then(data => {
+
+                        loadModalDataSponsor(data);
+
                         const createDate = new Date(parseInt(data.createDate));
                         const formattedDate = createDate.toLocaleDateString();
                         const formattedTime = createDate.toLocaleTimeString();
@@ -220,7 +275,7 @@ function loadUserData(){
 function loadUserImage(){
     getStatus()
         .then(data=>{
-            fetch(`/notebridge/api/persons/${data.userId}/image`)
+            fetch(`/notebridge/api/${data.role}s/${data.userId}/image`)
                 .then(res => res.blob())
                 .then(blob => {
                     const imageUrl = URL.createObjectURL(blob);

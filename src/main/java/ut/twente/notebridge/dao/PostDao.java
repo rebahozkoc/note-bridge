@@ -6,12 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
+import java.io.File;
+import java.io.InputStream;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -261,5 +264,34 @@ public enum PostDao {
 		// TODO delete this method if not used
 
 		return posts.keySet().size();
+	}
+
+	public void createImages(Post post, List<FormDataBodyPart> parts) {
+		for (FormDataBodyPart part : parts) {
+			InputStream uploadedInputStream = part.getValueAs(InputStream.class);
+			String fileName = part.getFormDataContentDisposition().getFileName();
+			String uuid = java.util.UUID.randomUUID().toString();
+			String uploadedFileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + uuid + fileName;
+			System.out.println(uploadedFileLocation);
+			// save it
+			File objFile = new File(uploadedFileLocation);
+			if (objFile.exists()) {
+				boolean res = objFile.delete();
+			}
+
+			Utils.saveToFile(uploadedInputStream, uploadedFileLocation);
+
+			String sql = """
+					INSERT INTO picture (postid, pictureurl) VALUES (?, ?)
+					""";
+			try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+				statement.setInt(1, post.getId());
+				statement.setString(2, uuid + fileName);
+				statement.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Could not create image.");
+			}
+		}
 	}
 }

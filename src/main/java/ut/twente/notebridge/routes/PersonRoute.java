@@ -1,7 +1,9 @@
 package ut.twente.notebridge.routes;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -14,7 +16,10 @@ import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 @Path("/persons")
@@ -53,9 +58,33 @@ public class PersonRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Person updatePerson(@PathParam("id") Integer id, Person person) {
-		person.setId(id);
-		return PersonDao.INSTANCE.update(person);
+	public Response updatePerson(@PathParam("id") Integer id, Person person) {
+
+		//TODO: PREVENT UNAUTHORIZED UPDATE(USERS SHOULD BE ABLE TO UPDATE ONLY THEIR OWN ACCOUNT)
+
+		Person existingPerson = PersonDao.INSTANCE.getUser(id);
+		if(person.getUsername()!=null){
+			existingPerson.setUsername(person.getUsername());
+		}
+		if(person.getEmail()!=null){
+			existingPerson.setEmail(person.getEmail());
+		}
+		if(person.getPhoneNumber()!=null){
+			existingPerson.setPhoneNumber(person.getPhoneNumber());
+		}
+		if(person.getName()!=null){
+			existingPerson.setName(person.getName());
+		}
+		if(person.getLastname()!=null){
+			existingPerson.setLastname(person.getLastname());
+		}
+
+
+		try{
+			return Response.status(Response.Status.OK).entity(PersonDao.INSTANCE.update(existingPerson)).build();
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@DELETE
@@ -96,17 +125,24 @@ public class PersonRoute {
 
 	@GET
 	@Path("{id}/image")
-	@Produces(MediaType.MULTIPART_FORM_DATA)
 	public Response getImage(@PathParam("id") Integer id) {
 		Person person = PersonDao.INSTANCE.getUser(id);
 		String fileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + person.getPicture();
-
 		File file = new File(fileLocation);
 
-		Response.ResponseBuilder response = Response.ok(file);
-		response.header("Content-Disposition",
-				"attachment; filename=profile_picture.png");
-		return response.build();
+		if (!file.exists()) {
+			return Response.status(Response.Status.NOT_FOUND).entity("Image not found").build();
+		}
+
+		try {
+			String mimeType = Files.probeContentType(Paths.get(fileLocation));
+			Response.ResponseBuilder response = Response.ok(file);
+			response.header("Content-Disposition", "inline; filename=" + file.getName());
+			response.type(mimeType);
+			return response.build();
+		} catch (IOException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading file").build();
+		}
 	}
 
 

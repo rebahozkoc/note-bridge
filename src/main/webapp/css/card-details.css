@@ -24,3 +24,27 @@
     transition: color 0.25s;
     color:red;
 }
+
+.btn-primary{
+    margin: 10px;
+    border: none;
+    background: #6332c5;
+    color: #fff;
+}
+
+.btn-primary:hover{
+    background-color: rgba(138,62,183,0.3);
+}
+
+.edit-icon {
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size:1.2em;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

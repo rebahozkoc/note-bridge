@@ -275,7 +275,7 @@ function loadUserData(){
 function loadUserImage(){
     getStatus()
         .then(data=>{
-            fetch(`/notebridge/api/persons/${data.userId}/image`)
+            fetch(`/notebridge/api/${data.role}s/${data.userId}/image`)
                 .then(res => res.blob())
                 .then(blob => {
                     const imageUrl = URL.createObjectURL(blob);

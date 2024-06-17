@@ -10,7 +10,7 @@
 <body id="top-background" class="page-settings">
     <div id="particles-js"> </div>
 
-    <nav class="navbar sticky-top">
+    <nav class="navbar">
         <div class="container-fluid d-flex justify-content-between">
             <button id="menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
                 ☰
@@ -43,11 +43,16 @@
         </div>
         <div class="row d-flex">
             <div id="left-content" class="col-6">
-                <div id="left-content-title" class="text-white fst-italic fs-2 fade-in"></div>
-                <div id="left-content-description" class="text-white fst-italic fs-4 fade-in"></div>
+                <div id="left-content-title" class="text-white fst-italic fs-2"></div>
+                <div id="left-content-description" class="text-white fst-italic fs-4"></div>
             </div>
             <div class="col-6">
-                <div id="carousel" class="carousel slide carousel-fade">
+                <div id="carouselExampleIndicators" class="carousel slide">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <img src="assets/images/main-image-2.jpg" class="d-block w-100" alt="band members">
@@ -59,6 +64,14 @@
                             <img src="assets/images/main-image-3.jpg" class="d-block w-100" alt="drums">
                         </div>
                     </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
             </div>
         </div>

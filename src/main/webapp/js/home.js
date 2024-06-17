@@ -8,7 +8,6 @@ const btn3 = document.getElementById("btn3");
 btn1.addEventListener("click", function() {
     leftContentTitle.innerHTML = `Discover multiple musical events`;
     leftContentDescription.innerHTML = `Connect with other musicians to have jam sessions together!`;
-    carousel.next();
 })
 
 btn2.addEventListener("click", function() {

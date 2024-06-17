@@ -6,25 +6,25 @@ let cards = {};
 fetchPosts();
 displayAllCards();
 
-function fetchPosts() {
-    fetch('/notebridge/api/posts')
-        .then(res => res.json())
-        .then(data => {
-            cards = data;
-            displayAllCards();
-        })
-        .catch(err => {
-            console.error(`Unable to fetch cards: ${err.status}`);
-            console.error(err);
-        });
-}
-
-function displayAllCards() {
-    posts.innerHTML = `
-        <h1 class="fw-bold text-white fs-2 my-5">Browse posts</h1>
-        ${cards.data.map(post => `${displayCard(post)}`).join("\n")}
-    `;
-}
+// function fetchPosts() {
+//     fetch('/notebridge/api/posts')
+//         .then(res => res.json())
+//         .then(data => {
+//             cards = data;
+//             displayAllCards();
+//         })
+//         .catch(err => {
+//             console.error(`Unable to fetch cards: ${err.status}`);
+//             console.error(err);
+//         });
+// }
+//
+// function displayAllCards() {
+//     posts.innerHTML = `
+//         <h1 class="fw-bold text-white fs-2 my-5">Browse posts</h1>
+//         ${cards.data.map(post => `${displayCard(post)}`).join("\n")}
+//     `;
+// }
 
 function displayCard(card) {
     return `

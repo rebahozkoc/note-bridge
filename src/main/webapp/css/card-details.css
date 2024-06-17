@@ -1,16 +1,26 @@
-.card-body{
-    padding: 50px 0;
+.card-body-2, .card-body{
+    padding: 25px 0;
     text-align: center;
     border-radius: 25px;
     background-color: rgba(17, 24, 39, 0.8);
     color: rgb(225, 225, 225);
     box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
 }
+.card-body-2{
+    margin: 20px auto;
+}
 
 .mb-2{
     color:white;
+    margin:-3px;
 }
 
-.text-muted{
-    color:white;
+.small-opacity{
+    opacity: 0.5;
+}
+
+.heart{
+    cursor: pointer;
+    transition: color 0.25s;
+    color:red;
 }

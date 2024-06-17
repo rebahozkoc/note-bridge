@@ -57,8 +57,8 @@ public enum BaseUserDao {
 						INSERT INTO BaseUser (createDate,
 						lastUpdate, username,
 						picture, phoneNumber,
-						password, email)
-						VALUES (?, ?, ?, ?, ?, ?, ?);
+						password, email,description)
+						VALUES (?, ?, ?, ?, ?, ?, ?,?);
 				""";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -78,6 +78,12 @@ public enum BaseUserDao {
 			} else {
 				statement.setString(5, newUser.getPhoneNumber());
 			}
+			if (newUser.getDescription() == null) {
+				statement.setNull(8, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(8, newUser.getDescription());
+			}
+
 			String hashedPassword = Security.hashPassword(newUser.getPassword());
 			newUser.setPassword(hashedPassword);
 			statement.setString(6, hashedPassword);
@@ -203,7 +209,7 @@ public enum BaseUserDao {
 	public BaseUser update(BaseUser user) {
 		String sql = """
 						UPDATE BaseUser
-						SET lastUpdate = ?, username = ?, picture = ?, phoneNumber = ?, email = ?
+						SET lastUpdate = ?, username = ?, picture = ?, phoneNumber = ?, email = ?,description = ?
 						WHERE id = ?;
 				""";
 
@@ -222,8 +228,13 @@ public enum BaseUserDao {
 			} else {
 				statement.setString(4, user.getPhoneNumber());
 			}
+			if (user.getDescription() == null) {
+				statement.setNull(6, java.sql.Types.VARCHAR);
+			} else {
+				statement.setString(6, user.getDescription());
+			}
 			statement.setString(5, user.getEmail());
-			statement.setInt(6, user.getId());
+			statement.setInt(7, user.getId());
 
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {

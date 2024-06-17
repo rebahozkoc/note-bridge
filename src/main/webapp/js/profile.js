@@ -1,7 +1,7 @@
 const nameSurnameSpan=document.getElementById("name-surname");
 const usernameHeader=document.getElementById("username");
 const createDateElement=document.getElementById("create-date");
-const description=document.getElementById("description");
+const descriptionElement=document.getElementById("description");
 const emailElement=document.getElementById("email");
 const phoneNumberElement=document.getElementById("phone-number");
 const profilePicture= document.getElementById("current-profile-picture");
@@ -25,7 +25,7 @@ modifyPageIfSponsor();
 
 nameLastnameModal.querySelector(".btn-primary").addEventListener("click",saveChangesNameLastname);
 contactInformationModal.querySelector(".btn-primary").addEventListener("click",saveChangesContactInformation);
-
+descriptionModal.querySelector(".btn-primary").addEventListener("click",saveChangesDescription);
 
 function modifyPageIfSponsor(){
     getStatus().then(data=>{
@@ -187,6 +187,25 @@ function saveChangesContactInformation(event){
     contactInformationModal.querySelector(".btn-close").click();
 }
 
+function saveChangesDescription(event){
+    event.preventDefault();
+    const description=descriptionModal.querySelector("#descriptionInput").value;
+    const updatedInfo={
+        description:description
+
+    }
+    if(updateUserInformation(updatedInfo)) {
+        alert("Description updated successfully");
+        descriptionElement.innerHTML=description;
+
+    }else{
+        alert("Description update failed")
+        loadUserData();
+
+    }
+    descriptionModal.querySelector(".btn-close").click();
+}
+
 
 
 
@@ -232,7 +251,7 @@ function loadUserData(){
                         nameSurnameSpan.parentNode.parentNode.insertBefore(companyWebsite, nameSurnameSpan.parentNode.nextSibling);
 
                         usernameHeader.innerHTML=`@${data.username}`;
-                        description.innerHTML=data.description;
+                        descriptionElement.innerHTML=data.description;
                         emailElement.innerHTML=data.email;
                         phoneNumberElement.innerHTML=data.phoneNumber;
                         createDateElement.innerHTML = `Account Created on: ${formattedDate} ${formattedTime}`;
@@ -253,7 +272,7 @@ function loadUserData(){
 
                         nameSurnameSpan.innerHTML= data.name+" "+data.lastname;
                         usernameHeader.innerHTML=`@${data.username}`;
-                        description.innerHTML=data.description;
+                        descriptionElement.innerHTML=data.description;
                         emailElement.innerHTML=data.email;
                         phoneNumberElement.innerHTML=data.phoneNumber;
                         createDateElement.innerHTML = `Account Created on: ${formattedDate} ${formattedTime}`;

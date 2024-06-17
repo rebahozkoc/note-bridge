@@ -54,7 +54,16 @@
             <h3>Description</h3>
             <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editDescriptionModal">&#9998;</span>
         </div>
-        <p id="description">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
+        <textarea id="description" style=" width: 100%;);
+    border: none;
+    outline: none;
+    font: inherit;
+    padding: 50px 0; /* Adjust padding as needed */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+    overflow: hidden;
+    resize: none;
+    background: none;
+    color: white;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
     </div>
 
     <div class="profile-details-box">
@@ -130,7 +139,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating">
-                        <textarea class="form-control" id="descriptionInput" style="height: 150px;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
+                        <textarea class="form-control" id="descriptionInput" maxlength="300" style="height: 150px;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
                         <label for="descriptionInput">Description</label>
                     </div>
                 </div>
@@ -160,7 +169,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="saveContact()">Save changes</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>

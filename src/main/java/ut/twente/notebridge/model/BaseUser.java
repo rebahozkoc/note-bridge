@@ -8,6 +8,7 @@ public class BaseUser extends BaseEntity {
     private String password;
     private String phoneNumber;
     private String picture;
+    private String description;
 
 
     public BaseUser() {
@@ -17,6 +18,14 @@ public class BaseUser extends BaseEntity {
         this.password = null;
         this.phoneNumber = null;
         this.picture = null;
+        this.description = null;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUsername() {
@@ -68,5 +77,6 @@ public class BaseUser extends BaseEntity {
         this.setPhoneNumber(baseUser.getPhoneNumber());
         this.setPassword(baseUser.getPassword());
         this.setEmail(baseUser.getEmail());
+        this.setDescription(baseUser.getDescription());
     }
 }

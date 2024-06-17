@@ -76,6 +76,9 @@ public class PersonRoute {
 		if(person.getLastname()!=null){
 			existingPerson.setLastname(person.getLastname());
 		}
+		if (person.getDescription() != null) {
+			existingPerson.setDescription(person.getDescription());
+		}
 
 
 		try{

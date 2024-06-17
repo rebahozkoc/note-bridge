@@ -1,21 +1,18 @@
 package ut.twente.notebridge.dao;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import jakarta.ws.rs.BadRequestException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
 import ut.twente.notebridge.model.Sponsor;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 public enum SponsorDao {
@@ -28,11 +25,11 @@ public enum SponsorDao {
 		if (sponsors.containsKey(id)) {
 			sponsors.remove(id);
 		} else {
-			throw new NotFoundException("Person '" + id + "' not found.");
+			throw new NotFoundException("Sponsor '" + id + "' not found.");
 		}
 	}
 
-	public List<Sponsor> getUsers(int pageSize, int pageNumber, String sortBy) {
+	public List<Sponsor> getSponsors(int pageSize, int pageNumber, String sortBy) {
 		// TODO implement getUsers or delete
 		List<Sponsor> list = new ArrayList<>(sponsors.values());
 
@@ -45,14 +42,32 @@ public enum SponsorDao {
 		return (List<Sponsor>) Utils.pageSlice(list, pageSize, pageNumber);
 	}
 
-	public Sponsor getUser(int id) {
-		var pt = sponsors.get(id);
+	public Sponsor getSponsor(int id) {
+		String sql = "SELECT row_to_json(t) sponsor FROM(SELECT * FROM sponsor JOIN baseUser ON sponsor.id = baseUser.id WHERE sponsor.id=?) t"; // Assuming delete_post takes one parameter
 
-		if (pt == null) {
-			throw new NotFoundException("Person '" + id + "' not found!");
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				String json = rs.getString("sponsor");
+
+				ObjectMapper mapper = JsonMapper.builder()
+						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+						.build();
+				Sponsor sponsor = mapper.readValue(json, Sponsor.class);
+				sponsor.setPassword("hidden");
+				return sponsor;
+
+			} else {
+				//no rows returned, post with that id does not exist
+				throw new NotFoundException();
+			}
+
+		} catch (SQLException | JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting sponsor user");
 		}
-
-		return pt;
 	}
 
 	public Sponsor create(Sponsor newSponsor) {
@@ -86,12 +101,23 @@ public enum SponsorDao {
 	}
 
 	public Sponsor update(Sponsor updated) {
-		if (!updated.isValid()) throw new BadRequestException("Invalid user.");
-		if (sponsors.get(updated.getId()) == null)
-			throw new NotFoundException("Person id '" + updated.getId() + "' not found.");
-
-		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		sponsors.put(updated.getId(), updated);
+		// TODO: add authentication layer
+		BaseUserDao.INSTANCE.update(updated);
+		String sql = """
+						UPDATE Sponsor
+						SET companyname = ?,
+						websiteurl = ?
+						WHERE id = ?;
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setString(1, updated.getCompanyName());
+			statement.setString(2, updated.getWebsiteURL());
+			statement.setInt(3, updated.getId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while updating person user");
+		}
 
 		return updated;
 	}

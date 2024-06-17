@@ -111,19 +111,6 @@ function hideCreatePostForm() {
     createPostForm.style.display = "none";
 }
 
-function showCategories() {
-    mainContent.innerHTML = `
-    <div class="container w-75" id="categories">
-        <h1 class="fw-bold text-white fs-2 my-5">Select a category</h1>
-        <div class="btn-group w-100" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-outline-light category-btn">Music events</button>
-            <button type="button" class="btn btn-outline-light category-btn">Find band members</button>
-            <button type="button" class="btn btn-outline-light category-btn">Sell or buy instruments</button>
-        </div>
-    </div>
-    `;
-}
-
 function sendRequestCreatePost() {
     const form = document.getElementById("createPostForm");
     const data = new FormData(form);

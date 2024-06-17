@@ -8,7 +8,10 @@ import jakarta.ws.rs.NotFoundException;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Security;
+import ut.twente.notebridge.utils.Utils;
 
+import java.io.File;
+import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,7 +47,9 @@ public enum BaseUserDao {
 			//no user with that username exists, continue
 		}
 
-		return save(user);
+		BaseUser savedUser = save(user);
+		savedUser.setPassword("hidden");
+		return savedUser;
 	}
 
 	public BaseUser save(BaseUser newUser) {
@@ -231,5 +236,22 @@ public enum BaseUserDao {
 			e.printStackTrace();
 			throw new RuntimeException("Updating user failed.");
 		}
+	}
+
+	public BaseUser setProfilePicture(int id, InputStream uploadedInputStream,String fileName) {
+		//Your local disk path where you want to store the file
+		BaseUser baseUser = getUser(id);
+		String uuid = java.util.UUID.randomUUID().toString();
+		String uploadedFileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + uuid + fileName;
+		System.out.println(uploadedFileLocation);
+		// save it
+		File objFile = new File(uploadedFileLocation);
+		if (objFile.exists()) {
+			boolean res = objFile.delete();
+		}
+
+		Utils.saveToFile(uploadedInputStream, uploadedFileLocation);
+		baseUser.setPicture(uuid + fileName);
+		return baseUser;
 	}
 }

@@ -5,80 +5,123 @@
     <title>Note-Bridge</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
 </head>
-<body class="page-settings">
+<body id="top-background" class="page-settings">
     <div id="particles-js"> </div>
 
-    <div class="container-fluid">
-        <div class="row">
+    <nav class="navbar sticky-top">
+        <div class="container-fluid d-flex justify-content-between">
+            <button id="menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+                ☰
+            </button>
+            <a class="navbar-brand" href="#">
+                <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
+            </a>
+            <a href="login.html" class="btn btn-outline-light rounded-4 py-2">
+                Log in
+            </a>
+        </div>
+    </nav>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <button class="btn btn-light white-block" style="border-top-right-radius: 10px">Search</button>
+        <button class="btn btn-light white-block">Categories</button>
+        <button class="btn btn-light white-block">Browse Posts</button>
+        <button class="btn btn-light white-block">Create Post</button>
+        <button class="btn btn-light white-block">My Posts</button>
+        <button onclick="location.href='/notebridge/profile.html'" class="btn btn-light white-block">My Profile</button>
+        <button class="btn btn-light white-block" style="border-bottom-right-radius: 10px">Contact us</button>
+        <button class="btn btn-dark black-block" style="margin-top: 8.5vh"></button>
+        <button class="btn btn-dark black-block" style="margin-top: 32.7vh"></button>
+        <button class="btn btn-dark black-block" style="margin-top: 57vh"></button>
+    </div>
 
-            <!-- Sidebar -->
-            <div class="col-4 p-0">
-                <div class="white-block d-flex justify-content-between py-4">
-                    <img src="images/NoteBridge.png" alt="logo">
-                    <a href="login.html" class="btn btn-outline-dark rounded-4 py-2">Log in</a>
-                </div>
-                <button class="btn btn-dark black-block"></button>
-                <button class="btn btn-light white-block">Search</button>
-                <button class="btn btn-light white-block" onclick="showCategories()">Categories</button>
-                <a href="#posts" class="btn btn-light white-block" onclick="showPosts()">Browse Posts</a>
-                <button class="btn btn-dark black-block"></button>
-                <button class="btn btn-light white-block" onclick="showCreatePostForm()">Create Post</button>
-                <button class="btn btn-light white-block">My Posts</button>
-
-                <button onclick="location.href='/notebridge/profile.html'" class="btn btn-light white-block">My Profile</button>
-                <button class="btn btn-light white-block rounded-bottom-4" onclick="showContactUsForm()">Contact us</button>
+    <div class="container">
+        <div id="top-content" class="row">
+            <h1 class="title text-white fst-italic fs-1 mb-5">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
+            <button type="button" class="btn btn-outline-light fst-italic fs-4 w-25 rounded-5 p-2">Visit Forum</button>
+        </div>
+        <div class="row d-flex">
+            <div id="left-content" class="col-6">
+                <div id="left-content-title" class="text-white fst-italic fs-2 fade-in"></div>
+                <div id="left-content-description" class="text-white fst-italic fs-4 fade-in"></div>
             </div>
-
-            <!-- Main content -->
-            <div id="main-content" class="col-8 mb-4">
-                <h1 class="fw-bold text-white fs-2 m-5">Capture the feeling of a vibrant music community!</h1>
-                <div id="carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="col-6">
+                <div id="carousel" class="carousel slide carousel-fade">
                     <div class="carousel-inner">
-
-                        <!-- First card -->
                         <div class="carousel-item active">
-                            <div class="card first-page-card rounded-5">
-                                <img src="images/main-image-2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-1">
-                                <div class="card-body">
-                                    <h5 class="card-title">Are you looking for a new band member?</h5>
-                                    <p class="card-text">Get yourself ready to be connected with musicians from all over the world!</p>
-                                </div>
-                            </div>
+                            <img src="assets/images/main-image-2.jpg" class="d-block w-100" alt="band members">
                         </div>
-
-                        <!-- Second card -->
                         <div class="carousel-item">
-                            <div class="card first-page-card rounded-5">
-                                <img src="images/main-image-1.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-2">
-                                <div class="card-body">
-                                    <h5 class="card-title">Discover multiple musical events</h5>
-                                    <p class="card-text">Connect with other musicians to have jam sessions together!</p>
-                                </div>
-                            </div>
+                            <img src="assets/images/main-image-1.jpg" class="d-block w-100" alt="jam session">
                         </div>
-
-                        <!-- Third card -->
                         <div class="carousel-item">
-                            <div class="card first-page-card rounded-5">
-                                <img src="images/main-image-3.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Sell or buy instruments</h5>
-                                    <p class="card-text">Are you interested to buy an instrument or do you want to sell one? Check the posts out!</p>
-                                </div>
-                            </div>
+                            <img src="assets/images/main-image-3.jpg" class="d-block w-100" alt="drums">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="container w-75" id="categories">
+            <div class="btn-group w-100" role="group" aria-label="Basic example">
+                <button type="button" id="btn1" class="btn btn-outline-light category-btn">Music events</button>
+                <button type="button" id="btn2" class="btn btn-outline-light category-btn">Find band members</button>
+                <button type="button" id="btn3" class="btn btn-outline-light category-btn">Sell or buy instruments</button>
+            </div>
+        </div>
+        test
     </div>
+
+            <!-- Main content -->
+<!--            <div id="main-content" class="col-8 mb-4">-->
+<!--                <h1 class="fw-bold text-white fs-2 m-5">Capture the feeling of a vibrant music community!</h1>-->
+<!--                <div id="carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">-->
+<!--                    <div class="carousel-inner">-->
+
+<!--                        &lt;!&ndash; First card &ndash;&gt;-->
+<!--                        <div class="carousel-item active">-->
+<!--                            <div class="card first-page-card rounded-5">-->
+<!--                                <img src="assets/images/main-image-2.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-1">-->
+<!--                                <div class="card-body">-->
+<!--                                    <h5 class="card-title">Are you looking for a new band member?</h5>-->
+<!--                                    <p class="card-text">Get yourself ready to be connected with musicians from all over the world!</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; Second card &ndash;&gt;-->
+<!--                        <div class="carousel-item">-->
+<!--                            <div class="card first-page-card rounded-5">-->
+<!--                                <img src="assets/images/main-image-1.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-2">-->
+<!--                                <div class="card-body">-->
+<!--                                    <h5 class="card-title">Discover multiple musical events</h5>-->
+<!--                                    <p class="card-text">Connect with other musicians to have jam sessions together!</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; Third card &ndash;&gt;-->
+<!--                        <div class="carousel-item">-->
+<!--                            <div class="card first-page-card rounded-5">-->
+<!--                                <img src="assets/images/main-image-3.jpg" class="card-img-top image-first-page-card rounded-top-5" alt="main-image-3">-->
+<!--                                <div class="card-body">-->
+<!--                                    <h5 class="card-title">Sell or buy instruments</h5>-->
+<!--                                    <p class="card-text">Are you interested to buy an instrument or do you want to sell one? Check the posts out!</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <!-- Posts -->
     <div class="container w-75 hide" id="posts">
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/base.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="js/particles.js"></script>
     <script src="js/app.js"></script>

@@ -134,4 +134,31 @@ public class PostRoute {
 		like.setPersonId(personId);
 		return PostDao.INSTANCE.beingLiked(like);
 	}
+
+	//This route is defined to get all posts of a user, when user is logged in
+	//and desires to display all their posts.
+	@GET
+	@Path("/person/{personId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPostsByPerson(@PathParam("personId") int personId,
+									 @Context HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
+		}else{
+			int personIdSession = (int) session.getAttribute("userId");
+			if(personIdSession!=personId){
+				return Response.status(Response.Status.FORBIDDEN).entity("You are not allowed to display others' posts.").build();
+			}else{
+				try{
+					return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.getPostsByPersonId(personId)).build();
+				}catch (Exception e){
+					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Server failed to retreive posts.").build();
+				}
+
+			}
+		}
+
+	}
+
 }

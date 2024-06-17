@@ -5,324 +5,227 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NoteBridge</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/profilestyle.css">
+    <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="page-settings">
 
-    <div id="particles-js"></div>
+<div id="particles-js"></div>
 
-    <main class="container mt-5">
+<main class="container mt-5">
 
-            <div class="profile-header text-center mb-4">
-                <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture" class="profile-picture rounded-circle mx-auto d-block mb-3">
-                <h2>Name Surname</h2>
-                <p>@username</p>
-                <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
-            </div>
+    <div class="profile-header text-center mb-4">
+        <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture" class="profile-picture rounded-circle mx-auto d-block mb-3" id="current-profile-picture">
+        <h2><span id="name-surname">Name Surname </span> <button class="btn p-0 edit-header-icon" data-bs-toggle="modal" data-bs-target="#editHeaderModal">
+            <span class="edit-icon">&#9998;</span>
+        </button></h2>
+        <p id="username">@username</p>
+        <p id="create-date">Account Created On: January 15, 2022</p>
+        <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
+    </div>
 
-            <div class="profile-details-box">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3>Description</h3>
-                    <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editDescriptionModal">&#9998;</span>
+    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editHeaderModalLabel">Edit Name Surname</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <p>I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
-            </div>
-
-            <div class="profile-details-box">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3>Contact Information</h3>
-                    <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editContactModal">&#9998;</span>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="nameInput" value="Name">
+                        <label for="nameInput">Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="lastnameInput" value="Surname">
+                        <label for="lastnameInput">Surname</label>
+                    </div>
                 </div>
-                <p>Email: example@example.com</p>
-                <p>Phone: (123) 456-7890</p>
-            </div>
-
-            <div class="profile-details-box">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3>Instruments Interested In</h3>
-                    <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editInstrumentsModal">&#9998;</span>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
-                <ul>
-                    <li>Piano</li>
-                    <li>Violin</li>
-                    <li>Guitar</li>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-details-box">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Description</h3>
+            <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editDescriptionModal">&#9998;</span>
+        </div>
+        <p id="description">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</p>
+    </div>
+
+    <div class="profile-details-box">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Contact Information</h3>
+            <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editContactModal">&#9998;</span>
+        </div>
+        <p id="email">Email: example@example.com</p>
+        <p id="phone-number">Phone: (123) 456-7890</p>
+    </div>
+
+    <div class="profile-details-box">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Instruments Interested In</h3>
+            <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editInstrumentsModal">&#9998;</span>
+        </div>
+        <ul>
+            <li>Piano</li>
+            <li>Violin</li>
+            <li>Guitar</li>
+        </ul>
+    </div>
+
+    <div class="schedule mt-4">
+        <div id="calendar"></div>
+    </div>
+
+    <div class="main-grid-container">
+        <div class="calendar-container mb-4">
+            <header class="calendar-header">
+                <h4>Monthly Schedule of Events - <span class="month-name"></span></h4>
+                <p class="calendar-current-date"></p>
+                <div class="calendar-navigation">
+                    <span id="calendar-prev" class="material-symbols-rounded"> < </span>
+                    <span id="calendar-next" class="material-symbols-rounded"> > </span>
+                </div>
+            </header>
+
+            <div class="calendar-body">
+                <ul class="calendar-weekdays">
+                    <li>Sun</li>
+                    <li>Mon</li>
+                    <li>Tue</li>
+                    <li>Wed</li>
+                    <li>Thu</li>
+                    <li>Fri</li>
+                    <li>Sat</li>
                 </ul>
+                <ul class="calendar-dates"></ul>
             </div>
 
-            <div class="schedule mt-4">
-                <div id="calendar"></div>
-            </div>
+        </div>
 
-        <div class="main-grid-container">
-            <div class="calendar-container mb-4">
-                <header class="calendar-header">
-                    <h4>Monthly Schedule of Events - <span class="month-name"></span></h4>
-                    <p class="calendar-current-date"></p>
-                    <div class="calendar-navigation">
-                        <span id="calendar-prev" class="material-symbols-rounded"> < </span>
-                        <span id="calendar-next" class="material-symbols-rounded"> > </span>
-                    </div>
-                </header>
-
-                <div class="calendar-body">
-                    <ul class="calendar-weekdays">
-                        <li>Sun</li>
-                        <li>Mon</li>
-                        <li>Tue</li>
-                        <li>Wed</li>
-                        <li>Thu</li>
-                        <li>Fri</li>
-                        <li>Sat</li>
-                    </ul>
-                    <ul class="calendar-dates"></ul>
-                </div>
-
-            </div>
-
-            <div class="schedule-container">
-                <div class="schedule">
-                    <h3 class = "text-center">Daily Schedule <span id="selected-date"></span></h3>
-                    <div id="schedule-date" class="schedule-date"></div>
-                    <div id="schedule-content">
-                         <!--schedule content will be dynamically generated-->
-                    </div>
+        <div class="schedule-container">
+            <div class="schedule">
+                <h3 class = "text-center">Daily Schedule</h3>
+                <h5 class = "text-center"><span id="selected-date"></span></h5>
+                <div id="schedule-date" class="schedule-date"></div>
+                <div id="schedule-content">
+                    <!--schedule content will be dynamically generated-->
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Edit Description Modal -->
-        <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editDescriptionModalLabel">Edit Description</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Edit Description Modal -->
+    <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDescriptionModalLabel">Edit Description</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <textarea class="form-control" id="descriptionInput" style="height: 150px;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
+                        <label for="descriptionInput">Description</label>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-floating">
-                            <textarea class="form-control" id="descriptionInput" style="height: 150px;">I am an experienced music teacher specializing in classical piano and music theory. With over 10 years of teaching experience, I have helped countless students achieve their musical goals.</textarea>
-                            <label for="descriptionInput">Description</label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="saveDescription()">Save changes</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Edit Contact Information Modal -->
-        <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editContactModalLabel">Edit Contact Information</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Edit Contact Information Modal -->
+    <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editContactModalLabel">Edit Contact Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="emailInput" value="example@example.com">
+                        <label for="emailInput">Email address</label>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="emailInput" value="example@example.com">
-                            <label for="emailInput">Email address</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="tel" class="form-control" id="phoneInput" value="(123) 456-7890">
-                            <label for="phoneInput">Phone</label>
-                        </div>
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="phoneInput" value="(123) 456-7890">
+                        <label for="phoneInput">Phone</label>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="saveContact()">Save changes</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="saveContact()">Save changes</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Edit Instruments Modal -->
-        <div class="modal fade" id="editInstrumentsModal" tabindex="-1" aria-labelledby="editInstrumentsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editInstrumentsModalLabel">Edit Instruments Interested In</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Edit Instruments Modal -->
+    <div class="modal fade" id="editInstrumentsModal" tabindex="-1" aria-labelledby="editInstrumentsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editInstrumentsModalLabel">Edit Instruments Interested In</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="instrumentsInput" value="Piano, Violin, Guitar">
+                        <label for="instrumentsInput">Instruments</label>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="instrumentsInput" value="Piano, Violin, Guitar">
-                            <label for="instrumentsInput">Instruments</label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="saveInstruments()">Save changes</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="saveInstruments()">Save changes</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="false">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="editProfileModalLabel">Edit Profile</h1>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture" class="profile-picture rounded-circle mb-3">
-                        <div class="form-floating mb-3 text-center">
-                            <input type="file" class="form-control" id="profilePictureInput" placeholder="Upload Photo">
-                            <label for="profilePictureInput">Update Profile Picture</label>
-                        </div>
-                        <div class="form-floating mb-3 text-center">
-                            <input type="file" class="form-control" id="headerPictureInput" placeholder="Upload Header Photo">
-                            <label for="headerPictureInput">Update Header Image</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="nameInput" placeholder="Name Surname">
-                            <label for="nameInput">Name Surname</label>
-                        </div>
-                        <!--<div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="emailInput" placeholder="Email">
-                            <label for="emailInput">Email address</label>
-                        </div>-->
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="addressInput" placeholder="Address">
-                            <label for="addressInput">Address</label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-save btn-primary">Save Changes</button>
-                    </div>
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editProfileModalLabel">Edit Profile Picture</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <form id="upload-img">
+                        <input type="file" name="file" id="file" accept="image/*" class="form-control mb-3">
+                        <img id="img" src="assets/images/profile-picture-placeholder.png" alt="Image preview..." class="profile-picture rounded-circle mt-3">
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-save btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+
             </div>
         </div>
+    </div>
+</main>
 
-        <p class="account-info">Account Created On: January 15, 2022</p>
-
-    </main>
-    <footer class="text-center py-3">
-        <div class="container">
-            <p>&copy; 2024 NoteBridge. All rights reserved.</p>
-        </div>
-    </footer>
+<footer class="text-center py-3">
+    <div class="container">
+        <p>&copy; 2024 NoteBridge. All rights reserved.</p>
+    </div>
+</footer>
 </body>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
-<script>
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = date.getMonth();
 
-    const day = document.querySelector(".calendar-dates");
-    const currdate = document.querySelector(".calendar-current-date");
-    const monthNameElem = document.querySelector(".month-name");
-    const prenexIcons = document.querySelectorAll(".calendar-navigation span");
-    const scheduleContent = document.getElementById("schedule-content");
-    const selectedDateElem = document.getElementById("selected-date");
-
-    const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-
-    // Function to generate the calendar
-    const manipulate = () => {
-        // Get the first day of the month
-        let dayone = new Date(year, month, 1).getDay();
-        // Get the last date of the month
-        let lastdate = new Date(year, month + 1, 0).getDate();
-        // Get the day of the last date of the month
-        let dayend = new Date(year, month, lastdate).getDay();
-        // Get the last date of the previous month
-        let monthlastdate = new Date(year, month, 0).getDate();
-        // Variable to store the generated calendar HTML
-        let lit = "";
-        // Loop to add the last dates of the previous month
-        for (let i = dayone; i > 0; i--) {
-            lit += `<li class="inactive">${monthlastdate - i + 1}</li>`;
-        }
-        // Loop to add the dates of the current month
-        for (let i = 1; i <= lastdate; i++) {
-            // Check if the current date is today
-            let isToday = i === date.getDate() && month === date.getMonth() && year === date.getFullYear() ? "active" : "";
-            lit += `<li class="date-item ${isToday}" onclick="updateDailySchedule(this, ${i})">${i}</li>`;
-        }
-        // Loop to add the first dates of the next month
-        for (let i = dayend; i < 6; i++) {
-            lit += `<li class="inactive">${i - dayend + 1}</li>`
-        }
-        // update the HTML of the dates element with the generated calendar
-        day.innerHTML = lit;
-        monthNameElem.innerText = `${monthNames[month]} ${year}`;
-
-    }
-
-    // Function to update the daily schedule with the selected date
-    const updateDailySchedule = (element, selectedDate) => {
-        // Remove active class from all dates
-        const allDates = document.querySelectorAll('.date-item');
-        allDates.forEach(date => {
-            date.classList.remove('active');
-        });
-
-        // Add active class to the clicked date
-        element.classList.add('active');
-
-        // Format the selected date as mm/dd/yyyy
-        const formattedDate = `${month < 9 ? '0' + (month + 1) : month + 1}/${selectedDate < 10 ? '0' + selectedDate : selectedDate}/${year}`;
-
-        // Update the selected date in the title
-        selectedDateElem.innerText = formattedDate;
-
-        // Update the schedule content with the activities
-        scheduleContent.innerHTML = `
-        <ul class="schedule-daily">
-            <li>Jam session</li>
-            <li>Lecture</li>
-        </ul>`;
-    }
-
-    manipulate();
-
-    prenexIcons.forEach(icon => {
-        icon.addEventListener("click", () => {
-            month = icon.id === "calendar-prev" ? month - 1 : month + 1;
-            if (month < 0 || month > 11) {
-                date = new Date(year, month, new Date().getDate());
-                year = date.getFullYear();
-                month = date.getMonth();
-            } else {
-                date = new Date();
-            }
-            manipulate();
-        });
-    });
-
-    // Functions to save edited content
-    const saveDescription = () => {
-        const description = document.getElementById("descriptionInput").value;
-        document.querySelector(".profile-details p").innerText = description;
-        document.getElementById("editDescriptionModal").querySelector(".btn-close").click();
-    }
-
-    const saveContact = () => {
-        const email = document.getElementById("emailInput").value;
-        const phone = document.getElementById("phoneInput").value;
-        document.querySelector(".profile-details p:nth-of-type(2)").innerText = `Email: ${email}`;
-        document.querySelector(".profile-details p:nth-of-type(3)").innerText = `Phone: ${phone}`;
-        document.getElementById("editContactModal").querySelector(".btn-close").click();
-    }
-
-    const saveInstruments = () => {
-        const instruments = document.getElementById("instrumentsInput").value.split(',').map(item => item.trim());
-        const instrumentsList = document.getElementById("instrumentsList");
-        instrumentsList.innerHTML = instruments.map(item => `<li>${item}</li>`).join('');
-        document.getElementById("editInstrumentsModal").querySelector(".btn-close").click();
-    }
-
-
-</script>
-
+<script src="js/profile-calendar.js"></script>
 <script src="js/particles.js"></script>
 <script src="js/app.js"></script>
+
+<script src="js/profile.js"></script>
 
 </html>

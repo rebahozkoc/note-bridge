@@ -1,9 +1,7 @@
 package ut.twente.notebridge.routes;
 
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -103,19 +101,9 @@ public class PersonRoute {
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		try {
 			Person person = PersonDao.INSTANCE.getUser(id);
-			System.out.println("PersonRoute.uploadFile is called");
-			//Your local disk path where you want to store the file
-			String uuid = java.util.UUID.randomUUID().toString();
-			String uploadedFileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + uuid + fileDetail.getFileName();
-			System.out.println(uploadedFileLocation);
-			// save it
-			File objFile = new File(uploadedFileLocation);
-			if (objFile.exists()) {
-				boolean res = objFile.delete();
-			}
-
-			Utils.saveToFile(uploadedInputStream, uploadedFileLocation);
-			person.setPicture(uuid + fileDetail.getFileName());
+			System.out.println("PersonRoute.putImage is called");
+			BaseUser baseUser = BaseUserDao.INSTANCE.setProfilePicture(id, uploadedInputStream, fileDetail.getFileName());
+			person.setBaseUser(baseUser);
 			PersonDao.INSTANCE.update(person);
 			return Response.status(Response.Status.OK).entity(person).build();
 		} catch (Exception e) {

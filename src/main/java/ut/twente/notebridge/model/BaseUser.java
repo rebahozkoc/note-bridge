@@ -1,6 +1,5 @@
 package ut.twente.notebridge.model;
 
-import java.sql.Timestamp;
 
 public class BaseUser extends BaseEntity {
 
@@ -58,5 +57,16 @@ public class BaseUser extends BaseEntity {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public void setBaseUser(BaseUser baseUser) {
+        this.setId(baseUser.getId());
+        this.setCreateDate(baseUser.getCreateDate());
+        this.setLastUpdate(baseUser.getLastUpdate());
+        this.setUsername(baseUser.getUsername());
+        this.setPicture(baseUser.getPicture());
+        this.setPhoneNumber(baseUser.getPhoneNumber());
+        this.setPassword(baseUser.getPassword());
+        this.setEmail(baseUser.getEmail());
     }
 }

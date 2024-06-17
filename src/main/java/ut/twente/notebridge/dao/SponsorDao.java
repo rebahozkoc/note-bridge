@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
 import ut.twente.notebridge.model.Sponsor;
@@ -14,8 +13,6 @@ import ut.twente.notebridge.utils.Utils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 public enum SponsorDao {
@@ -28,7 +25,7 @@ public enum SponsorDao {
 		if (sponsors.containsKey(id)) {
 			sponsors.remove(id);
 		} else {
-			throw new NotFoundException("Person '" + id + "' not found.");
+			throw new NotFoundException("Sponsor '" + id + "' not found.");
 		}
 	}
 

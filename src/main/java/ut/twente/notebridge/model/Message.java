@@ -1,55 +1,54 @@
 package ut.twente.notebridge.model;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class Message extends BaseEntity {
-    private int idOfMessageHistory;
-    private String user;
-    private Timestamp date;
-    private String message;
+    private int messagehistory_id;
+    private Integer user_id;
+    private Timestamp createddate;
+    private String content;
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Message() {
-        idOfMessageHistory=0;
-        user=null;
-        date=null;
-        message=null;
+        messagehistory_id =0;
+        user_id =null;
+        createddate =null;
+        content =null;
     }
 
-    public Message(String user, String message) {
-        this.user=user;
-        this.message=message;
+    public Message(Integer user_id, String content) {
+        this.user_id = user_id;
+        this.content = content;
     }
 
-    public int getIdForMessage() {
-        return idOfMessageHistory;
+    public int getMessagehistory_id() {
+        return messagehistory_id;
     }
 
-    public void setIdForMessage(int id) {
-        this.idOfMessageHistory = id;
+    public void setMessagehistory_id(int id) {
+        this.messagehistory_id = id;
     }
 
-    public String getUser() {
-        return user;
+    public Integer getUser_id() {
+        return user_id;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreateddate() {
+        return createddate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreateddate(Timestamp createddate) {
+        this.createddate = createddate;
     }
 }

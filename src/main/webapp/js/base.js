@@ -43,3 +43,4 @@ function pressPianoBtn8() {
 function addSoundTag(sound) {
     return `<source src=` + sound + ` type="audio/mpeg">`;
 }
+

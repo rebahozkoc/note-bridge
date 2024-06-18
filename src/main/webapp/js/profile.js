@@ -256,11 +256,9 @@ function loadUserData(){
                         emailElement.innerHTML=data.email;
                         phoneNumberElement.innerHTML=data.phoneNumber;
                         createDateElement.innerHTML = `Account Created on: ${formattedDate} ${formattedTime}`;
-                        return true;
                     })
                     .catch(error=>{
                         console.error("Error", error);
-                        return false;
                     });
             }else{
                 fetch(`/notebridge/api/persons/${data.userId}`)
@@ -279,11 +277,9 @@ function loadUserData(){
                         emailElement.innerHTML=data.email;
                         phoneNumberElement.innerHTML=data.phoneNumber;
                         createDateElement.innerHTML = `Account Created on: ${formattedDate} ${formattedTime}`;
-                        return true;
                     })
                     .catch(error=>{
                         console.error("Error", error);
-                        return false;
                     });
             }
 

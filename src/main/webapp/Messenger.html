@@ -12,38 +12,57 @@
 <body id="top-background" class="page-settings">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <div id="particles-js"> </div>
-<div id="navbar">
-<nav id="navitems" class="navbar sticky-top">
-    <div class="container-fluid d-flex justify-content-between">
-        <button id="menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling " onclick="hideContacts()">
-            ☰
+<nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="#">
             <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
         </a>
-        <a href="login.html" class="btn btn-outline-light rounded-4 py-2">
-            Log in
-        </a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <button type="button" class="card-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"><img src="assets/images/piano-icon.jpg" width="35px" height="35px"></button>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="cards.html">Browse Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="Messenger.html">Messenger</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#form">Contact Us</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li>
+                    <a class="nav-link text-white" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
+                </li>
+                <li>
+                    <a class="nav-link text-white mt-1" href="login.html">Log in</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
-    <div class="header grid-container ">
-        <span id="contactName" style="font: 35px 'Arial Black';color: #201d1d; height: 11vh"></span>
-        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; height: 100%;">
-            Invite +
-        </button>
+<div class="offcanvas offcanvas-bottom rounded-4" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-body d-flex bg-dark rounded-3">
+        <button class="btn btn-light white-block rounded-start-2" onclick="pressPianoBtn1()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn2()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn3()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn4()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn5()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn6()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn7()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn8()"></button>
+        <button class="btn btn-light white-block rounded-end-2"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 5.5vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 14vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 29.5vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 45vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 53vh"></button>
     </div>
-</div>
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-    <button class="btn btn-light white-block" style="border-top-right-radius: 10px">Search</button>
-    <button class="btn btn-light white-block">Categories</button>
-    <button class="btn btn-light white-block">Browse Posts</button>
-    <button class="btn btn-light white-block">Create Post</button>
-    <button class="btn btn-light white-block">My Posts</button>
-    <button onclick="location.href='/notebridge/profile.html'" class="btn btn-light white-block">My Profile</button>
-    <button class="btn btn-light white-block" style="border-bottom-right-radius: 10px">Contact us</button>
-    <button class="btn btn-dark black-block" style="margin-top: 8.5vh"></button>
-    <button class="btn btn-dark black-block" style="margin-top: 32.7vh"></button>
-    <button class="btn btn-dark black-block" style="margin-top: 57vh"></button>
 </div>
 <div class="contactAndChat">
     <div id="contactsHolder" class="contacts ib">
@@ -51,6 +70,12 @@
     </div>
     <div class="chat ib">
         <div class="row g-0">
+            <div class="header grid-container ">
+                <span id="contactName" style="font: 35px 'Arial Black';color: #201d1d;"></span>
+                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; height: 100%;">
+                    Invite +
+                </button>
+            </div>
             <div id="messageBox" class="chat-box g-0"></div>
             <div class="g-0">
                 <form id='newMessage' class="d-flex">
@@ -110,37 +135,41 @@
         }
     }
 
-    function loadMessages() {
+    function loadMessages(id) {
         if (selectedContact === null) {
             console.log("this is top contact");
             console.log(contacts['data'][0].id);
             selectedContact=contacts['data'][0].id;
-            loadMessagesWithID(contacts['data'][0].id);
+            console.info(id);
+            loadMessagesWithID(selectedContact,id);
         } else {
             console.log("this is selected contact");
             console.log(selectedContact);
-            loadMessagesWithID(selectedContact);
+            loadMessagesWithID(selectedContact,id);
         }
     }
 
-    function loadMessagesWithID(x){
+    function loadMessagesWithID(x, id){
         let username=null;
         for (const contact in contacts['data']){
             if (contacts['data'][contact].id===x){
                 username=contacts['data'][contact].username;
             }
         }
-        console.log(username);
         document.getElementById("contactName").innerText=username;
-        fetchMessages(x);
+        fetchMessages(x, id);
     }
 
     function loadMessagesForThisUser(x){
         messageElement.innerHTML=``;
         messages={};
         selectedContact=getId(`${x.innerText.split("\n")[0]}`);
+        console.info(selectedContact);
         document.getElementById("contactName").innerText=`${x.innerText.split("\n")[0]}`;
-        fetchMessages(getId(`${x.innerText.split("\n")[0]}`));
+        getStatus()
+            .then(data=> {
+                fetchMessages(getId(`${x.innerText.split("\n")[0]}`),data.userId);
+            })
     }
 
     function getId(x){
@@ -161,41 +190,35 @@
             .then(data=> {
                 fetch(`http://localhost:8080/notebridge/api/message/contact/${data.userId}`, {method: "GET"})
                     .then(res => res.json())
-                    .then(data => {
-                        contacts = data;
+                    .then(data2 => {
+                        let id=data.userId;
+                        contacts = data2;
                         showContacts();
-                        loadMessages();
+                        loadMessages(id);
                     })
                     .catch(err => {
                         console.error(`Unable to fetch contacts: ${err.status}`);
                         console.error(err);
                     });
-            })
+        })
     }
 
-    function fetchMessages(id){
-        getStatus()
-            .then(data=> {
-
-                fetch(`http://localhost:8080/notebridge/api/message/messages/${id}/${data.userId}`, {method: "GET"})
+    function fetchMessages(x, id){
+                fetch(`http://localhost:8080/notebridge/api/message/messages/${x}/${id}`, {method: "GET"})
                     .then(res => res.json())
                     .then(data => {
                         messages = data;
-                        showMessageHistory();
+                        showMessageHistory(id);
                     })
                     .catch(err => {
-                        console.error(`Unable to fetch contacts: ${err.status}`);
+                        console.error(`Unable to fetch messages: ${err.status}`);
                         console.error(err);
-                    });
-            })
+                    })
     }
 
-    function showMessageHistory(){
-        getStatus()
-            .then(data => {
-                messageElement.innerHTML = `
-                ${messages.data.map(message => `${divideMessages(message, data.userId)}`).join("\n")}`
-            })
+    function showMessageHistory(id){
+        messageElement.innerHTML = `
+                ${messages.data.map(message => `${divideMessages(message, id)}`).join("\n")}`
     }
 
     function divideMessages(message, id){
@@ -244,21 +267,21 @@
             .then(data => {
                 let dataObject = {};
                 let message = document.getElementById("message").value;
-                let user2 = selectedContact;
                 dataObject.user_id = data.userId;
                 dataObject.content = message;
-                fetch(`/notebridge/api/message/newmessage/${15}/${16}/${message}`, {
+                fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${message}`, {
                     method: "POST",
                     body: JSON.stringify(dataObject),
                     headers: {
                         "Content-type": "application/json"
                     }
                 }).then(r => {
-                    loadMessagesWithID(selectedContact);
+                    loadMessagesWithID(selectedContact, dataObject.user_id);
+                    clearQuery();
                 })
-                event.preventDefault();
-                clearQuery();
             })
+        event.preventDefault();
+
     })
 
 </script>

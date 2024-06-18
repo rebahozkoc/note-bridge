@@ -6,6 +6,14 @@ const secondField = document.querySelector("#second-field");
 form.addEventListener("submit", function(event) {
     event.preventDefault();
 
+    const password = document.querySelector("#password").value;
+    const repeatPassword = document.querySelector("#repeat-password").value;
+
+    if (password !== repeatPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
     const data = new FormData(form);
     let dataObject = {};
     let uriToSendRequest;
@@ -33,6 +41,7 @@ form.addEventListener("submit", function(event) {
         }
     }).then(res => {
         if(res.status === 200) {
+            alert("Welcome, " + username + "!");
             window.location.replace("http://localhost:8080/notebridge/login.html")
         } else {
             res.text().then(data => {

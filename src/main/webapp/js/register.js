@@ -2,15 +2,20 @@ const form = document.querySelector("#register-form");
 const registerAsUserBtn = document.querySelector("#user-btn");
 const firstField = document.querySelector("#first-field");
 const secondField = document.querySelector("#second-field");
+const warningMessage = document.querySelector("#warning-message");
 
 form.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const password = document.querySelector("#password").value;
-    const repeatPassword = document.querySelector("#repeat-password").value;
+    const password = document.querySelector("#floatingPassword").value;
+    const repeatPassword = document.querySelector("#floatingPassword2").value;
+    const username = document.querySelector("#username").value;
+
+    console.log(password);
+    console.log(repeatPassword);
 
     if (password !== repeatPassword) {
-        alert("Passwords do not match!");
+        warningMessage.innerHTML = "Passwords do not match!";
         return;
     }
 
@@ -30,9 +35,6 @@ form.addEventListener("submit", function(event) {
         uriToSendRequest = "/notebridge/api/sponsors";
     }
 
-    console.log(uriToSendRequest);
-    console.log(JSON.stringify(dataObject));
-
     fetch(uriToSendRequest, {
         method: "POST",
         body: JSON.stringify(dataObject),
@@ -41,11 +43,10 @@ form.addEventListener("submit", function(event) {
         }
     }).then(res => {
         if(res.status === 200) {
-            alert("Welcome, " + username + "!");
+            alert("Welcome!");
             window.location.replace("http://localhost:8080/notebridge/login.html")
         } else {
             res.text().then(data => {
-                const warningMessage = document.querySelector("#warning-message");
                 warningMessage.innerHTML = data;
             });
         }})

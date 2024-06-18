@@ -6,8 +6,8 @@
 
 .post {
     margin: 5vh 17vh 10vh;
-    box-shadow: rgba(138,62,183,0.3) 1px -5px 35px;
     color: rgb(225, 225, 225);
+    width: 18rem;
 }
 
 .card-btn {
@@ -24,7 +24,25 @@
 .card-background {
     background-color:rgb(17, 24, 39);
     color: rgb(225, 225, 225);
-    box-shadow: rgba(138,62,183,0.3) 1px -5px 40px;
+}
+
+.card,
+.card-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 30ch;
+}
+
+
+.card,
+.card-title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 15ch;
+
 }
 
 .card:hover {
@@ -81,6 +99,7 @@ html {
     background-color:rgb(17, 24, 39);
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
+
 }
 
 

@@ -6,16 +6,12 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import jakarta.ws.rs.NotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -36,17 +32,19 @@ public enum MessageDao {
 
     private final HashMap<String, MessageHistory> messenger=new HashMap<>();
 
-    public List<Message> getMessages(int pageSize, int pageNumber, String sortBy, String user) {
+    public List<Message> getMessages(int pageSize, int pageNumber, String sortBy, String user1, String user2) {
         List<Message> list = null;
         System.out.println("GET messages called");
         try {
             PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-					SELECT json_agg(privatemessage)
-					FROM notebridge.privatemessage, notebridge.privatemessagehistory
-					WHERE notebridge.privatemessagehistory.user1=? OR notebridge.privatemessagehistory.user2=?;
+					SELECT json_agg(pm)
+					FROM notebridge.privatemessage pm
+					WHERE pm.messagehistory_id = (SELECT id FROM privatemessagehistory WHERE (user1=? AND user2=?) OR (user1=? AND user2=?));
 					""");
-            ps.setInt(1, Integer.parseInt(user));
-            ps.setInt(2, Integer.parseInt(user));
+            ps.setInt(1, Integer.parseInt(user1));
+            ps.setInt(2, Integer.parseInt(user2));
+            ps.setInt(3, Integer.parseInt(user2));
+            ps.setInt(4, Integer.parseInt(user1));
             ResultSet rs = ps.executeQuery();
             ObjectMapper mapper = JsonMapper.builder()
                     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
@@ -133,10 +131,10 @@ public enum MessageDao {
 					DELETE FROM privatemessage
 					WHERE user_id=? AND content=? AND createddate=?
 					""");
-            ps.setInt(1, Integer.parseInt(message.getUser()));
-            ps.setString(2, message.getMessage());
+            ps.setInt(1, message.getUser_id());
+            ps.setString(2, message.getContent());
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            String string  = dateFormat.format(message.getDate());
+            String string  = dateFormat.format(message.getCreateddate());
             ps.setString(3, string);
             ps.executeQuery();
             ps.close();
@@ -152,38 +150,6 @@ public enum MessageDao {
 //        } else {
 //            throw new NotFoundException("Message History '" + id + "' not found.");
 //        }
-    }
-    public List<Message> getMessages(String user) {
-        List<Message> list = null;
-        System.out.println("GET messages called");
-        try {
-            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-					SELECT json_agg(privatemessage)
-					FROM notebridge.privatemessage, notebridge.privatemessagehistory
-					WHERE notebridge.privatemessagehistory.user1=? OR notebridge.privatemessagehistory.user2=?;
-					""");
-            ps.setInt(1, Integer.parseInt(user));
-            ps.setInt(2, Integer.parseInt(user));
-            ResultSet rs = ps.executeQuery();
-            ObjectMapper mapper = JsonMapper.builder()
-                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-                    .build();
-            if (rs.next()) {
-                list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Message[].class));
-            }
-            ps.close();
-            rs.close();
-        } catch (SQLException | JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return list;
-//        var pt = messenger.get(id);
-//
-//        if (pt == null) {
-//            throw new NotFoundException("Message History '" + id + "' not found!");
-//        }
-//
-//        return pt;
     }
 
     public void load() throws IOException {
@@ -201,18 +167,22 @@ public enum MessageDao {
         return f.exists() && !f.isDirectory();
     }
 
-    public void createNewMessage(String contact, Message message) {
+    public Message createNewMessage(String contact, Message message) {
         try {
             PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
 				INSERT INTO privatemessage(content,createddate,user_id,messagehistory_id)
 				VALUES(?,current_timestamp,?,get_history_id(?,?));
 					""");
-            ps.setString(1,message.getMessage());
-            ps.setInt(2, Integer.parseInt(message.getUser()));
-            ps.setInt(3, Integer.parseInt(message.getUser()));
+            ps.setString(1,message.getContent());
+            ps.setInt(2, message.getUser_id());
+            ps.setInt(3, message.getUser_id());
             ps.setInt(4, Integer.parseInt(contact));
-            ps.executeQuery();
-            ps.close();
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating message failed, no rows affected.");
+            }
+            return message;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -221,6 +191,7 @@ public enum MessageDao {
 //        }else {
 //            throw new NotFoundException("Message History '" + id + "' not found.");
 //        }
+
     }
 
     public void create(String user1, String user2) {

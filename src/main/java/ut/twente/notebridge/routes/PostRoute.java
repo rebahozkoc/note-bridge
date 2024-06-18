@@ -7,6 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import ut.twente.notebridge.dao.LikeDao;
@@ -15,7 +16,11 @@ import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
+import ut.twente.notebridge.utils.Utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +89,8 @@ public class PostRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post updatePost(@PathParam("id") String id, Post post) {
+	public Post updatePost(@PathParam("id") Integer id, Post post) {
+		post.setId(id);
 		return PostDao.INSTANCE.update(post);
 	}
 
@@ -138,6 +144,37 @@ public class PostRoute {
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
+	}
+
+	@GET
+	@Path("{id}/image")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getImage(@PathParam("id") Integer id) {
+		System.out.println("PostRoute.getImage is called");
+
+		List<String> imageFiles = PostDao.INSTANCE.getImages(id);
+		List<String> imageList = new java.util.ArrayList<>();
+
+		for (String imageFile: imageFiles){
+			String fileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + imageFile;
+			File file = new File(fileLocation);
+			if (file.exists()) {
+				try {
+					byte[] fileContent = FileUtils.readFileToByteArray(file);
+					String encodedString = Base64.getEncoder().encodeToString(fileContent);
+					imageList.add(encodedString);
+				} catch (IOException e) {
+					e.printStackTrace();
+					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while encoding image to base64").build();
+				}
+			} else {
+				return Response.status(Response.Status.NOT_FOUND).entity("Image file not found at " + fileLocation).build();
+			}
+
+
+		}
+		return Response.ok(imageList).build();
+
 	}
 
 

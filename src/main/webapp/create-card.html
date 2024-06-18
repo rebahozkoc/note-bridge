@@ -8,13 +8,10 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="page-settings">
+<body class="page-settings d-flex justify-content-center">
+    <div id="particles-js"></div>
 
-<div id="particles-js"></div>
-
-<div id="form-container" style="height: 100%;margin: 0;display: flex;justify-content: center;align-items: center;">
-
-    <form class="container main-content w-75 rounded-5 p-5" style="padding: 20px;" onsubmit="return sendRequestCreatePost()">
+    <form id="create-post-form" class="container main-content w-50 rounded-5 p-5" style="padding: 20px;">
         <h1 class="fw-bold text-white py-2 fs-2">Create a post</h1>
         <div class="form-floating mb-3">
             <textarea class="form-control" placeholder="Title" id="title" name="title"></textarea>
@@ -45,11 +42,11 @@
             <label for="formFileMultiple" class="form-label text-white">Add pictures.</label>
             <input class="form-control" type="file" id="formFileMultiple" multiple> <!-- name="pictures" -->
         </div>
-        <button type="submit" class="btn btn-outline-light mt-3 px-3 py-2 rounded-4" onclick="hideCreatePostForm()">Create post</button>
+        <button type="submit" class="btn btn-outline-light mt-3 px-3 py-2 rounded-4">Create post</button>
     </form>
-</div>
 </body>
 
+<script src="js/create-card.js"></script>
 <script src="js/particles.js"></script>
 <script src="js/app.js"></script>
 </html>

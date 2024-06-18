@@ -20,19 +20,14 @@
     margin-bottom: 10vh;
 }
 
-#offcanvasScrolling {
-    margin-top: 13.5vh;
-    height: 83.5%;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-.navbar {
-    background-color: rgba(17, 24, 39, 0.8);
-}
-
 #page-content {
     margin-top: 5vh;
+}
+
+#offcanvasBottom {
+    margin-left: 2vh;
+    margin-bottom: 2vh;
+    width: 75vh;
 }
 
 #left-content {
@@ -44,24 +39,38 @@
     text-align: center;
 }
 
+#music {
+    display: none;
+}
+
 .white-block {
     overflow: hidden;
     display: block;
-    font-size: 2.5vh;
-    color: darkslategrey;
-    border-bottom: 1px solid grey;
-    border-top: 1px solid grey;
+    width: 10.5vh;
+    height: 23vh;
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
     background-color: white;
-    padding: 4vh;
     border-radius: 0;
+    margin-top: 2.5vh;
+}
+
+.white-block:hover {
+    height: 21.5vh;
 }
 
 .black-block {
     position: absolute;
+    width: 4vh;
+    height: 15vh;
     background-color: black;
-    padding: 2.7vh 20vh;
-    border-bottom-left-radius: 0;
     border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 2.5vh;
+}
+
+.black-block:hover {
+    height: 13.5vh;
 }
 
 .first-page-card {
@@ -103,11 +112,6 @@
     font-size: 3vh;
     background: none;
     border: none;
-}
-
-#logo {
-    width: 17vh;
-    border-radius: 50%;
 }
 
 @keyframes

@@ -89,7 +89,8 @@ public class PostRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post updatePost(@PathParam("id") String id, Post post) {
+	public Post updatePost(@PathParam("id") Integer id, Post post) {
+		post.setId(id);
 		return PostDao.INSTANCE.update(post);
 	}
 
@@ -152,7 +153,7 @@ public class PostRoute {
 		System.out.println("PostRoute.getImage is called");
 
 		List<String> imageFiles = PostDao.INSTANCE.getImages(id);
-		Map<String, String> imageMap = new HashMap<>();
+		List<String> imageList = new java.util.ArrayList<>();
 
 		for (String imageFile: imageFiles){
 			String fileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + imageFile;
@@ -161,7 +162,7 @@ public class PostRoute {
 				try {
 					byte[] fileContent = FileUtils.readFileToByteArray(file);
 					String encodedString = Base64.getEncoder().encodeToString(fileContent);
-					imageMap.put(imageFile, encodedString);
+					imageList.add(encodedString);
 				} catch (IOException e) {
 					e.printStackTrace();
 					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while encoding image to base64").build();
@@ -172,7 +173,7 @@ public class PostRoute {
 
 
 		}
-		return Response.ok(imageMap).build();
+		return Response.ok(imageList).build();
 
 	}
 

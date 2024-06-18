@@ -6,11 +6,12 @@ const secondField = document.querySelector("#second-field");
 form.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const password = document.querySelector("#password").value;
-    const repeatPassword = document.querySelector("#repeat-password").value;
+    const password = document.querySelector("#floatingPassword").value;
+    const repeatPassword = document.querySelector("#floatingPassword2").value;
+    const username = document.querySelector("#username").value;
 
     if (password !== repeatPassword) {
-        alert("Passwords do not match!");
+        warningMessage.innerHTML = "Passwords do not match!";
         return;
     }
 

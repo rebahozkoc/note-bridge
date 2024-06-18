@@ -110,37 +110,41 @@
         }
     }
 
-    function loadMessages() {
+    function loadMessages(id) {
         if (selectedContact === null) {
             console.log("this is top contact");
             console.log(contacts['data'][0].id);
             selectedContact=contacts['data'][0].id;
-            loadMessagesWithID(contacts['data'][0].id);
+            console.info(id);
+            loadMessagesWithID(selectedContact,id);
         } else {
             console.log("this is selected contact");
             console.log(selectedContact);
-            loadMessagesWithID(selectedContact);
+            loadMessagesWithID(selectedContact,id);
         }
     }
 
-    function loadMessagesWithID(x){
+    function loadMessagesWithID(x, id){
         let username=null;
         for (const contact in contacts['data']){
             if (contacts['data'][contact].id===x){
                 username=contacts['data'][contact].username;
             }
         }
-        console.log(username);
         document.getElementById("contactName").innerText=username;
-        fetchMessages(x);
+        fetchMessages(x, id);
     }
 
     function loadMessagesForThisUser(x){
         messageElement.innerHTML=``;
         messages={};
         selectedContact=getId(`${x.innerText.split("\n")[0]}`);
+        console.info(selectedContact);
         document.getElementById("contactName").innerText=`${x.innerText.split("\n")[0]}`;
-        fetchMessages(getId(`${x.innerText.split("\n")[0]}`));
+        getStatus()
+            .then(data=> {
+                fetchMessages(getId(`${x.innerText.split("\n")[0]}`),data.userId);
+            })
     }
 
     function getId(x){
@@ -161,41 +165,35 @@
             .then(data=> {
                 fetch(`http://localhost:8080/notebridge/api/message/contact/${data.userId}`, {method: "GET"})
                     .then(res => res.json())
-                    .then(data => {
-                        contacts = data;
+                    .then(data2 => {
+                        let id=data.userId;
+                        contacts = data2;
                         showContacts();
-                        loadMessages();
+                        loadMessages(id);
                     })
                     .catch(err => {
                         console.error(`Unable to fetch contacts: ${err.status}`);
                         console.error(err);
                     });
-            })
+        })
     }
 
-    function fetchMessages(id){
-        getStatus()
-            .then(data=> {
-
-                fetch(`http://localhost:8080/notebridge/api/message/messages/${id}/${data.userId}`, {method: "GET"})
+    function fetchMessages(x, id){
+                fetch(`http://localhost:8080/notebridge/api/message/messages/${x}/${id}`, {method: "GET"})
                     .then(res => res.json())
                     .then(data => {
                         messages = data;
-                        showMessageHistory();
+                        showMessageHistory(id);
                     })
                     .catch(err => {
-                        console.error(`Unable to fetch contacts: ${err.status}`);
+                        console.error(`Unable to fetch messages: ${err.status}`);
                         console.error(err);
-                    });
-            })
+                    })
     }
 
-    function showMessageHistory(){
-        getStatus()
-            .then(data => {
-                messageElement.innerHTML = `
-                ${messages.data.map(message => `${divideMessages(message, data.userId)}`).join("\n")}`
-            })
+    function showMessageHistory(id){
+        messageElement.innerHTML = `
+                ${messages.data.map(message => `${divideMessages(message, id)}`).join("\n")}`
     }
 
     function divideMessages(message, id){
@@ -244,21 +242,21 @@
             .then(data => {
                 let dataObject = {};
                 let message = document.getElementById("message").value;
-                let user2 = selectedContact;
                 dataObject.user_id = data.userId;
                 dataObject.content = message;
-                fetch(`/notebridge/api/message/newmessage/${15}/${16}/${message}`, {
+                fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${message}`, {
                     method: "POST",
                     body: JSON.stringify(dataObject),
                     headers: {
                         "Content-type": "application/json"
                     }
                 }).then(r => {
-                    loadMessagesWithID(selectedContact);
+                    loadMessagesWithID(selectedContact, dataObject.user_id);
+                    clearQuery();
                 })
-                event.preventDefault();
-                clearQuery();
             })
+        event.preventDefault();
+
     })
 
 </script>

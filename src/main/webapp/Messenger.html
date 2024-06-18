@@ -76,11 +76,13 @@
                     Invite +
                 </button>
             </div>
-            <div id="messageBox" class="chat-box g-0"></div>
+            <div id="messageBox" class="chat-box g-0">
+
+            </div>
             <div class="g-0">
                 <form id='newMessage' class="d-flex">
                     <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: #34A1FD">
-                    <button class="btn btn-outline-dark" type="submit" id="but" >Send</button>
+                    <button class="btn btn-outline-info" type="submit" id="but" >Send</button>
                 </form>
             </div>
         </div>
@@ -127,12 +129,8 @@
         x.className = "list-group-item d-flex justify-content-between align-items-center"
     }
 
-    function hideContacts(){
-        if (document.getElementById("contactsHolder").style.visibility==="hidden") {
-            document.getElementById("contactsHolder").style.visibility = "visible";
-        }else {
-            document.getElementById("contactsHolder").style.visibility = "hidden"
-        }
+    function deleteMessage(x){
+
     }
 
     function loadMessages(id) {
@@ -228,20 +226,32 @@
             return `${showMessageLeft(message)}`;
         }
     }
+
     function showMessageLeft(message){
         console.info(message.content);
         return `
-         <div class="left">
-            <p class="message">${message.content}</p>
+         <div class="dropup-center dropup left message ">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                ${message.content}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="deleteMessage(this)">Delete</a></li>
+            </ul>
          </div>
         `
     }
     function showMessageRight(message){
         // console.info(message.content);
         return`
-         <div class="right">
-            <p class="message">${message.content}</p>
-         </div>`
+         <div class="dropup-center dropup right message ">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                ${message.content}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="deleteMessage(this)">Delete</a></li>
+            </ul>
+         </div>
+        `
     }
 
     function showContact(contact) {

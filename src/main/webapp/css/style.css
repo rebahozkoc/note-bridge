@@ -6,6 +6,7 @@
 
 .navbar {
     background-color: rgba(17, 24, 39, 0.8);
+    z-index: 1; /* Stay on top */
 }
 
 #logo {

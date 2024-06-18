@@ -24,12 +24,6 @@
     margin-top: 5vh;
 }
 
-#offcanvasBottom {
-    margin-left: 2vh;
-    margin-bottom: 2vh;
-    width: 75vh;
-}
-
 #left-content {
     text-align: center;
     margin: auto;
@@ -37,40 +31,6 @@
 
 .title {
     text-align: center;
-}
-
-#music {
-    display: none;
-}
-
-.white-block {
-    overflow: hidden;
-    display: block;
-    width: 10.5vh;
-    height: 23vh;
-    border-left: 1px solid grey;
-    border-right: 1px solid grey;
-    background-color: white;
-    border-radius: 0;
-    margin-top: 2.5vh;
-}
-
-.white-block:hover {
-    height: 21.5vh;
-}
-
-.black-block {
-    position: absolute;
-    width: 4vh;
-    height: 15vh;
-    background-color: black;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    margin-top: 2.5vh;
-}
-
-.black-block:hover {
-    height: 13.5vh;
 }
 
 .first-page-card {

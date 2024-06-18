@@ -4,7 +4,6 @@ const rightContent = document.getElementById("right-content");
 const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
-let music = document.getElementById("music");
 
 btn1.addEventListener("click", function() {
     leftContentTitle.innerHTML = addParagraphTag(`Discover multiple musical events`);
@@ -30,48 +29,4 @@ function addParagraphTag(text) {
 
 function addImgTag(img) {
     return `<img src=` + img + ` class="d-block fade-in-image w-100 rounded-3">`;
-}
-
-function addSoundTag(sound) {
-    return `<source src=` + sound + ` type="audio/mpeg">`;
-}
-
-function pressPianoBtn1() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-1.mp3");
-    music.play();
-}
-
-function pressPianoBtn2() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-2.mp3");
-    music.play();
-}
-
-function pressPianoBtn3() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-3.mp3");
-    music.play();
-}
-
-function pressPianoBtn4() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-4.mp3");
-    music.play();
-}
-
-function pressPianoBtn5() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-5.mp3");
-    music.play();
-}
-
-function pressPianoBtn6() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-6.mp3");
-    music.play();
-}
-
-function pressPianoBtn7() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-7.mp3");
-    music.play();
-}
-
-function pressPianoBtn8() {
-    music.innerHTML = addSoundTag("assets/sounds/sound-8.mp3");
-    music.play();
 }

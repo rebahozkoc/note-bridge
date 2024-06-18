@@ -15,7 +15,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="home.html">
         <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
       </a>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
@@ -27,7 +27,10 @@
             <a class="nav-link text-white" href="cards.html">Browse Posts</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" href="#">Messenger</a>
+            <a class="nav-link text-white" href="Messenger.html">Messenger</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="create-card.html">Create post</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-white" href="home.html#form">Contact Us</a>
@@ -35,7 +38,7 @@
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li>
-            <a class="nav-link text-white" href="#"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
+            <a class="nav-link text-white" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
           </li>
           <li>
             <a class="nav-link text-white mt-1" href="login.html">Log in</a>
@@ -45,23 +48,32 @@
     </div>
   </nav>
 
+  <div class="offcanvas offcanvas-bottom rounded-4" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-body d-flex bg-dark rounded-3">
+      <button class="btn btn-light white-block rounded-start-2" onclick="pressPianoBtn1()"></button>
+      <button class="btn btn-light white-block" onclick="pressPianoBtn2()"></button>
+      <button class="btn btn-light white-block" onclick="pressPianoBtn3()"></button>
+      <button class="btn btn-light white-block" onclick="pressPianoBtn4()"></button>
+      <button class="btn btn-light white-block" onclick="pressPianoBtn5()"></button>
+      <button class="btn btn-light white-block" onclick="pressPianoBtn6()"></button>
+      <button class="btn btn-light white-block" onclick="pressPianoBtn7()"></button>
+      <button class="btn btn-light white-block" onclick="pressPianoBtn8()"></button>
+      <button class="btn btn-light white-block rounded-end-2"></button>
+      <button class="btn btn-dark black-block" style="margin-left: 5.5vh"></button>
+      <button class="btn btn-dark black-block" style="margin-left: 14vh"></button>
+      <button class="btn btn-dark black-block" style="margin-left: 29.5vh"></button>
+      <button class="btn btn-dark black-block" style="margin-left: 45vh"></button>
+      <button class="btn btn-dark black-block" style="margin-left: 53vh"></button>
+    </div>
+  </div>
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-9">
 
         <!-- Cards -->
-        <div id="cards" class="row">
+        <div id="cards" class="row"></div>
 
-          <div class="card post" style="width: 18rem;">
-            <img src="assets/images/main-image-3.jpg" class="card-img-top" alt="image">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-          </div>
-
-
-        </div>
       </div>
       <div class="col-3">
         <div class="sidenav">
@@ -76,6 +88,9 @@
     </div>
   </div>
 
+  <audio controls id="music"></audio>
+
+  <script src="js/base.js"></script>
   <script src="js/cards.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="js/particles.js"></script>

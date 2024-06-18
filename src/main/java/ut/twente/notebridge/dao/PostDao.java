@@ -294,4 +294,25 @@ public enum PostDao {
 			}
 		}
 	}
+
+	public List<String> getImages(Integer id) {
+		String sql = """
+				SELECT pictureurl FROM picture WHERE postid=?
+				""";
+
+		List<String> pictureUrls = new ArrayList<>();
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				String pictureUrl = rs.getString("pictureurl");
+				pictureUrls.add(pictureUrl);
+			}
+			return pictureUrls;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting images");
+		}
+	}
 }

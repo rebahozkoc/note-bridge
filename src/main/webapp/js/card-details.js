@@ -215,7 +215,7 @@ function getAuthor(cardId) {
 function getUser(){
     let user;
     getStatus().then(data => {
-        user = data.userId;
+        user = data.user;
     });
     return user ;
 }

@@ -17,7 +17,7 @@ const loadingScreen=document.getElementById("loading-screen");
 heartIcon.addEventListener("click", toggleLike);
 
 
-updatePage(cardId);
+loadPostDetailsAndLikes(cardId);
 
 function GetURLParameter(sParam) {
     const sPageURL = window.location.search.substring(1);
@@ -32,7 +32,7 @@ function GetURLParameter(sParam) {
     }
 }
 
-function updatePage(cardId) {
+function loadPostDetailsAndLikes(cardId) {
 
 
     fetch('/notebridge/api/posts/' + cardId)

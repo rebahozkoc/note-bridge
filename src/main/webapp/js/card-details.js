@@ -15,18 +15,37 @@ const editIcon = document.getElementById("edit-icon");
 
 const loadingScreen=document.getElementById("loading-screen");
 
-
 heartIcon.addEventListener("click", toggleLike);
 
 
 loadPostDetailsAndLikes(cardId);
 
 
+window.onload = function() {
+    getUserId();
+}
 
-/** Check if the user is logged in to update the navbar. */
-// window.onload = function() {
-//     checkLoggedIn();
-// }
+function getUserId() {
+    fetch("/notebridge/api/auth/status", {
+        method: "GET"
+    })
+        .then(res => {
+            if (res.status === 200) {
+                return res.json().then(data => {
+                    checkPostBelongsToUser(data.userId);
+                });
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+}
+
+function checkPostBelongsToUser(userId) {
+    console.log(userId);
+}
+
 
 
 function GetURLParameter(sParam) {
@@ -217,7 +236,7 @@ function getUser(){
     getStatus().then(data => {
         user = data.user;
     });
-    return user ;
+    return user;
 }
 
 

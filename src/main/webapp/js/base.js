@@ -52,18 +52,16 @@ function logOut() {
 }
 
 function checkLoggedIn() {
-    return fetch("/notebridge/api/auth/status", {
+    fetch("/notebridge/api/auth/status", {
         method: "GET"
     })
         .then(res => {
             if (res.status === 200) {
                 updateNavbar(true);
-                return res.json();
             } else {
                 updateNavbar(false);
-                return res.text();
             }
-        });
+        })
 }
 
 function updateNavbar(loggedIn) {

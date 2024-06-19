@@ -1,11 +1,11 @@
-const form = document.querySelector("#create-post-form");
+const form = document.getElementById("form");
 
 window.onload = function() {
     checkLoggedIn();
 }
 
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
 
     const data = new FormData(form);
     let dataObject = {};

@@ -96,7 +96,9 @@ function loadPostDetailsAndLikes(cardId) {
 
             }).catch(err => {
                 //Unauthenticated users should not be able to like posts
+                loadingScreen.style.display="none";
                 heartIcon.style.display="none";
+                console.error(err)
             });
 
 

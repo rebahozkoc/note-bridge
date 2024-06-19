@@ -38,7 +38,7 @@ form.addEventListener("submit", function(event) {
         }
     }).then(res => {
         if(res.status === 200) {
-            window.location.replace("http://localhost:8080/notebridge/login.html");
+            window.location.replace("login.html");
             alert('Welcome! You have created an account!');
         } else {
             res.text().then(data => {

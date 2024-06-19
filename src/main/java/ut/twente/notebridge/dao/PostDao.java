@@ -132,11 +132,35 @@ public enum PostDao {
 		}
 	}
 
-	public Like beingLiked (Like like){
-		String sql = """
-				INSERT INTO personlikespost (personid, postid) VALUES (?, ?)
+	public Like toggleLike (Like like){
+
+		String sqlDoAction="";
+		String sqlCheck = """
+					SELECT EXISTS(SELECT personid,postid FROM personlikespost WHERE personid=? AND postid=?);
 				""";
-		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+		try (PreparedStatement statementCheck = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sqlCheck)) {
+			statementCheck.setInt(1, like.getPersonId());
+			statementCheck.setInt(2, like.getPostId());
+			ResultSet rs = statementCheck.executeQuery();
+			if (rs.next()) {
+				if (rs.getBoolean(1)) {
+					sqlDoAction= """
+							DELETE FROM personlikespost WHERE personid=? AND postid=?;
+							""";
+				}else{
+					sqlDoAction= """
+							INSERT INTO personlikespost (personid, postid) VALUES (?, ?);
+							""";
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while checking if user is a person");
+		}
+
+
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sqlDoAction)) {
 			statement.setInt(1, like.getPersonId());
 			statement.setInt(2, like.getPostId());
 			int affectedRows = statement.executeUpdate();

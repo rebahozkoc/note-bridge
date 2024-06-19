@@ -1,5 +1,9 @@
 const form = document.querySelector("#create-post-form");
 
+window.onload = function() {
+    checkLoggedIn();
+}
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 

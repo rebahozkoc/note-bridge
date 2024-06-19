@@ -5,7 +5,10 @@ const description = document.getElementById("description");
 const eventType = document.getElementById("event-type");
 const eventLocation = document.getElementById("location");
 
-updatePage(cardId);
+window.onload = function() {
+    updatePage(cardId);
+    checkLoggedIn();
+}
 
 function GetURLParameter(sParam) {
     const sPageURL = window.location.search.substring(1);

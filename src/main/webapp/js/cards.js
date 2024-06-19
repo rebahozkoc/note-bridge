@@ -1,7 +1,10 @@
 let cards = document.querySelector("#cards");
 let cardsList = {};
 
-fetchPosts();
+window.onload = function() {
+    fetchPosts();
+    checkLoggedIn();
+}
 
 function fetchPosts() {
     fetch('/notebridge/api/posts')

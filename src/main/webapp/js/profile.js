@@ -8,7 +8,9 @@ const profilePicture= document.getElementById("current-profile-picture");
 
 const loadingScreen=document.getElementById("loading-screen");
 
-
+window.onload = function() {
+    checkLoggedIn();
+}
 
 
 

@@ -85,6 +85,12 @@ html {
     left: 0
 }
 
+.card-btn {
+    border: none;
+    background: none;
+    font-size: 3vh;
+}
+
 /* Navbar button */
 
 .button-cover {

@@ -9,12 +9,29 @@ form.addEventListener("submit", function(event) {
 
     const data = new FormData(form);
     let dataObject = {};
-    dataObject.personId = 123;
 
     for (const [key, value] of data.entries()) {
         dataObject[key] = value;
     }
 
+    fetch("/notebridge/api/auth/status", {
+        method: "GET"
+    })
+        .then(res => {
+            if (res.status === 200) {
+                return res.json().then(data => {
+                    sendRequestCreatePost(dataObject, data.userId);
+                });
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+})
+
+function sendRequestCreatePost(dataObject, userId) {
+    dataObject.personId = userId;
     fetch("/notebridge/api/posts", {
         method: "POST",
         body: JSON.stringify(dataObject),
@@ -22,6 +39,6 @@ form.addEventListener("submit", function(event) {
             "Content-type": "application/json"
         }
     }).then(r => {
-        window.location.href = "cards.html";
+//        window.location.href = "cards.html";
     });
-})
+}

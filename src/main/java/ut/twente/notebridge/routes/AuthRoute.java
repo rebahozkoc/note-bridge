@@ -60,8 +60,6 @@ public class AuthRoute {
 
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Server not available").build();
 		}
-
-
 	}
 
 	@GET
@@ -76,16 +74,9 @@ public class AuthRoute {
 
 
 	@GET
-	@Path("/loggedintest")
-	public Response welcome(@Context HttpServletRequest request) {
-		HttpSession session = request.getSession(false); // Get existing session, do not create new
-		System.out.println(session.getAttribute("username"));
-		if (session.getAttribute("username") != null) {
-			String username = (String) session.getAttribute("username");
-			return Response.ok("Welcome, " + username).build();
-		} else {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Please log in").build();
-		}
+	@Path("/health")
+	public Response welcome() {
+			return Response.ok("Welcome").build();
 	}
 
 	@GET

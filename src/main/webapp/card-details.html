@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 
-<body class="page-settings">
+<body class="page-settings" onload="showEditCard()">
 
 <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
     <div class="container-fluid">
@@ -65,8 +65,8 @@
 
                         <!-- Card title -->
                         <div id="title"></div>
-
-                        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
+                        <div id="edit-icon"></div>
+                        <div id="delete-icon"></div>
                     </div>
                     <img src="https://placehold.co/600x400/EEE/31343C" class="img-fluid mb-2" alt="Music Event">
                     <div id="description">

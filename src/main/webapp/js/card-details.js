@@ -10,6 +10,8 @@ const description = document.getElementById("description");
 const eventType = document.getElementById("event-type");
 const eventLocation = document.getElementById("location");
 const heartIcon = document.getElementById("heart-icon");
+const deleteIcon = document.getElementById("delete-icon");
+const editIcon = document.getElementById("edit-icon");
 
 const loadingScreen=document.getElementById("loading-screen");
 
@@ -19,10 +21,13 @@ heartIcon.addEventListener("click", toggleLike);
 
 loadPostDetailsAndLikes(cardId);
 
+
+
 /** Check if the user is logged in to update the navbar. */
 // window.onload = function() {
 //     checkLoggedIn();
 // }
+
 
 function GetURLParameter(sParam) {
     const sPageURL = window.location.search.substring(1);
@@ -194,5 +199,40 @@ function toggleHeart() {
 
 
 
+    }
+}
+
+function getAuthor(cardId) {
+    let author
+    fetch("/notebridge/api/posts/" + cardId)
+        .then(res => res.json())
+        .then(data => {
+            author = data.personId ;
+        })
+    return author;
+}
+
+function getUser(){
+    let user;
+    getStatus().then(data => {
+        user = data.userId;
+    });
+    return user ;
+}
+
+
+function showEditCard() {
+    let author = getAuthor(cardId);
+    console.log(author)
+    let viewer = getUser();
+    console.log(viewer)
+
+    if(author === viewer) {
+        deleteIcon.innerHTML = `
+        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
+        `
+        editIcon.innerHTML = `
+        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
+        `
     }
 }

@@ -91,3 +91,12 @@ CREATE TABLE PrivateMessage (
     FOREIGN KEY(senderId) REFERENCES BaseUser(id),
     FOREIGN KEY (receiverId) REFERENCES BaseUser(id)
 );
+
+
+CREATE TABLE Feedback (
+    id SERIAL PRIMARY KEY,
+    createDate TIMESTAMP NOT NULL,
+    lastUpdate TIMESTAMP,
+    email VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL
+    );

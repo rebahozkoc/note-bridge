@@ -43,7 +43,18 @@ function getUserId() {
 }
 
 function checkPostBelongsToUser(userId) {
-    console.log(userId);
+    let authorId = getAuthorID(cardId);
+    console.log(authorId)
+    console.log(userId)
+
+    if(authorId === userId) {
+        deleteIcon.innerHTML = `
+        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
+        `
+        editIcon.innerHTML = `
+        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
+        `
+    }
 }
 
 
@@ -221,7 +232,7 @@ function toggleHeart() {
     }
 }
 
-function getAuthor(cardId) {
+function getAuthorID(cardId) {
     let author
     fetch("/notebridge/api/posts/" + cardId)
         .then(res => res.json())
@@ -231,27 +242,3 @@ function getAuthor(cardId) {
     return author;
 }
 
-function getUser(){
-    let user;
-    getStatus().then(data => {
-        user = data.user;
-    });
-    return user;
-}
-
-
-function showEditCard() {
-    let author = getAuthor(cardId);
-    console.log(author)
-    let viewer = getUser();
-    console.log(viewer)
-
-    if(author === viewer) {
-        deleteIcon.innerHTML = `
-        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
-        `
-        editIcon.innerHTML = `
-        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
-        `
-    }
-}

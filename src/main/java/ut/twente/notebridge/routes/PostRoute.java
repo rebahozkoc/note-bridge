@@ -78,6 +78,20 @@ public class PostRoute {
 		}
 	}
 
+	@POST
+	@Path("/{id}/likes")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Like likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
+		// TODO this one gives error check it
+		HttpSession session = request.getSession(false);
+		int personId = (int) session.getAttribute("userId");
+		Like like= new Like();
+		like.setPostId(postId);
+		like.setPersonId(personId);
+		return PostDao.INSTANCE.beingLiked(like);
+	}
+
 	@GET
 	@Path("/{id}/comments")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -175,21 +189,6 @@ public class PostRoute {
 		}
 		return Response.ok(imageList).build();
 
-	}
-
-
-	@POST
-	@Path("/{id}/likes")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Like likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		int personId = (int) session.getAttribute("userId");
-
-		Like like= new Like();
-		like.setPostId(postId);
-		like.setPersonId(personId);
-		return PostDao.INSTANCE.beingLiked(like);
 	}
 
 	//This route is defined to get all posts of a user, when user is logged in

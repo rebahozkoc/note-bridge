@@ -6,9 +6,15 @@
 
 #top-content {
     display: flex;
-    margin-top: 60vh;
+    margin-top: 12vh;
     margin-bottom: 20vh;
     justify-content: center;
+}
+
+#main-logo-image {
+    width: 45vh;
+    border-radius: 50%;
+    margin-bottom: 35vh;
 }
 
 #categories {

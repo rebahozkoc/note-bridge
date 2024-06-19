@@ -1,4 +1,4 @@
-let music = document.getElementById("music");
+const music = document.getElementById("music");
 
 function pressPianoBtn1() {
     music.innerHTML = addSoundTag("assets/sounds/sound-1.mp3");

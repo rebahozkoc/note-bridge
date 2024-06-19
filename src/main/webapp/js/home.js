@@ -4,6 +4,40 @@ const rightContent = document.getElementById("right-content");
 const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
+const logInBtn = document.getElementById("login-btn");
+
+window.onload = function() {
+    checkLoggedIn().then(response => {
+        console.log(response);
+    });
+}
+
+function checkLoggedIn() {
+    return fetch("/notebridge/api/auth/status", {
+        method: "GET"
+    })
+        .then(res => {
+            if (res.status === 200) {
+                updateNavbar(true);
+                return res.json();
+            } else {
+                updateNavbar(false);
+                return res.text();
+            }
+        });
+}
+
+function updateNavbar(loggedIn) {
+    if(loggedIn) {
+        logInBtn.innerHTML = `
+        <a href="home.html" class="button-cover ms-2" role="button"><span class="text px-2">Log out</span><span>Log out</span></a>
+        `
+    } else {
+        logInBtn.innerHTML = `
+        <a href="login.html" class="button-cover ms-2" role="button"><span class="text px-2">Log in</span><span>Log in</span></a>
+        `
+    }
+}
 
 btn1.addEventListener("click", function() {
     leftContentTitle.innerHTML = addParagraphTag(`Discover multiple musical events`);

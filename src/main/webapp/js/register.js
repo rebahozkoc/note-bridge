@@ -2,19 +2,14 @@ const form = document.querySelector("#register-form");
 const registerAsUserBtn = document.querySelector("#user-btn");
 const firstField = document.querySelector("#first-field");
 const secondField = document.querySelector("#second-field");
+const password = document.querySelector("#password");
+const repeatPassword = document.querySelector("#repeat-password");
 const warningMessage = document.querySelector("#warning-message");
 
 form.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const password = document.querySelector("#floatingPassword").value;
-    const repeatPassword = document.querySelector("#floatingPassword2").value;
-    const username = document.querySelector("#username").value;
-
-    console.log(password);
-    console.log(repeatPassword);
-
-    if (password !== repeatPassword) {
+    if (password.value !== repeatPassword.value) {
         warningMessage.innerHTML = "Passwords do not match!";
         return;
     }
@@ -43,8 +38,8 @@ form.addEventListener("submit", function(event) {
         }
     }).then(res => {
         if(res.status === 200) {
-            alert("Welcome!");
-            window.location.replace("http://localhost:8080/notebridge/login.html")
+            window.location.replace("http://localhost:8080/notebridge/login.html");
+            alert('Welcome! You have created an account!');
         } else {
             res.text().then(data => {
                 warningMessage.innerHTML = data;

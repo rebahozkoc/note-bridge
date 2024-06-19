@@ -22,6 +22,7 @@ loadPostDetailsAndLikes(cardId);
 
 
 window.onload = function() {
+    checkLoggedIn();
     getUserId();
 }
 

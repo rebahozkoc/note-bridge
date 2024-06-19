@@ -53,6 +53,15 @@ function getAuthor(userId) {
 function checkPostBelongsToUser(userId, author) {
     console.log(userId);
     console.log(author);
+
+    if(author === userId) {
+        deleteIcon.innerHTML = `
+        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
+        `
+        editIcon.innerHTML = `
+        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
+        `
+    }
 }
 
 function GetURLParameter(sParam) {
@@ -237,18 +246,4 @@ function getUser(){
 }
 
 
-function showEditCard() {
-    let author = getAuthor(cardId);
-    console.log(author)
-    let viewer = getUser();
-    console.log(viewer)
 
-    if(author === viewer) {
-        deleteIcon.innerHTML = `
-        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
-        `
-        editIcon.innerHTML = `
-        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
-        `
-    }
-}

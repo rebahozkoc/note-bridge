@@ -1,9 +1,21 @@
 let cardId = GetURLParameter('id');
+let isPerson=false;
+
+
+const likeCountText= document.getElementById("like-countText");
+const likeCount=document.getElementById("like-count");
 
 const cardTitle = document.getElementById("title");
 const description = document.getElementById("description");
 const eventType = document.getElementById("event-type");
 const eventLocation = document.getElementById("location");
+const heartIcon = document.getElementById("heart-icon");
+
+const loadingScreen=document.getElementById("loading-screen");
+
+
+heartIcon.addEventListener("click", toggleLike);
+
 
 updatePage(cardId);
 
@@ -21,6 +33,8 @@ function GetURLParameter(sParam) {
 }
 
 function updatePage(cardId) {
+
+
     fetch('/notebridge/api/posts/' + cardId)
         .then(res => res.json())
         .then(data => {
@@ -28,10 +42,150 @@ function updatePage(cardId) {
             description.innerHTML = `<h5>${data.description}</h5>`;
             eventType.innerHTML = `${data.eventType}`;
             eventLocation.innerHTML = `${data.location}`;
+
+
+
+            //Get authentication status
+            getStatus().then(data => {
+
+
+                role=data.role;
+
+
+                //Sponsors should not be able to like posts
+                if(role==="sponsor"){
+                    heartIcon.style.display="none";
+                }else{
+                    isPerson=true;
+                }
+
+                fetch("/notebridge/api/posts/" + cardId + "/like")
+                    .then(res => {
+                        if(res.status === 200) {
+                            return res.json();
+                        }else{
+                            return res.text().then(errorText => {
+                                throw new Error(`${errorText}`);
+                            });
+                        }
+
+                }).then(data=>{
+
+
+                    if(data.isLiked){
+
+                        heartIcon.classList.remove("bi-heart");
+                        heartIcon.classList.add("bi-heart-fill");
+                    }
+
+                    loadingScreen.style.display="none";
+
+
+                }).catch(err => {
+                    console.error(err);
+                    loadingScreen.style.display="none";
+
+                })
+
+
+
+            }).catch(err => {
+                //Unauthenticated users should not be able to like posts
+                heartIcon.style.display="none";
+            });
+
+
+
+
+            //Get total likes
+            fetch("/notebridge/api/posts/" + cardId + "/likes").then(
+                res=>{
+                    if(res.status === 200){
+                        return res.json();
+                    } else {
+                        return res.text().then(errorText => {
+                            throw new Error(`${errorText}`);
+                        });
+                    }
+                }
+            ).then(data => {
+
+                if(data.totalLikes===0){
+                    likeCount.innerHTML="";
+                    likeCountText.innerHTML="No one likes this posts yet!";
+                    if(isPerson){
+                        likeCountText.innerHTML+=", Click on the heart icon to be the first one to like it!";
+                    }
+                }else{
+                    likeCount.innerHTML=data.totalLikes;
+                    likeCountText.innerHTML=` people liked this post!`;
+                }
+
+            }).catch(err => {
+                alert(`Unable to fetch likes: ${err}`);
+
+            });
+
+
+
+
         })
         .catch(err => {
-            console.error(`Unable to fetch cards: ${err.status}`);
-            console.error(err);
+            alert(`Unable to fetch cards: ${err}`);
+
         });
 }
 
+function toggleLike(){
+
+
+    fetch("/notebridge/api/posts/" + cardId + "/likes", {
+        method: "POST"
+    }).then(res => {
+        if (res.status === 200) {
+            return res.json();
+        } else {
+            return res.text().then(errorText => {
+                throw new Error(`${errorText}`);
+            });
+        }
+    }).then(data => {
+        toggleHeart();
+    }).catch(err => {
+        alert(`${err}`);
+
+    });
+}
+
+
+
+function toggleHeart() {
+    if (heartIcon.classList.contains("bi-heart-fill")) {
+
+
+
+        heartIcon.classList.remove("bi-heart-fill");
+        heartIcon.classList.add("bi-heart");
+
+        if(parseInt(likeCount.innerHTML)==1){
+            likeCount.innerHTML = "";
+            likeCountText.innerHTML="No one likes this posts yet, Click on to be the first one to like it!";
+        }else{
+            likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1;
+        }
+    } else {
+
+
+        heartIcon.classList.remove("bi-heart");
+        heartIcon.classList.add("bi-heart-fill");
+        if(likeCount.innerHTML==""){
+            likeCount.innerHTML = 1;
+            likeCountText.innerHTML=" person liked this post!";
+        }else{
+            likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1;
+        }
+
+
+
+    }
+}

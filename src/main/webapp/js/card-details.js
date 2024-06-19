@@ -78,111 +78,121 @@ function GetURLParameter(sParam) {
     }
 }
 
-function loadPostDetailsAndLikes(cardId) {
+async function loadPostDetailsAndLikes(cardId) {
+
+    console.log(cardId)
+    try{
+        const post= await fetch('/notebridge/api/posts/' + cardId);
+
+        const postData= await post.json();
 
 
-    fetch('/notebridge/api/posts/' + cardId)
-        .then(res => res.json())
-        .then(data => {
-            cardTitle.innerHTML = `<h3>${data.title}</h3>`;
-            description.innerHTML = `<h5>${data.description}</h5>`;
-            eventType.innerHTML = `${data.eventType}`;
-            eventLocation.innerHTML = `${data.location}`;
+        cardTitle.innerHTML = `<h3>${postData.title}</h3>`;
+        description.innerHTML = `<h5>${postData.description}</h5>`;
+        eventType.innerHTML = `${postData.eventType}`;
+        eventLocation.innerHTML = `${postData.location}`;
 
+        try{
+            await updateTotalLikes(cardId);
 
+        } catch(err){
+            console.error(err);
+        }
 
-            //Get authentication status
-            getStatus().then(data => {
-
-
-                role=data.role;
-
-
-                //Sponsors should not be able to like posts
-                if(role==="sponsor"){
-                    heartIcon.style.display="none";
-                }else{
-                    isPerson=true;
-                }
-
-                fetch("/notebridge/api/posts/" + cardId + "/like")
-                    .then(res => {
-                        if(res.status === 200) {
-                            return res.json();
-                        }else{
-                            return res.text().then(errorText => {
-                                throw new Error(`${errorText}`);
-                            });
-                        }
-
-                }).then(data=>{
-
-
-                    if(data.isLiked){
-
-                        heartIcon.classList.remove("bi-heart");
-                        heartIcon.classList.add("bi-heart-fill");
-                    }
-
-                    loadingScreen.style.display="none";
-
-
-                }).catch(err => {
-                    console.error(err);
-                    loadingScreen.style.display="none";
-
-                })
-
-
-
-            }).catch(err => {
-                //Unauthenticated users should not be able to like posts
-                loadingScreen.style.display="none";
+        try{
+            const statusData= await getStatus();
+            let role=statusData.role;
+            //Sponsors should not be able to like posts
+            if(role==="sponsor"){
                 heartIcon.style.display="none";
-                console.error(err)
-            });
+            }else{
+                isPerson=true;
+            }
+
+            await checkIfLiked(cardId);
+
+            loadingScreen.style.display="none";
+
+        }catch(err){
+            console.error(err);
+            heartIcon.style.display="none";
+            loadingScreen.style.display="none";
+
+        }
+
+    }catch(err){
+        console.error(err);
+        loadingScreen.style.display="none";
+
+    }
 
 
-
-
-            //Get total likes
-            fetch("/notebridge/api/posts/" + cardId + "/likes").then(
-                res=>{
-                    if(res.status === 200){
-                        return res.json();
-                    } else {
-                        return res.text().then(errorText => {
-                            throw new Error(`${errorText}`);
-                        });
-                    }
-                }
-            ).then(data => {
-
-                if(data.totalLikes===0){
-                    likeCount.innerHTML="";
-                    likeCountText.innerHTML="No one likes this posts yet!";
-                    if(isPerson){
-                        likeCountText.innerHTML+=", Click on the heart icon to be the first one to like it!";
-                    }
-                }else{
-                    likeCount.innerHTML=data.totalLikes;
-                    likeCountText.innerHTML=` people liked this post!`;
-                }
-
-            }).catch(err => {
-                alert(`Unable to fetch likes: ${err}`);
-
-            });
-
-
-
-
-        })
-        .catch(err => {
-            alert(`Unable to fetch cards: ${err}`);
-
-        });
 }
+
+function checkIfLiked(cardId) {
+
+
+
+    fetch("/notebridge/api/posts/" + cardId + "/like")
+        .then(res => {
+            if(res.status === 200) {
+                return res.json();
+            }else{
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+
+        }).then(data=>{
+
+
+            if(data.isLiked){
+
+                heartIcon.classList.remove("bi-heart");
+                heartIcon.classList.add("bi-heart-fill");
+            }
+
+            loadingScreen.style.display="none";
+
+
+    }).catch(err => {
+        console.error(err);
+        loadingScreen.style.display="none";
+
+    })
+}
+
+
+function updateTotalLikes(cardId){
+    fetch("/notebridge/api/posts/" + cardId + "/likes").then(
+        res=>{
+            if(res.status === 200){
+                return res.json();
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        }
+    ).then(data => {
+
+        if(data.totalLikes===0){
+            likeCount.innerHTML="";
+            likeCountText.innerHTML="No one likes this posts yet!";
+            if(isPerson){
+                likeCountText.innerHTML+=", Click on the heart icon to be the first one to like it!";
+            }
+        }else{
+            likeCount.innerHTML=data.totalLikes;
+            likeCountText.innerHTML=` people liked this post!`;
+        }
+
+    }).catch(err => {
+        alert(`Unable to fetch likes: ${err}`);
+
+    });
+}
+
 
 function toggleLike(){
 

@@ -39,6 +39,6 @@ function sendRequestCreatePost(dataObject, userId) {
             "Content-type": "application/json"
         }
     }).then(r => {
-//        window.location.href = "cards.html";
+        window.location.href = "cards.html";
     });
 }

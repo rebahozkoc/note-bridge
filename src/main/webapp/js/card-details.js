@@ -32,7 +32,7 @@ function getUserId() {
         .then(res => {
             if (res.status === 200) {
                 return res.json().then(data => {
-                    checkPostBelongsToUser(data.userId);
+                    getAuthor(data.userId);
                 });
             } else {
                 return res.text().then(errorText => {
@@ -42,22 +42,18 @@ function getUserId() {
         })
 }
 
-function checkPostBelongsToUser(userId) {
-    let authorId = getAuthorID(cardId);
-    console.log(authorId)
-    console.log(userId)
-
-    if(authorId === userId) {
-        deleteIcon.innerHTML = `
-        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
-        `
-        editIcon.innerHTML = `
-        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
-        `
-    }
+function getAuthor(userId) {
+    fetch("/notebridge/api/posts/" + cardId)
+        .then(res => res.json())
+        .then(data => {
+            checkPostBelongsToUser(userId, data.personId);
+        })
 }
 
-
+function checkPostBelongsToUser(userId, author) {
+    console.log(userId);
+    console.log(author);
+}
 
 function GetURLParameter(sParam) {
     const sPageURL = window.location.search.substring(1);
@@ -232,13 +228,27 @@ function toggleHeart() {
     }
 }
 
-function getAuthorID(cardId) {
-    let author
-    fetch("/notebridge/api/posts/" + cardId)
-        .then(res => res.json())
-        .then(data => {
-            author = data.personId ;
-        })
-    return author;
+function getUser(){
+    let user;
+    getStatus().then(data => {
+        user = data.user;
+    });
+    return user;
 }
 
+
+function showEditCard() {
+    let author = getAuthor(cardId);
+    console.log(author)
+    let viewer = getUser();
+    console.log(viewer)
+
+    if(author === viewer) {
+        deleteIcon.innerHTML = `
+        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
+        `
+        editIcon.innerHTML = `
+        <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
+        `
+    }
+}

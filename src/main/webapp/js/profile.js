@@ -64,7 +64,7 @@ document.getElementById('upload-img').onsubmit = function (e) {
     formData.append('file', file);
     getStatus()
         .then(data => {
-            fetch(`http://localhost:8080/notebridge/api/${data.role}s/${data.userId}/image`, {
+            fetch(`/notebridge/api/${data.role}s/${data.userId}/image`, {
                 method: 'PUT',
                 body: formData
             }).then(response => {

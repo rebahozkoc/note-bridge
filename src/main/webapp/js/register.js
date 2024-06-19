@@ -2,9 +2,17 @@ const form = document.querySelector("#register-form");
 const registerAsUserBtn = document.querySelector("#user-btn");
 const firstField = document.querySelector("#first-field");
 const secondField = document.querySelector("#second-field");
+const password = document.querySelector("#password");
+const repeatPassword = document.querySelector("#repeat-password");
+const warningMessage = document.querySelector("#warning-message");
 
 form.addEventListener("submit", function(event) {
     event.preventDefault();
+
+    if (password.value !== repeatPassword.value) {
+        warningMessage.innerHTML = "Passwords do not match!";
+        return;
+    }
 
     const data = new FormData(form);
     let dataObject = {};
@@ -22,9 +30,6 @@ form.addEventListener("submit", function(event) {
         uriToSendRequest = "/notebridge/api/sponsors";
     }
 
-    console.log(uriToSendRequest);
-    console.log(JSON.stringify(dataObject));
-
     fetch(uriToSendRequest, {
         method: "POST",
         body: JSON.stringify(dataObject),
@@ -33,10 +38,10 @@ form.addEventListener("submit", function(event) {
         }
     }).then(res => {
         if(res.status === 200) {
-            window.location.replace("http://localhost:8080/notebridge/login.html")
+            window.location.replace("login.html");
+            alert('Welcome! You have created an account!');
         } else {
             res.text().then(data => {
-                const warningMessage = document.querySelector("#warning-message");
                 warningMessage.innerHTML = data;
             });
         }})

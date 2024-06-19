@@ -5,6 +5,10 @@ const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
 
+window.onload = function() {
+    checkLoggedIn();
+}
+
 btn1.addEventListener("click", function() {
     leftContentTitle.innerHTML = addParagraphTag(`Discover multiple musical events`);
     leftContentDescription.innerHTML = addParagraphTag(`Connect with other musicians to have jam sessions together!`);

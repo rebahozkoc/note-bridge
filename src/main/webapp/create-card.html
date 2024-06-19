@@ -8,45 +8,81 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="page-settings d-flex justify-content-center">
+<body class="page-settings">
     <div id="particles-js"></div>
 
-    <form id="create-post-form" class="container main-content w-50 rounded-5 p-5" style="padding: 20px;">
-        <h1 class="fw-bold text-white py-2 fs-2">Create a post</h1>
-        <div class="form-floating mb-3">
-            <textarea class="form-control" placeholder="Title" id="title" name="title"></textarea>
-            <label for="title">Title</label>
-        </div>
-        <div class="form-floating mb-3">
-            <textarea class="form-control" placeholder="Description" id="description" name="description" style="height: 15vh"></textarea>
-            <label for="description">Description</label>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <h6 class="text-white">Select the type of post you create.</h6>
-                <select class="form-select mt-1" aria-label="Default select example" name="eventType">
-                    <option selected>jam</option>
-                    <option value="1">music event</option>
-                    <option value="2">search band members</option>
-                    <option value="3">sell instrument</option>
-                </select>
+    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="home.html">
+                <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <button type="button" class="card-btn mt-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"><img src="assets/images/piano-icon.jpg" width="35px" height="35px"></button>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cards.html" class="button-cover ms-2 me-3" role="button"><span class="text px-5">Browse Posts</span><span>Browse Posts</span></a>
+                    </li>
+                    <li id="messenger-btn" class="nav-item">
+                        <a href="Messenger.html" class="button-cover me-3" role="button"><span class="text px-5">Messenger</span><span>Messenger</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="home.html#form" class="button-cover" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li id="profile-btn">
+                        <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
+                    </li>
+                    <li id="login-btn"></li>
+                </ul>
             </div>
-            <div class="col-6">
-                <div class="form-floating mt-2">
-                    <textarea class="form-control" placeholder="Description" id="location" name="location"></textarea>
-                    <label for="location">Location</label>
+        </div>
+    </nav>
+
+    <div class="d-flex mt-5 justify-content-center">
+        <form id="create-post-form" class="container main-content w-50 rounded-5 p-5" style="padding: 20px;">
+            <h1 class="fw-bold text-white py-2 fs-2">Create a post</h1>
+            <div class="form-floating mb-3">
+                <textarea class="form-control" placeholder="Title" id="title" name="title"></textarea>
+                <label for="title">Title</label>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea class="form-control" placeholder="Description" id="description" name="description" style="height: 15vh"></textarea>
+                <label for="description">Description</label>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <h6 class="text-white">Select the type of post you create.</h6>
+                    <select class="form-select mt-1" aria-label="Default select example" name="eventType">
+                        <option selected>jam</option>
+                        <option value="1">music event</option>
+                        <option value="2">search band members</option>
+                        <option value="3">sell instrument</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating mt-2">
+                        <textarea class="form-control" placeholder="Description" id="location" name="location"></textarea>
+                        <label for="location">Location</label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="my-2">
-            <label for="formFileMultiple" class="form-label text-white">Add pictures.</label>
-            <input class="form-control" type="file" id="formFileMultiple" multiple> <!-- name="pictures" -->
-        </div>
-        <button type="submit" class="btn btn-outline-light mt-3 px-3 py-2 rounded-4">Create post</button>
-    </form>
+            <div class="my-2">
+                <label for="formFileMultiple" class="form-label text-white">Add pictures.</label>
+                <input class="form-control" type="file" id="formFileMultiple" multiple> <!-- name="pictures" -->
+            </div>
+            <button type="submit" class="btn btn-outline-light mt-3 px-3 py-2 rounded-4">Create post</button>
+        </form>
+    </div>
 </body>
 
-<script src="js/create-card.js"></script>
-<script src="js/particles.js"></script>
-<script src="js/app.js"></script>
+    <script src="js/base.js"></script>
+    <script src="js/create-card.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/app.js"></script>
 </html>

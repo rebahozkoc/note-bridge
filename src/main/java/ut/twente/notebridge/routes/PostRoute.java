@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.dto.CommentDtoList;
@@ -40,15 +41,15 @@ public class PostRoute {
 	@Path("/{id}/likes")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getLikes(@PathParam("id") int id) {
-		Map<String,Integer> responseObj = new HashMap<>();
+		Map<String, Integer> responseObj = new HashMap<>();
 
-		try{
+		try {
 			int totalLikes = LikeDao.INSTANCE.getTotalLikes(id);
 			responseObj.put("totalLikes", totalLikes);
 			ObjectMapper mapper = new ObjectMapper();
 			return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(responseObj)).build();
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while getting total likes").build();
 		}
 
@@ -59,23 +60,57 @@ public class PostRoute {
 	@Path("/{id}/like")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response didUserLike(@PathParam("id") int id, @Context HttpServletRequest request){
-		Map<String,String> responseObj = new HashMap<>();
+		Map<String,Boolean> responseObj = new HashMap<>();
 		// In case user is not authenticated, return unauthorized
-		if(request.getSession(false)==null){
+		if (request.getSession(false) == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
 		}
-		int userId=(int) request.getSession().getAttribute("userId");
-		try{
+		int userId = (int) request.getSession().getAttribute("userId");
+		try {
 			// Check if user liked the post
-			Boolean isLiked = LikeDao.INSTANCE.isLiked(id,userId);
+			Boolean isLiked = LikeDao.INSTANCE.isLiked(id, userId);
 			// Create the return Object & return as JSON
-			responseObj.put("isLiked", isLiked.toString());
+			responseObj.put("isLiked", isLiked);
 			ObjectMapper mapper = new ObjectMapper();
 			return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(responseObj)).build();
-		}catch (Exception e){
+		} catch (Exception e) {
 			// In case there is an exception while checking if the user liked or not, return internal server error
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while checking if user liked the post").build();
 		}
+	}
+
+	@POST
+	@Path("/{id}/likes")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
+		// TODO this one gives error check it
+		HttpSession session = request.getSession(false);
+		int userId = (int) session.getAttribute("userId");
+		boolean isPerson;
+		try{
+			isPerson=BaseUserDao.INSTANCE.isPerson(userId);
+		} catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while checking if user is a person").build();
+		}
+		if (isPerson) {
+			Like like= new Like();
+			like.setPostId(postId);
+			like.setPersonId(userId);
+			try{
+				return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.toggleLike(like)).build();
+			}catch (Exception e){
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while liking the post").build();
+			}
+
+		}else{
+			return Response.status(Response.Status.FORBIDDEN).entity("Only persons can like a post").build();
+		}
+
+
+
+
+
 	}
 
 	@GET
@@ -97,7 +132,7 @@ public class PostRoute {
 	@DELETE
 	@Path("/{id}")
 	public void deletePost(@PathParam("id") int id) {
-		try{
+		try {
 			PostDao.INSTANCE.delete(id);
 
 		} catch (Exception e) {
@@ -124,8 +159,13 @@ public class PostRoute {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Post createPost(Post post) {
-		return PostDao.INSTANCE.create(post);
+	public Response createPost(Post post) {
+		try {
+			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.create(post)).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
@@ -155,7 +195,7 @@ public class PostRoute {
 		List<String> imageFiles = PostDao.INSTANCE.getImages(id);
 		List<String> imageList = new java.util.ArrayList<>();
 
-		for (String imageFile: imageFiles){
+		for (String imageFile : imageFiles) {
 			String fileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + imageFile;
 			File file = new File(fileLocation);
 			if (file.exists()) {
@@ -177,39 +217,24 @@ public class PostRoute {
 
 	}
 
-
-	@POST
-	@Path("/{id}/likes")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Like likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		int personId = (int) session.getAttribute("userId");
-
-		Like like= new Like();
-		like.setPostId(postId);
-		like.setPersonId(personId);
-		return PostDao.INSTANCE.beingLiked(like);
-	}
-
 	//This route is defined to get all posts of a user, when user is logged in
 	//and desires to display all their posts.
 	@GET
 	@Path("/person/{personId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPostsByPerson(@PathParam("personId") int personId,
-									 @Context HttpServletRequest request) {
+	                                 @Context HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
-		}else{
+		} else {
 			int personIdSession = (int) session.getAttribute("userId");
-			if(personIdSession!=personId){
+			if (personIdSession != personId) {
 				return Response.status(Response.Status.FORBIDDEN).entity("You are not allowed to display others' posts.").build();
-			}else{
-				try{
+			} else {
+				try {
 					return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.getPostsByPersonId(personId)).build();
-				}catch (Exception e){
+				} catch (Exception e) {
 					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Server failed to retreive posts.").build();
 				}
 

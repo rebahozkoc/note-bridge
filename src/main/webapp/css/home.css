@@ -6,9 +6,15 @@
 
 #top-content {
     display: flex;
-    margin-top: 60vh;
+    margin-top: 12vh;
     margin-bottom: 20vh;
     justify-content: center;
+}
+
+#main-logo-image {
+    width: 45vh;
+    border-radius: 50%;
+    margin-bottom: 35vh;
 }
 
 #categories {
@@ -16,7 +22,7 @@
     margin-bottom: 16vh;
 }
 
-#form {
+#feedback-form-container {
     margin-bottom: 10vh;
 }
 
@@ -43,12 +49,6 @@
     height: 50vh;
 }
 
-.card-btn {
-    border: none;
-    background: none;
-    font-size: 3vh;
-}
-
 .category-btn {
     width: 10vh;
     height: 15vh;
@@ -65,13 +65,6 @@
     background-color:rgb(17, 24, 39);
     color: rgb(225, 225, 225);
     box-shadow: rgba(138,62,183,0.3) 1px -5px 40px;
-}
-
-#menu-btn {
-    color: white;
-    font-size: 3vh;
-    background: none;
-    border: none;
 }
 
 @keyframes

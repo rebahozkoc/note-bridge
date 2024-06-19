@@ -8,7 +8,9 @@ const profilePicture= document.getElementById("current-profile-picture");
 
 const loadingScreen=document.getElementById("loading-screen");
 
-
+window.onload = function() {
+    checkLoggedIn();
+}
 
 
 
@@ -64,7 +66,7 @@ document.getElementById('upload-img').onsubmit = function (e) {
     formData.append('file', file);
     getStatus()
         .then(data => {
-            fetch(`http://localhost:8080/notebridge/api/${data.role}s/${data.userId}/image`, {
+            fetch(`/notebridge/api/${data.role}s/${data.userId}/image`, {
                 method: 'PUT',
                 body: formData
             }).then(response => {

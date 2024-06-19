@@ -4,6 +4,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Utils;
 
 import java.sql.SQLException;
 
@@ -14,6 +15,9 @@ public class InitializationListener implements ServletContextListener {
 		System.out.println("Initializing Notebridge...");
 		try {
 			DatabaseConnection.INSTANCE.load();
+
+			System.out.println("Working Directory = " + System.getProperty("user.dir"));
+			System.out.println(Utils.readFromProperties(""));
 		} catch (Exception e) {
 			System.err.println("Error while loading data.");
 			e.printStackTrace();

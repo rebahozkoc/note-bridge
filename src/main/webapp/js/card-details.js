@@ -19,6 +19,11 @@ heartIcon.addEventListener("click", toggleLike);
 
 loadPostDetailsAndLikes(cardId);
 
+/** Check if the user is logged in to update the navbar. */
+// window.onload = function() {
+//     checkLoggedIn();
+// }
+
 function GetURLParameter(sParam) {
     const sPageURL = window.location.search.substring(1);
     const sURLVariables = sPageURL.split('&');

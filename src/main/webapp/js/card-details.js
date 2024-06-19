@@ -32,7 +32,7 @@ function getUserId() {
         .then(res => {
             if (res.status === 200) {
                 return res.json().then(data => {
-                    checkPostBelongsToUser(data.userId);
+                    getAuthor(data.userId);
                 });
             } else {
                 return res.text().then(errorText => {
@@ -42,11 +42,18 @@ function getUserId() {
         })
 }
 
-function checkPostBelongsToUser(userId) {
-    console.log(userId);
+function getAuthor(userId) {
+    fetch("/notebridge/api/posts/" + cardId)
+        .then(res => res.json())
+        .then(data => {
+            checkPostBelongsToUser(userId, data.personId);
+        })
 }
 
-
+function checkPostBelongsToUser(userId, author) {
+    console.log(userId);
+    console.log(author);
+}
 
 function GetURLParameter(sParam) {
     const sPageURL = window.location.search.substring(1);
@@ -219,16 +226,6 @@ function toggleHeart() {
 
 
     }
-}
-
-function getAuthor(cardId) {
-    let author
-    fetch("/notebridge/api/posts/" + cardId)
-        .then(res => res.json())
-        .then(data => {
-            author = data.personId ;
-        })
-    return author;
 }
 
 function getUser(){

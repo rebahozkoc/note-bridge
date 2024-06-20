@@ -92,7 +92,7 @@ function checkPostBelongsToUser(userId, author) {
 
     if(author === userId) {
         deleteIcon.innerHTML = `
-        <button type="button" class="button"><img src="../assets/images/trash.png" alt="delete"> </button>
+        <button type="button" class="button" style="background-color: transparent; border: transparent;"><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </button>
         `
         editIcon.innerHTML = `
         <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>

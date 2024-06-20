@@ -1,29 +1,60 @@
 let cards = document.querySelector("#cards");
 let cardsList = {};
+const pageSize=12;
+let pageNumber=1;
+let totalNumberOfCards=0;
+
+
+
+const loadingScreen = document.getElementById("loading-screen");
+const loadMoreButton = document.getElementById("load-more-btn");
+loadMoreButton.addEventListener("click", loadMore);
+
+
+function loadMore(){
+    pageNumber++;
+    fetchPosts(pageSize,pageNumber);
+}
+
+
 
 window.onload = function() {
-    fetchPosts();
+    fetchPosts(pageSize,pageNumber);
     checkLoggedIn();
 }
 
-function fetchPosts() {
-    fetch('/notebridge/api/posts')
+function fetchPosts(pageSize,pageNumber) {
+    fetch(`/notebridge/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}`)
         .then(res => res.json())
         .then(data => {
+            totalNumberOfCards=data.meta.total;
+
+
             cardsList = data;
             displayAllCards();
         })
         .catch(err => {
+            if(err.status===500){
+                loadMoreButton.style.display="none";
+            }
+            loadingScreen.style.display = "none";
             console.error(`Unable to fetch cards: ${err.status}`);
             console.error(err);
         });
 }
 
 function displayAllCards() {
-    cardsList.data.reverse();
-    cards.innerHTML = `
+    cardsList.data;
+    cards.innerHTML += `
         ${cardsList.data.map(card => `${displayCard(card)}`).join("\n")}
     `;
+    if(totalNumberOfCards<=pageSize*pageNumber){
+        loadMoreButton.style.display="none";
+    }
+    if(pageNumber===1){
+        loadingScreen.style.display = "none";
+
+    }
 }
 
 function displayCard(card) {

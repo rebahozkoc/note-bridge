@@ -13,6 +13,7 @@ const eventLocation = document.getElementById("location");
 const heartIcon = document.getElementById("heart-icon");
 const deleteIcon = document.getElementById("delete-icon");
 const editIcon = document.getElementById("edit-icon");
+const interestButton = document.getElementById("interested-button");
 
 const authorImage=document.getElementById("author-img");
 const authorName=document.getElementById("author-name");
@@ -67,6 +68,7 @@ function getUserId() {
             } else {
                 return res.text().then(errorText => {
                     hideCommentsSection();
+                    rerouteInterestedButton();
                     throw new Error(`${errorText}`);
                 });
             }
@@ -78,6 +80,7 @@ function getAuthor(userId) {
         .then(res => res.json())
         .then(data => {
             checkPostBelongsToUser(userId, data.personId);
+            displayInterestedButton(userId, data.personId);
         })
 }
 
@@ -93,6 +96,24 @@ function checkPostBelongsToUser(userId, author) {
         <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal">&#9998;</span>
         `
     }
+}
+
+
+function displayInterestedButton(userId, author) {
+
+    if(author !== userId) {
+        interestButton.innerHTML = `
+        <a class="btn btn-primary" href="#" role="button">I'm Interested!</a>
+
+        `
+    }
+}
+
+function rerouteInterestedButton() {
+    interestButton.innerHTML = `
+     <a class="btn btn-primary" href="login.html" role="button">I'm Interested!</a>
+
+    `
 }
 
 function GetURLParameter(sParam) {

@@ -19,20 +19,16 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public enum PostDao {
 	INSTANCE;
 
-	private final HashMap<Integer, Post> posts = new HashMap<>();
-
 	public void delete(int id) {
 		String sql = """
-				DELETE FROM post WHERE id=?
-				
-		"""; // Assuming delete_post takes one parameter
+						DELETE FROM post WHERE id=?
+						
+				"""; // Assuming delete_post takes one parameter
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, id);
@@ -44,15 +40,23 @@ public enum PostDao {
 	}
 
 	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy) {
-		List<Post> list = new ArrayList<>(posts.values());
+		List<Post> list = new ArrayList<>();
 		System.out.println("GET posts called");
-		try {
-			Statement statement = DatabaseConnection.INSTANCE.getConnection().createStatement();
-			String sql = """
-					SELECT json_agg(post) FROM post
-					""";
 
-			ResultSet rs = statement.executeQuery(sql);
+		String sql = """
+				SELECT json_agg(t) FROM (
+					SELECT * FROM Post
+					ORDER BY id
+					LIMIT ?
+					OFFSET ?
+				) t;
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+
+			statement.setInt(1, pageSize);
+			statement.setInt(2, (pageNumber - 1) * pageSize);
+
+			ResultSet rs = statement.executeQuery();
 			ObjectMapper mapper = JsonMapper.builder()
 					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 					.build();
@@ -61,7 +65,7 @@ public enum PostDao {
 			}
 		} catch (SQLException | JsonProcessingException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Could not get posts.");
+ 			throw new RuntimeException("Could not get posts.");
 		}
 
 		/*
@@ -71,11 +75,10 @@ public enum PostDao {
 			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
 		else throw new NotSupportedException("Sort field not supported");
 		*/
-		return (List<Post>) Utils.pageSlice(list, pageSize, pageNumber);
+		return list;
 	}
 
 	public Post getPost(int id) {
-
 		String sql = "SELECT row_to_json(t) post FROM(SELECT * FROM Post WHERE id=?) t"; // Assuming delete_post takes one parameter
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
@@ -100,8 +103,9 @@ public enum PostDao {
 			throw new RuntimeException("Error while getting post.");
 		}
 	}
+
 	public CommentDtoList getComments(int id) {
-		String sql= """
+		String sql = """
 				SELECT jsonb_build_object(
 				           'comments', jsonb_agg(
 				                          jsonb_build_object(
@@ -132,9 +136,8 @@ public enum PostDao {
 		}
 	}
 
-	public Like toggleLike (Like like){
-
-		String sqlDoAction="";
+	public Like toggleLike(Like like) {
+		String sqlDoAction = "";
 		String sqlCheck = """
 					SELECT EXISTS(SELECT personid,postid FROM personlikespost WHERE personid=? AND postid=?);
 				""";
@@ -144,11 +147,11 @@ public enum PostDao {
 			ResultSet rs = statementCheck.executeQuery();
 			if (rs.next()) {
 				if (rs.getBoolean(1)) {
-					sqlDoAction= """
+					sqlDoAction = """
 							DELETE FROM personlikespost WHERE personid=? AND postid=?;
 							""";
-				}else{
-					sqlDoAction= """
+				} else {
+					sqlDoAction = """
 							INSERT INTO personlikespost (personid, postid) VALUES (?, ?);
 							""";
 				}
@@ -157,8 +160,6 @@ public enum PostDao {
 			e.printStackTrace();
 			throw new RuntimeException("Error while checking if user is a person");
 		}
-
-
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sqlDoAction)) {
 			statement.setInt(1, like.getPersonId());
@@ -264,30 +265,26 @@ public enum PostDao {
 		}
 	}
 
-	private int getMaxId() {
-		// TODO delete this method if not used
-
-		Set<Integer> ids = posts.keySet();
-		return ids.isEmpty() ? 0 : ids.stream().max(Integer::compareTo).get();
-	}
-
 	public Post update(Post updated) {
 		// TODO delete this method if not used
-
-		if (!updated.isValid()) throw new BadRequestException("Invalid post.");
-		if (posts.get(updated.getId()) == null)
-			throw new NotFoundException("Post id '" + updated.getId() + "' not found.");
-
-		updated.setLastUpdate(Timestamp.valueOf(Instant.now().toString()));
-		posts.put(updated.getId(), updated);
 
 		return updated;
 	}
 
 	public int getTotalPosts() {
-		// TODO delete this method if not used
+		String sql = "SELECT COUNT(*) FROM post ";
 
-		return posts.keySet().size();
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return rs.getInt(1);
+			} else {
+				return 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting total posts");
+		}
 	}
 
 	public void createImages(Post post, List<FormDataBodyPart> parts) {

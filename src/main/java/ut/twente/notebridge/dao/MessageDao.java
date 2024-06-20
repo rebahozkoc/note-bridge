@@ -1,40 +1,23 @@
 package ut.twente.notebridge.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import java.io.File;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Message;
-import ut.twente.notebridge.model.MessageHistory;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 
 public enum MessageDao {
     INSTANCE;
 
-    private static final String ORIGINAL_MESSAGES = Utils.getAbsolutePathToResources() + "/mock-post-dataset.json";
-
-    private static final String UPDATED_MESSAGES = Utils.getAbsolutePathToResources() + "/updated-mock-user-dataset.json";
-
-
-    private final HashMap<String, MessageHistory> messenger=new HashMap<>();
-
     public List<Message> getMessages(int pageSize, int pageNumber, String sortBy, String user1, String user2) {
         List<Message> list = null;
-        System.out.println("GET messages called");
         try {
             PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
 					SELECT json_agg(pm)
@@ -58,13 +41,6 @@ public enum MessageDao {
             throw new RuntimeException(e);
         }
         return (List<Message>) Utils.pageSlice(list,pageSize,pageNumber);
-//        List<Message> list = null;
-//
-//        if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
-//           list=messenger.get(user).getMessagesSortedOnTime();
-//        else
-//            throw new NotSupportedException("Sort field not supported");
-//
     }
 
     public List<BaseUser> getContacts(int pageSize, int pageNumber, String sortBy,String user){
@@ -118,53 +94,21 @@ public enum MessageDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//        if(messenger.containsKey(id)) {
-//            messenger.remove(id);
-//        } else {
-//            throw new NotFoundException("Message History '" + id + "' not found.");
-//        }
     }
 
-    public void deleteMessage(Message message){
-        try {
-            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-					DELETE FROM privatemessage
-					WHERE user_id=? AND content=? AND createddate=?
-					""");
-            ps.setInt(1, message.getUser_id());
-            ps.setString(2, message.getContent());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            String string  = dateFormat.format(message.getCreateddate());
-            ps.setString(3, string);
-            ps.executeQuery();
-            ps.close();
+    public void deleteMessage(int id) {
+        String sql = """
+				DELETE FROM privatemessage WHERE id=?
+				
+		"""; // Assuming delete_post takes one parameter
+
+        try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete message.");
         }
-//        if(messenger.containsKey(id)) {
-//            if (messenger.get(id).getUserList(message.getUser()).contains(message)){
-//                messenger.get(id).getUserList(message.getUser()).remove(message);
-//            }else {
-//                throw new NotFoundException("Message '" + message + "' not found.");
-//            }
-//        } else {
-//            throw new NotFoundException("Message History '" + id + "' not found.");
-//        }
-    }
-
-    public void load() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        File source = existsMessages() ?
-                new File(UPDATED_MESSAGES) :
-                new File(ORIGINAL_MESSAGES);
-        MessageHistory[] arr = mapper.readValue(source, MessageHistory[].class);
-
-        Arrays.stream(arr).forEach(pt -> messenger.put(String.valueOf(pt.getIdOfMessageHistory()), pt));
-    }
-
-    private boolean existsMessages() {
-        File f = new File(UPDATED_MESSAGES);
-        return f.exists() && !f.isDirectory();
     }
 
     public Message createNewMessage(String contact, Message message) {
@@ -186,12 +130,6 @@ public enum MessageDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//        if (messenger.containsKey(id)){
-//            messenger.get(id).getUserList(id).add(new Message(id,message));
-//        }else {
-//            throw new NotFoundException("Message History '" + id + "' not found.");
-//        }
-
     }
 
     public void create(String user1, String user2) {
@@ -207,33 +145,10 @@ public enum MessageDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//        String nextId = "" + (getMaxId() + 1);
-//
-//        newMessageHistory.setId(Integer.parseInt(nextId));
-//        newMessageHistory.setCreateDate(Timestamp.valueOf(Instant.now().toString()));
-//        messenger.put(nextId,newMessageHistory);
-//
-//        return newMessageHistory;
-    }
-
-    private int getMaxId() {
-        Set<String> ids = messenger.keySet();
-        return ids.isEmpty() ? 0 : ids.stream()
-                .map(Integer::parseInt)
-                .max(Integer::compareTo)
-                .get();
-    }
-
-    public void save() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-        File destination = new File(UPDATED_MESSAGES);
-
-        writer.writeValue(destination, messenger.values());
     }
 
     public int getTotalMessages() {
-        return messenger.keySet().size();
+        return 0;
     }
 }
 

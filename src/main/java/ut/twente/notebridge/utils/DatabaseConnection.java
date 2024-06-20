@@ -13,7 +13,7 @@ public enum DatabaseConnection {
 
 	private Connection connection;
 
-	public void load(){
+	public void load(boolean deploymentMode) {
 
 		String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
 		System.out.println(rootPath);
@@ -26,7 +26,12 @@ public enum DatabaseConnection {
 			e.printStackTrace();
 		}
 
-		String URL = appProps.getProperty("URL");
+		String URL;
+		if (deploymentMode) {
+			URL = appProps.getProperty("PROD_URL");
+		}else{
+			URL = appProps.getProperty("TEST_URL");
+		}
 		String USER = appProps.getProperty("USER");
 		String PASSWORD = appProps.getProperty("PASSWORD");
 

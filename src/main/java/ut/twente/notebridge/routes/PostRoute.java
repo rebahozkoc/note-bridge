@@ -213,7 +213,6 @@ public class PostRoute {
 			}
 		}
 		return Response.ok(imageList).build();
-
 	}
 
 	//This route is defined to get all posts of a user, when user is logged in

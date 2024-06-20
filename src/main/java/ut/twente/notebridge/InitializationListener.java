@@ -14,7 +14,7 @@ public class InitializationListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		System.out.println("Initializing Notebridge...");
 		try {
-			DatabaseConnection.INSTANCE.load();
+			DatabaseConnection.INSTANCE.load(true);
 
 			System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		} catch (Exception e) {

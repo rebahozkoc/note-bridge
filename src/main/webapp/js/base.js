@@ -43,6 +43,37 @@ function pressPianoBtn8() {
     music.play();
 }
 
+function pressPianoBtn9() {
+    music.innerHTML = addSoundTag("assets/sounds/sound-9.mp3");
+    music.play();
+}
+
+function pressPianoBtn10() {
+    music.innerHTML = addSoundTag("assets/sounds/sound-10.mp3");
+    music.play();
+}
+
+function pressPianoBtn11() {
+    music.innerHTML = addSoundTag("assets/sounds/sound-11.mp3");
+    music.play();
+}
+
+function pressPianoBtn12() {
+    music.innerHTML = addSoundTag("assets/sounds/sound-12.mp3");
+    music.play();
+}
+
+function pressPianoBtn13() {
+    music.innerHTML = addSoundTag("assets/sounds/sound-13.mp3");
+    music.play();
+}
+
+function pressPianoBtn14() {
+    music.innerHTML = addSoundTag("assets/sounds/sound-14.mp3");
+    music.play();
+}
+
+
 function addSoundTag(sound) {
     return `<source src=` + sound + ` type="audio/mpeg">`;
 }

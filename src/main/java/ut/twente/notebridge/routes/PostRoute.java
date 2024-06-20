@@ -38,17 +38,22 @@ public class PostRoute {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResourceCollection<Post> getPosts(
+	public Response getPosts(
 			@QueryParam("sortBy") String sortBy,
 			@QueryParam("pageSize") int pageSize,
 			@QueryParam("pageNumber") int pageNumber
 	) {
-		int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
-		int pn = pageNumber > 0 ? pageNumber : 1;
-		var resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy).toArray(new Post[0]);
-		var total = PostDao.INSTANCE.getTotalPosts();
+		try{
+			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
+			int pn = pageNumber > 0 ? pageNumber : 1;
+			var resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy).toArray(new Post[0]);
+			var total = PostDao.INSTANCE.getTotalPosts();
 
-		return new ResourceCollection<>(resources, ps, pn, total);
+			return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+
 	}
 
 	// Returns the like count for a post with a given id

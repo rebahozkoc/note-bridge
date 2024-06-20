@@ -63,7 +63,7 @@ public enum PostDao {
 			if (rs.next()) {
 				list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Post[].class));
 			}
-		} catch (SQLException | JsonProcessingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
  			throw new RuntimeException("Could not get posts.");
 		}

@@ -17,7 +17,6 @@ public class InitializationListener implements ServletContextListener {
 			DatabaseConnection.INSTANCE.load();
 
 			System.out.println("Working Directory = " + System.getProperty("user.dir"));
-			System.out.println(Utils.readFromProperties(""));
 		} catch (Exception e) {
 			System.err.println("Error while loading data.");
 			e.printStackTrace();

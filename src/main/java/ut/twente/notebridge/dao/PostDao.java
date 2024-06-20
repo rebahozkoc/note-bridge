@@ -6,19 +6,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import ut.twente.notebridge.dto.CommentDtoList;
+import ut.twente.notebridge.dto.PostDto;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 public enum PostDao {
@@ -27,7 +31,6 @@ public enum PostDao {
 	public void delete(int id) {
 		String sql = """
 						DELETE FROM post WHERE id=?
-						
 				"""; // Assuming delete_post takes one parameter
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
@@ -39,8 +42,8 @@ public enum PostDao {
 		}
 	}
 
-	public List<Post> getPosts(int pageSize, int pageNumber, String sortBy) {
-		List<Post> list = new ArrayList<>();
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy) {
+		List<PostDto> list = new ArrayList<>();
 		System.out.println("GET posts called");
 
 		String sql = """
@@ -61,7 +64,10 @@ public enum PostDao {
 					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 					.build();
 			if (rs.next()) {
-				list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), Post[].class));
+				list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), PostDto[].class));
+				for (PostDto post : list) {
+					post.setImage(getFirstImage(post.getId()));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -335,5 +341,34 @@ public enum PostDao {
 			e.printStackTrace();
 			throw new RuntimeException("Error while getting images");
 		}
+	}
+
+	public String getFirstImage(Integer id) {
+		String sql = """
+				SELECT pictureurl FROM picture WHERE postid=? LIMIT 1
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				String imageFile = rs.getString("pictureurl");
+				String fileLocation = Utils.readFromProperties("PERSISTENCE_FOLDER_PATH") + imageFile;
+				File file = new File(fileLocation);
+				if (file.exists()) {
+					try {
+						byte[] fileContent = FileUtils.readFileToByteArray(file);
+						return Base64.getEncoder().encodeToString(fileContent);
+					} catch (IOException e) {
+						e.printStackTrace();
+						throw new RuntimeException("Error while encoding image to base64");
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting first image");
+		}
+		return null;
 	}
 }

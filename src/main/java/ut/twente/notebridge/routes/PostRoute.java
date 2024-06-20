@@ -14,6 +14,7 @@ import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.dto.CommentDtoList;
+import ut.twente.notebridge.dto.PostDto;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
@@ -46,7 +47,7 @@ public class PostRoute {
 		try{
 			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
 			int pn = pageNumber > 0 ? pageNumber : 1;
-			var resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy).toArray(new Post[0]);
+			var resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy).toArray(new PostDto[0]);
 			var total = PostDao.INSTANCE.getTotalPosts();
 
 			return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();
@@ -209,8 +210,6 @@ public class PostRoute {
 			} else {
 				return Response.status(Response.Status.NOT_FOUND).entity("Image file not found at " + fileLocation).build();
 			}
-
-
 		}
 		return Response.ok(imageList).build();
 

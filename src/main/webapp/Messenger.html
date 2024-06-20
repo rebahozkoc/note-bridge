@@ -226,6 +226,7 @@
         if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
             messages=newMessages;
             showMessageHistory(id,username);
+            document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
         }
     }
 
@@ -318,7 +319,7 @@
                         "Content-type": "application/json"
                     }
                 }).then(r => {
-                    console.log(data.userId);
+                    document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
                     loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
                     clearQuery();
                 })

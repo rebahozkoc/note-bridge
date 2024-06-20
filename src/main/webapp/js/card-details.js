@@ -6,6 +6,8 @@ let postImages = document.getElementById("post-images");
 const likeCountText= document.getElementById("like-countText");
 const likeCount=document.getElementById("like-count");
 
+
+
 const cardTitle = document.getElementById("title");
 const description = document.getElementById("description");
 const eventType = document.getElementById("event-type");
@@ -14,6 +16,9 @@ const heartIcon = document.getElementById("heart-icon");
 const deleteIcon = document.getElementById("delete-icon");
 const editIcon = document.getElementById("edit-icon");
 const interestButton = document.getElementById("interested-button");
+const postCreateDateSpan = document.getElementById("post-create-date");
+const postLastUpdateDateSpan = document.getElementById("post-lastupdate-date");
+
 
 const authorImage=document.getElementById("author-img");
 const authorName=document.getElementById("author-name");
@@ -143,7 +148,8 @@ async function loadPostDetailsAndLikes(cardId) {
         description.innerHTML = `<h5>${postData.description}</h5>`;
         eventType.innerHTML = `${postData.eventType}`;
         eventLocation.innerHTML = `${postData.location}`;
-
+        postCreateDateSpan.innerHTML=`${new Date(parseInt(postData.createDate)).toLocaleDateString()} ${new Date(parseInt(postData.createDate)).toLocaleTimeString()}`;
+        postLastUpdateDateSpan.innerHTML=`${new Date(parseInt(postData.lastUpdate)).toLocaleDateString()} ${new Date(parseInt(postData.lastUpdate)).toLocaleTimeString()}`;
         try{
             await updateTotalLikes(cardId);
             await loadAuthorImage(postData.personId);

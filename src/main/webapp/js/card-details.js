@@ -50,9 +50,11 @@ function displayPostImages(images) {
     console.log(images);
     console.log(images[0]);
 
-    postImages.innerHTML += `
-    <img src="data:image/jpeg;base64,${images[0]}" class="d-block w-100">
-    `;
+    //document.getElementById("test-image").setAttribute('src', "data:image/jpg;base64," + images[0]);
+
+    // postImages.innerHTML = `
+    // <img src="data:image/jpeg;base64,${images[0]}" class="d-block w-100">
+    // `;
 }
 
 function getUserId() {

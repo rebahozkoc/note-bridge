@@ -33,22 +33,23 @@ public class PostRoute {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Post getPost(@PathParam("id") int id) {
-
 		return PostDao.INSTANCE.getPost(id);
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPosts(
-			@QueryParam("sortBy") String sortBy,
 			@QueryParam("pageSize") int pageSize,
-			@QueryParam("pageNumber") int pageNumber
+			@QueryParam("pageNumber") int pageNumber,
+			@QueryParam("sortBy") String sortBy,
+			@QueryParam("reverse") @DefaultValue("false") boolean reverse
 	) {
 		try{
 			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
 			int pn = pageNumber > 0 ? pageNumber : 1;
-			var resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy).toArray(new PostDto[0]);
+			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, reverse).toArray(new PostDto[0]);
 			var total = PostDao.INSTANCE.getTotalPosts();
+
 
 			return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();
 		}catch (Exception e){

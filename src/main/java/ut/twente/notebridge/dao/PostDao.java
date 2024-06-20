@@ -42,20 +42,28 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy) {
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse) {
 		List<PostDto> list = new ArrayList<>();
+		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
+
 		System.out.println("GET posts called");
 
 		String sql = """
 				SELECT json_agg(t) FROM (
 					SELECT * FROM Post
-					ORDER BY id
+					ORDER BY %s
 					LIMIT ?
 					OFFSET ?
-				) t;
+					) t;
 				""";
-		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 
+		if (sortBy == null || sortBy.isEmpty() || !allowedSortableColumns.contains(sortBy)) {
+			sortBy = "createDate DESC";
+		} else if (reverse) {
+			sortBy += " DESC";
+		}
+		sql = String.format(sql, sortBy);
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, pageSize);
 			statement.setInt(2, (pageNumber - 1) * pageSize);
 
@@ -71,16 +79,8 @@ public enum PostDao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
- 			throw new RuntimeException("Could not get posts.");
+			throw new RuntimeException("Could not get posts.");
 		}
-
-		/*
-		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
-			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
-		else if ("lastUpDate".equals(sortBy))
-			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
-		else throw new NotSupportedException("Sort field not supported");
-		*/
 		return list;
 	}
 

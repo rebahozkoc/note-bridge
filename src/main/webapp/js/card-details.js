@@ -15,6 +15,8 @@ const editIcon = document.getElementById("edit-icon");
 
 const loadingScreen=document.getElementById("loading-screen");
 
+const commentsSection = document.getElementById("comments-section");
+
 heartIcon.addEventListener("click", toggleLike);
 
 
@@ -34,9 +36,11 @@ function getUserId() {
             if (res.status === 200) {
                 return res.json().then(data => {
                     getAuthor(data.userId);
+                    showCommentsSection();
                 });
             } else {
                 return res.text().then(errorText => {
+                    hideCommentsSection();
                     throw new Error(`${errorText}`);
                 });
             }
@@ -246,6 +250,61 @@ function toggleHeart() {
 
 
     }
+}
+
+function showCommentsSection() {
+    commentsSection.style.display = "block";
+}
+
+function hideCommentsSection() {
+    commentsSection.style.display = "none";
+}
+
+
+function submitComment() {
+    const commentText = document.getElementById("comment-text").value;
+
+    if (!commentText) {
+        alert("Please enter a comment.");
+        return;
+    }
+
+    const comment = {
+        text: commentText,
+        postId: cardId,
+
+    };
+
+    fetch("/notebridge/api/comments", {
+        method: "POST",
+        body: JSON.stringify(comment),
+        headers: {
+            "Content-type": "application/json"
+        }
+    }).then(res => {
+        if (res.status === 200) {
+            alert("Comment added!");
+            return res.json();
+        } else {
+            return res.text().then(errorText => {
+                throw new Error(`${errorText}`);
+            });
+        }
+    }).then(data => {
+        addCommentToPage(comment);
+        document.getElementById("comment-text").value = "";
+    }).catch(err => {
+        console.error("Error submitting comment:", err);
+    });
+}
+
+
+function addCommentToPage(comment) {
+    const commentsContainer = document.getElementById("comments-container");
+    const commentElement = document.createElement("div");
+    commentElement.classList.add("comment");
+    commentElement.innerHTML = `<p>${comment.text}</p>`;
+    commentsContainer.appendChild(commentElement);
 }
 
 function getUser(){

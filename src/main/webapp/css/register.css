@@ -1,0 +1,33 @@
+#message {
+    display:block;
+    background: none;
+    color: white;
+    position: relative;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+p {
+    padding: 1px 5px;
+    font-size: 15px;
+}
+
+.valid {
+    color: green;
+}
+
+.valid:before {
+    position: relative;
+    left: -5px;
+    content: "✔️";
+}
+
+.invalid {
+    color: red;
+}
+
+.invalid:before {
+    position: relative;
+    left: -5px;
+    content: "✖️";
+}

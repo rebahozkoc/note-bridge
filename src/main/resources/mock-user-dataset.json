@@ -1,0 +1,57 @@
+[
+  {
+    "id": "23",
+    "createDate": "2023-01-10T08:00:00Z",
+    "lastUpDate": "2023-01-10T08:30:00Z",
+    "username": "johndoe",
+    "email": "john.doe@example.com",
+    "password": "password123",
+    "fullName": "John Doe",
+    "phoneNumber": "+1234567890",
+    "profilePicture": "http://example.com/images/profile/johndoe.jpg"
+  },
+  {
+    "id": "54",
+    "createDate": "2023-02-15T09:00:00Z",
+    "lastUpDate": "2023-02-15T09:45:00Z",
+    "username": "janesmith",
+    "email": "jane.smith@example.com",
+    "password": "securepassword",
+    "fullName": "Jane Smith",
+    "phoneNumber": "+0987654321",
+    "profilePicture": "http://example.com/images/profile/janesmith.jpg"
+  },
+  {
+    "id": "64",
+    "createDate": "2023-03-20T10:00:00Z",
+    "lastUpDate": "2023-03-20T10:15:00Z",
+    "username": "michaelbrown",
+    "email": "michael.brown@example.com",
+    "password": "mypassword",
+    "fullName": "Michael Brown",
+    "phoneNumber": "+1122334455",
+    "profilePicture": "http://example.com/images/profile/michaelbrown.jpg"
+  },
+  {
+    "id": "81",
+    "createDate": "2023-04-25T11:00:00Z",
+    "lastUpDate": "2023-04-25T11:20:00Z",
+    "username": "emilywhite",
+    "email": "emily.white@example.com",
+    "password": "password",
+    "fullName": "Emily White",
+    "phoneNumber": "+2233445566",
+    "profilePicture": "http://example.com/images/profile/emilywhite.jpg"
+  },
+  {
+    "id": "22",
+    "createDate": "2023-05-30T12:00:00Z",
+    "lastUpDate": "2023-05-30T12:10:00Z",
+    "username": "davidthompson",
+    "email": "david.thompson@example.com",
+    "password": "davidpassword",
+    "fullName": "David Thompson",
+    "phoneNumber": "+3344556677",
+    "profilePicture": "http://example.com/images/profile/davidthompson.jpg"
+  }
+]

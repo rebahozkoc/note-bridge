@@ -1,0 +1,86 @@
+#top-background {
+    background-image: url("../assets/images/picture.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+#top-content {
+    display: flex;
+    margin-top: 12vh;
+    margin-bottom: 20vh;
+    justify-content: center;
+}
+
+#main-logo-image {
+    width: 45vh;
+    border-radius: 50%;
+    margin-bottom: 35vh;
+}
+
+#categories {
+    margin-top: 13vh;
+    margin-bottom: 16vh;
+}
+
+#feedback-form-container {
+    margin-bottom: 10vh;
+}
+
+#page-content {
+    margin-top: 5vh;
+}
+
+#left-content {
+    text-align: center;
+    margin: auto;
+}
+
+.title {
+    text-align: center;
+}
+
+.first-page-card {
+    margin: 5vh 17vh 10vh;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 35px;
+    color: rgb(225, 225, 225);
+}
+
+.image-first-page-card {
+    height: 50vh;
+}
+
+.category-btn {
+    width: 10vh;
+    height: 15vh;
+    font-size: 3vh;
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
+}
+
+.hide {
+    display: none;
+}
+
+.card,
+.card-background {
+    background-color:rgb(17, 24, 39);
+    color: rgb(225, 225, 225);
+    box-shadow: rgba(138,62,183,0.3) 1px -5px 40px;
+}
+
+@keyframes
+fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in-text {
+    animation: fade-in 3s;
+}
+
+.fade-in-image {
+    animation: fade-in 3s;
+}

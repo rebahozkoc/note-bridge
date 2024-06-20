@@ -1,5 +1,6 @@
 let cardId = GetURLParameter('id');
 let isPerson=false;
+let postImages = document.getElementById("post-images");
 
 
 const likeCountText= document.getElementById("like-countText");
@@ -31,6 +32,26 @@ loadPostDetailsAndLikes(cardId);
 window.onload = function() {
     checkLoggedIn();
     getUserId();
+    getPostImages();
+}
+
+function getPostImages() {
+    fetch("/notebridge/api/posts/" + cardId + "/image", {
+        method: "GET"
+    })
+        .then(res => res.json())
+        .then(data => {
+            displayPostImages(data);
+        })
+}
+
+function displayPostImages(images) {
+    console.log(images);
+    console.log(images[0]);
+
+    postImages.innerHTML += `
+    <img src="data:image/jpeg;base64,${images[0]}" class="d-block w-100">
+    `;
 }
 
 function getUserId() {

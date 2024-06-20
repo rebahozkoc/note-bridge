@@ -1,4 +1,5 @@
 const music = document.getElementById("music");
+const welcomeMessage = document.getElementById("welcome-message");
 const logInBtn = document.getElementById("login-btn");
 const messengerBtn = document.getElementById("messenger-btn");
 const profileBtn = document.getElementById("profile-btn");
@@ -89,8 +90,16 @@ function checkLoggedIn() {
         .then(res => {
             if (res.status === 200) {
                 updateNavbar(true);
+                return res.json().then(data => {
+                    welcomeMessage.innerHTML = `
+                    <h1 class="title text-white fst-italic fs-2 mb-5"><strong>Welcome, ${data.username}</strong>!<br><span class="fs-4">We are delighted to see you as a part of our community.<br>Feel free to discover, interact, and collaborate with other musicians!</span></h1>
+                    `;
+                });
             } else {
                 updateNavbar(false);
+                welcomeMessage.innerHTML = `
+                <h1 class="title text-white fst-italic fs-1 mb-5">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
+                `;
             }
         })
 }

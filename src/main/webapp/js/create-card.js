@@ -1,17 +1,19 @@
-const form = document.getElementById("form");
+const createPostForm = document.getElementById("form");
 
 window.onload = function() {
     checkLoggedIn();
 }
 
-form.addEventListener("submit", function(event) {
+createPostForm.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const data = new FormData(form);
+    const formDataPostInformation = new FormData(createPostForm);
     let dataObject = {};
 
-    for (const [key, value] of data.entries()) {
-        dataObject[key] = value;
+    for (const [key, value] of formDataPostInformation.entries()) {
+        if(key !== "images") {
+            dataObject[key] = value;
+        }
     }
 
     fetch("/notebridge/api/auth/status", {
@@ -32,13 +34,27 @@ form.addEventListener("submit", function(event) {
 
 function sendRequestCreatePost(dataObject, userId) {
     dataObject.personId = userId;
+
     fetch("/notebridge/api/posts", {
         method: "POST",
         body: JSON.stringify(dataObject),
         headers: {
             "Content-type": "application/json"
         }
-    }).then(r => {
-        window.location.href = "cards.html";
+    }).then(res => res.json())
+        .then(data => {
+            sendRequestAddImagesToPost(data.id);
+            window.location.href = "cards.html";
     });
+}
+
+function sendRequestAddImagesToPost(postId) {
+    let formData = new FormData();
+    let images = document.getElementById("images").files;
+    formData.append("images", images);
+
+    fetch("/notebridge/api/posts/" + postId + "/images", {
+        method: "POST",
+        body: formData
+    })
 }

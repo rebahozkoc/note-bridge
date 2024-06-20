@@ -215,7 +215,6 @@ function saveChangesDescription(event){
 
 //TO UPDATE THE CHANGES INSIDE THE INPUT VALUES OF THE MODALS
 function loadModalDataPerson(data){
-    console.log(nameLastnameModal);
     nameLastnameModal.querySelector("#nameInput").value=data.name;
     nameLastnameModal.querySelector("#lastnameInput").value=data.lastname;
     descriptionModal.querySelector("#descriptionInput").value=data.description;
@@ -223,7 +222,6 @@ function loadModalDataPerson(data){
     contactInformationModal.querySelector("#phoneInput").value=data.phoneNumber;
 }
 function loadModalDataSponsor(data){
-    console.log(nameLastnameModal);
     nameLastnameModal.querySelector("#nameInput").value=data.companyName;
     nameLastnameModal.querySelector("#lastnameInput").value=data.websiteURL;
     descriptionModal.querySelector("#descriptionInput").value=data.description;
@@ -292,6 +290,13 @@ function loadUserData(){
     })
 
 }
+
+
+async function loadInstrumentData(personId){
+
+}
+
+
 
 function loadUserImage(){
     getStatus()

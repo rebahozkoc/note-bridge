@@ -291,14 +291,21 @@ function loadUserData(){
             console.error("Error", error.toString());
     })
 
-
 }
 
 function loadUserImage(){
     getStatus()
         .then(data=>{
             fetch(`/notebridge/api/${data.role}s/${data.userId}/image`)
-                .then(res => res.blob())
+                .then(res => {
+                    if(res.status===200) {
+                        return res.blob();
+                    }else{
+                        return res.text().then(errorText => {
+                            throw new Error(`${errorText}`);
+                        });
+                    }
+                })
                 .then(blob => {
                     const imageUrl = URL.createObjectURL(blob);
                     // Set the src attribute of the img element

@@ -13,6 +13,11 @@ const heartIcon = document.getElementById("heart-icon");
 const deleteIcon = document.getElementById("delete-icon");
 const editIcon = document.getElementById("edit-icon");
 
+const authorImage=document.getElementById("author-img");
+const authorName=document.getElementById("author-name");
+const authorUsername=document.getElementById("author-username");
+const authorCreateDate=document.getElementById("author-createDate");
+
 const loadingScreen=document.getElementById("loading-screen");
 
 const commentsSection = document.getElementById("comments-section");
@@ -84,7 +89,6 @@ function GetURLParameter(sParam) {
 
 async function loadPostDetailsAndLikes(cardId) {
 
-    console.log(cardId)
     try{
         const post= await fetch('/notebridge/api/posts/' + cardId);
 
@@ -98,7 +102,8 @@ async function loadPostDetailsAndLikes(cardId) {
 
         try{
             await updateTotalLikes(cardId);
-
+            await loadAuthorImage(postData.personId);
+            await loadAuthorDetails(postData.personId);
         } catch(err){
             console.error(err);
         }
@@ -131,6 +136,61 @@ async function loadPostDetailsAndLikes(cardId) {
     }
 
 
+}
+
+
+function loadAuthorImage(personId) {
+
+    console.log(personId)
+
+    fetch(`/notebridge/api/persons/${personId}/image`)
+        .then(res => {
+            if(res.status===200) {
+                return res.blob();
+            }else{
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+
+        })
+        .then(blob => {
+
+            const imageUrl = URL.createObjectURL(blob);
+            // Set the src attribute of the img element
+            authorImage.src = imageUrl;
+
+        })
+        .catch(error=>{
+            console.error("Error", error.toString());
+        });
+
+
+}
+
+function loadAuthorDetails(personId){
+    fetch(`/notebridge/api/persons/${personId}`).then(res=> {
+
+
+            if (res.status === 200) {
+                return res.json();
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        }
+    ).then(data => {
+        authorUsername.innerHTML = data.username;
+        authorName.innerHTML = data.name + " " + data.lastname;
+        const createDate = new Date(parseInt(data.createDate));
+        const formattedDate = createDate.toLocaleDateString();
+        const formattedTime = createDate.toLocaleTimeString();
+        authorCreateDate.innerHTML = `Account Created on: ${formattedDate} ${formattedTime}`;
+
+    }).catch(err=>{
+        console.error(err);
+    })
 }
 
 function checkIfLiked(cardId) {

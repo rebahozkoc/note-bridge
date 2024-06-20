@@ -2,23 +2,17 @@ package ut.twente.notebridge.routes;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import ut.twente.notebridge.dao.MessageDao;
+import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.ResourceCollection;
 
 @Path("/message")
 public class MessageRoute {
-
-//    @GET
-//    @Path("/messages/{user}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public List<Message> getMessageHistory(@PathParam("user") String user) {
-//
-//        return MessageDao.INSTANCE.getMessages(user);
-//
-//    }
 
     @GET
     @Path("/contact/{id}")
@@ -49,11 +43,11 @@ public class MessageRoute {
     @Path("/newmessage/{user}/{contact}/{message}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void addMessage(@PathParam("user") String user, @PathParam("contact") String contact, @PathParam("message") String message) {
+    public Message addMessage(@PathParam("user") String user, @PathParam("contact") String contact, @PathParam("message") String message) {
         Message m=new Message();
         m.setUser_id(Integer.valueOf(user));
-        m.setContent(message);
-        MessageDao.INSTANCE.createNewMessage(contact,m);
+        m.setContent(URLDecoder.decode(message, StandardCharsets.UTF_8));
+        return MessageDao.INSTANCE.createNewMessage(contact,m);
     }
 
     @DELETE
@@ -62,16 +56,15 @@ public class MessageRoute {
         MessageDao.INSTANCE.delete(id, user);
     }
 
-    @PUT
-    @Path("/deletemessage{user}/{message}/{time}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void deleteMessage(@PathParam("user") String user, @PathParam("message") String message, @PathParam("time") String time) {
-        Message m=new Message();
-        m.setCreateddate(Timestamp.valueOf(time));//probably will need adjusting
-        m.setUser_id(Integer.valueOf(user));
-        m.setContent(message);
-        MessageDao.INSTANCE.deleteMessage(m);
+    @DELETE
+    @Path("/deletemessage/{id}")
+    public void deleteMessage(@PathParam("id") int id) {
+        try{
+            MessageDao.INSTANCE.deleteMessage(id);
+
+        } catch (Exception e) {
+            throw new NotFoundException("Message '" + id + "' not found!");
+        }
     }
 
     @GET

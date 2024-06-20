@@ -2,6 +2,7 @@ body {
     background: #0b032e;
     font-family: Tahoma, serif;
     background-size: cover;
+    overflow: hidden;
 }
 #particles-js canvas {
     display: block;
@@ -65,15 +66,17 @@ body {
     border-radius: 25px;
     background-color: #34A1FD;
     max-height: fit-content;
-    max-width: 150px;
+    max-width: 30vh;
     color: #201d1d;
     box-shadow: 2px 2px black;
 }
 .left{
     align-self: flex-start;
+    margin-bottom: 0.3vh;
 }
 .right{
     align-self: flex-end;
+    margin-right: 0.5vh;
 }
 .contacts{
     background:white;

@@ -30,13 +30,17 @@
                     <li class="nav-item">
                         <a href="cards.html" class="button-cover ms-2 me-3" role="button"><span class="text px-5">Browse Posts</span><span>Browse Posts</span></a>
                     </li>
-                    <li id="messenger-btn" class="nav-item"></li>
+                    <li id="messenger-btn" class="nav-item">
+                        <a href="Messenger.html" class="button-cover me-3" role="button"><span class="text px-5">Messenger</span><span>Messenger</span></a>
+                    </li>
                     <li class="nav-item">
-                        <a href="#form" class="button-cover" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
+                        <a href="#feedback-form-container" class="button-cover" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
                     </li>
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li id="profile-btn"></li>
+                    <li id="profile-btn">
+                        <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
+                    </li>
                     <li id="login-btn"></li>
                 </ul>
             </div>
@@ -53,15 +57,14 @@
             <button class="btn btn-light white-block" onclick="pressPianoBtn6()"></button>
             <button class="btn btn-light white-block" onclick="pressPianoBtn7()"></button>
             <button class="btn btn-light white-block" onclick="pressPianoBtn8()"></button>
-            <button class="btn btn-light white-block rounded-end-2" onclick="pressPianoBtn9()"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 5.5vh" onclick="pressPianoBtn10()"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 14vh" onclick="pressPianoBtn11()"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 29.5vh" onclick="pressPianoBtn12()"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 45vh" onclick="pressPianoBtn13()"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 53vh" onclick="pressPianoBtn14()"></button>
+            <button class="btn btn-light white-block rounded-end-2"></button>
+            <button class="btn btn-dark black-block" style="margin-left: 5.5vh"></button>
+            <button class="btn btn-dark black-block" style="margin-left: 14vh"></button>
+            <button class="btn btn-dark black-block" style="margin-left: 29.5vh"></button>
+            <button class="btn btn-dark black-block" style="margin-left: 45vh"></button>
+            <button class="btn btn-dark black-block" style="margin-left: 53vh"></button>
         </div>
     </div>
-
 <div class="contactAndChat">
     <div id="contactsHolder" class="contacts ib">
         <ul id='contacts' class="list-group"></ul>
@@ -110,8 +113,10 @@
         </div>
     </div>
 </div>
-<script src="js/particles.js"></script>
-<script src="js/app.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/app.js"></script>
+    <audio controls id="music"></audio>
+    <script src="js/base.js"></script>
 <script>
     let contacts = {};
     let messages = {};
@@ -120,6 +125,11 @@
     const messageElement=document.getElementById("messageBox");
     const message=document.getElementById("but");
 
+    window.onload = function() {
+        checkLoggedIn();
+        fetchContacts();
+    }
+
     function turnGrey(x) {
         x.className = "list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center"
     }
@@ -127,25 +137,20 @@
         x.className = "list-group-item d-flex justify-content-between align-items-center"
     }
 
-    function deleteMessage(x){
 
-    }
+    setInterval(fetchContacts, 2000);
 
-    function loadMessages(id) {
+
+    function loadMessages(id, username) {
         if (selectedContact === null) {
-            console.log("this is top contact");
-            console.log(contacts['data'][0].id);
             selectedContact=contacts['data'][0].id;
-            console.info(id);
-            loadMessagesWithID(selectedContact,id);
+            loadMessagesWithID(selectedContact,id, username);
         } else {
-            console.log("this is selected contact");
-            console.log(selectedContact);
-            loadMessagesWithID(selectedContact,id);
+            loadMessagesWithID(selectedContact,id, username);
         }
     }
 
-    function loadMessagesWithID(x, id){
+    function loadMessagesWithID(x, id, user){
         let username=null;
         for (const contact in contacts['data']){
             if (contacts['data'][contact].id===x){
@@ -153,18 +158,17 @@
             }
         }
         document.getElementById("contactName").innerText=username;
-        fetchMessages(x, id);
+        fetchMessages(x, id, user);
     }
 
     function loadMessagesForThisUser(x){
         messageElement.innerHTML=``;
         messages={};
         selectedContact=getId(`${x.innerText.split("\n")[0]}`);
-        console.info(selectedContact);
         document.getElementById("contactName").innerText=`${x.innerText.split("\n")[0]}`;
         getStatus()
             .then(data=> {
-                fetchMessages(getId(`${x.innerText.split("\n")[0]}`),data.userId);
+                fetchMessages(getId(`${x.innerText.split("\n")[0]}`),data.userId,data.username);
             })
     }
 
@@ -176,21 +180,28 @@
         }
     }
 
+    function getUsername(x){
+        for (let i = 0; i < contacts['data'].length; i++) {
+            if (contacts['data'][i].id === x) {
+                return contacts['data'][i].username;
+            }
+        }
+    }
+
     function clearQuery(){
         let textbox=document.getElementById("message");
         textbox.value='';
     }
-    fetchContacts();
     function fetchContacts(){
         getStatus()
             .then(data=> {
-                fetch(`http://localhost:8080/notebridge/api/message/contact/${data.userId}`, {method: "GET"})
+                fetch(`/notebridge/api/message/contact/${data.userId}`, {method: "GET"})
                     .then(res => res.json())
                     .then(data2 => {
                         let id=data.userId;
                         contacts = data2;
                         showContacts();
-                        loadMessages(id);
+                        loadMessages(id,data.username);
                     })
                     .catch(err => {
                         console.error(`Unable to fetch contacts: ${err.status}`);
@@ -199,12 +210,11 @@
         })
     }
 
-    function fetchMessages(x, id){
-                fetch(`http://localhost:8080/notebridge/api/message/messages/${x}/${id}`, {method: "GET"})
+    function fetchMessages(x, id, username){
+                fetch(`/notebridge/api/message/messages/${x}/${id}`, {method: "GET"})
                     .then(res => res.json())
                     .then(data => {
-                        messages = data;
-                        showMessageHistory(id);
+                        noChangeInMessages(data,id,username);
                     })
                     .catch(err => {
                         console.error(`Unable to fetch messages: ${err.status}`);
@@ -212,42 +222,65 @@
                     })
     }
 
-    function showMessageHistory(id){
-        messageElement.innerHTML = `
-                ${messages.data.map(message => `${divideMessages(message, id)}`).join("\n")}`
+    function noChangeInMessages(newMessages, id ,username){
+        if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
+            messages=newMessages;
+            showMessageHistory(id,username);
+        }
     }
 
-    function divideMessages(message, id){
+    function showMessageHistory(id, username){
+        messageElement.innerHTML = `
+                ${messages.data.map(message => `${divideMessages(message, id, username)}`).join("\n")}`
+    }
+
+    function divideMessages(message, id, username){
         if (`${message.user_id}` === id.toString()) {
-            return `${showMessageRight(message)}`;
+            return `${showMessageRight(message, username)}`;
         } else {
             return `${showMessageLeft(message)}`;
         }
     }
 
     function showMessageLeft(message){
-        console.info(message.content);
-        return `
-         <div class="dropup-center dropup left message ">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        let time=message.createddate;
+        const date = new Date(time);
+        const formatter = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit'});
+        const formattedTime = formatter.format(date);
+        let username=getUsername(message.user_id);
+        return`
+         <div class="left">
+         <p style="color: white;text-align: left; margin: 0;padding: 0;">${username}</p>
+         <div class="dropup-center dropup message">
+            <button class="btn data-toggle disabled" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left">
                 ${message.content}
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" onclick="deleteMessage(this)">Delete</a></li>
             </ul>
          </div>
+         <p style="color: white">${formattedTime}</p>
+         </div>
         `
     }
-    function showMessageRight(message){
-        // console.info(message.content);
+    function showMessageRight(message, username){
+        let time=message.createddate;
+        const date = new Date(time);
+        const formatter = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit'});
+        const formattedTime = formatter.format(date);
         return`
-         <div class="dropup-center dropup right message ">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+         <div class="right">
+         <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
+         <div class="dropup-center dropup message">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left">
                 ${message.content}
             </button>
+            <input type="hidden" value=${message.id}>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="deleteMessage(this)">Delete</a></li>
+                <li><a class="dropdown-item" onclick="deleteMessage(this.parentNode.parentNode.parentNode.parentNode)">Delete</a></li>
             </ul>
+         </div>
+         <p style="color: white">${formattedTime}</p>
          </div>
         `
     }
@@ -277,14 +310,16 @@
                 let message = document.getElementById("message").value;
                 dataObject.user_id = data.userId;
                 dataObject.content = message;
-                fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${message}`, {
+                let encodedMessage = encodeURIComponent(message);
+                fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${encodedMessage}`, {
                     method: "POST",
                     body: JSON.stringify(dataObject),
                     headers: {
                         "Content-type": "application/json"
                     }
                 }).then(r => {
-                    loadMessagesWithID(selectedContact, dataObject.user_id);
+                    console.log(data.userId);
+                    loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
                     clearQuery();
                 })
             })
@@ -292,15 +327,23 @@
 
     })
 
+    function deleteMessage(x){
+        let idElement=x.querySelector("input[type='hidden']");
+        let id=idElement.value;
+        fetch(`/notebridge/api/message/deletemessage/${id}`, { method: "DELETE" })
+            .then(() => {
+                getStatus()
+                    .then(data => {
+                        loadMessages(data.userId,data.username);
+                    })
+            })
+            .catch(err => {
+                console.error(`Unable to delete message: ${err.status}`);
+                console.error(err);
+            });
+    }
+
+
 </script>
-<audio controls id="music"></audio>
-
-    <script>
-        window.onload = function() {
-            checkLoggedIn();
-        }
-    </script>
-
-    <script src="js/base.js"></script>
 </body>
 </html>

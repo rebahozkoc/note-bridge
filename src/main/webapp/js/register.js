@@ -5,8 +5,13 @@ const secondField = document.querySelector("#second-field");
 const password = document.querySelector("#password");
 const repeatPassword = document.querySelector("#repeat-password");
 const warningMessage = document.querySelector("#warning-message");
+const myInput = document.getElementById("password");
+const letter = document.getElementById("letter");
+const capital = document.getElementById("capital");
+const number = document.getElementById("number");
+const length = document.getElementById("length");
 
-form.addEventListener("submit", function(event) {
+form.addEventListener("submit", function (event) {
     event.preventDefault();
 
     if (password.value !== repeatPassword.value) {
@@ -24,7 +29,7 @@ form.addEventListener("submit", function(event) {
 
     delete dataObject.btnradio;
 
-    if(registerAsUserBtn.checked) {
+    if (registerAsUserBtn.checked) {
         uriToSendRequest = "/notebridge/api/persons";
     } else {
         uriToSendRequest = "/notebridge/api/sponsors";
@@ -37,14 +42,15 @@ form.addEventListener("submit", function(event) {
             "Content-type": "application/json"
         }
     }).then(res => {
-        if(res.status === 200) {
+        if (res.status === 200) {
             window.location.replace("login.html");
             alert('Welcome! You have created an account!');
         } else {
             res.text().then(data => {
                 warningMessage.innerHTML = data;
             });
-        }})
+        }
+    })
         .catch(err => {
             console.error("Register Error", err)
         })
@@ -80,4 +86,49 @@ function showRegisterSponsorForm() {
         <label for="websiteURL">Website URL</label>
     </div>
     `;
+}
+
+    myInput.onkeyup = function() {
+
+    let specialCharacters = "!@#$%^&*()-_+=.";
+    let hasSpecialCharacter = false;
+
+    for(let i= 0; i<specialCharacters.length; i++) {
+        if(myInput.value.includes(specialCharacters.charAt(i))) {
+            letter.classList.remove("invalid");
+            letter.classList.add("valid");
+            hasSpecialCharacter = true;
+            break;
+        }
+    }
+    if(!hasSpecialCharacter) {
+        letter.classList.remove("valid");
+        letter.classList.add("invalid");
+    }
+
+    let upperCaseLetters = /[A-Z]/g;
+    if(myInput.value.match(upperCaseLetters)) {
+        capital.classList.remove("invalid");
+        capital.classList.add("valid");
+    } else {
+        capital.classList.remove("valid");
+        capital.classList.add("invalid");
+    }
+
+    let numbers = /(\D*\d){2,}/g;
+    if(myInput.value.match(numbers)) {
+        number.classList.remove("invalid");
+        number.classList.add("valid");
+    } else {
+        number.classList.remove("valid");
+        number.classList.add("invalid");
+    }
+
+    if(myInput.value.length >= 8) {
+        length.classList.remove("invalid");
+        length.classList.add("valid");
+    } else {
+        length.classList.remove("valid");
+        length.classList.add("invalid");
+    }
 }

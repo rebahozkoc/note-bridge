@@ -1,7 +1,10 @@
 package ut.twente.notebridge.routes;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -56,9 +59,14 @@ public class PersonRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updatePerson(@PathParam("id") Integer id, Person person) {
+	public Response updatePerson(@PathParam("id") Integer id, Person person, @Context HttpServletRequest request) {
 
-		//TODO: PREVENT UNAUTHORIZED UPDATE(USERS SHOULD BE ABLE TO UPDATE ONLY THEIR OWN ACCOUNT)
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
 
 		Person existingPerson = PersonDao.INSTANCE.getUser(id);
 		if(person.getUsername()!=null){
@@ -90,11 +98,20 @@ public class PersonRoute {
 
 	@DELETE
 	@Path("/{id}")
-	public void deletePerson(@PathParam("id") int id) {
+	public Response deletePerson(@PathParam("id") int id, @Context HttpServletRequest request){
 
-		//TODO: PREVENT UNAUTHORIZED DELETE(USERS SHOULD BE ABLE TO DELETE ONLY THEIR OWN ACCOUNT)
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
 
-		PersonDao.INSTANCE.delete(id);
+		try{
+			return Response.status(Response.Status.OK).entity("Person deleted").build();
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@PUT
@@ -104,7 +121,15 @@ public class PersonRoute {
 	public Response putImage(
 			@PathParam("id") Integer id,
 			@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+			@FormDataParam("file") FormDataContentDisposition fileDetail, @Context HttpServletRequest request) {
+
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
+
 		try {
 			Person person = PersonDao.INSTANCE.getUser(id);
 			System.out.println("PersonRoute.putImage is called");

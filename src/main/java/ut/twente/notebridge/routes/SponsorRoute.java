@@ -1,6 +1,9 @@
 package ut.twente.notebridge.routes;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -44,17 +47,26 @@ public class SponsorRoute {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSponsor(@PathParam("id") int id) {
-		return Response.status(Response.Status.OK).entity(SponsorDao.INSTANCE.getSponsor(id)).build();
+		try{
+			return Response.status(Response.Status.OK).entity(SponsorDao.INSTANCE.getSponsor(id)).build();
+
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateSponsor(@PathParam("id") Integer id, Sponsor sponsor) {
+	public Response updateSponsor(@PathParam("id") Integer id, Sponsor sponsor, @Context HttpServletRequest request){
 
-		//TODO: PREVENT UNAUTHORIZED UPDATE(USERS SHOULD BE ABLE TO UPDATE ONLY THEIR OWN ACCOUNT)
-
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
 		Sponsor existingSponsor = SponsorDao.INSTANCE.getSponsor(id);
 		if(sponsor.getUsername()!=null){
 			existingSponsor.setUsername(sponsor.getUsername());
@@ -85,8 +97,20 @@ public class SponsorRoute {
 
 	@DELETE
 	@Path("/{id}")
-	public void deleteSponsor(@PathParam("id") String id) {
-		SponsorDao.INSTANCE.delete(id);
+	public Response deleteSponsor(@PathParam("id") int id, @Context HttpServletRequest request){
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
+		try{
+			SponsorDao.INSTANCE.delete(id);
+			return Response.status(Response.Status.OK).entity("Sponsor deleted").build();
+
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@PUT

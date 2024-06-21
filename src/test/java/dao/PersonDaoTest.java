@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import ut.twente.notebridge.utils.DatabaseConnection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PersonDaoTest {
@@ -64,7 +66,6 @@ public class PersonDaoTest {
 			person.setName("Test Person");
 			person.setLastname("Test Lastname");
 		}
-
 	}
 
 	@Test
@@ -84,5 +85,53 @@ public class PersonDaoTest {
 		Person createdPerson = PersonDao.INSTANCE.create(person);
 		assertNotEquals(person.getId(), 0, "Person ID should not be null before creating Person");
 		assertEquals(createdPerson, person, "Person is created");
+	}
+
+	@Test
+	@Order(3)
+	public void stage2_getPerson() {
+		Person newPerson = PersonDao.INSTANCE.getUser(person.getId());
+		assertEquals(person.getEmail(), newPerson.getEmail(), "Person is retrieved");
+		assertEquals(person.getId(), newPerson.getId(), "Person is retrieved");
+		assertEquals(person.getUsername(), newPerson.getUsername(), "Person is retrieved");
+		assertEquals(person.getPhoneNumber(), newPerson.getPhoneNumber(), "Person is retrieved");
+		assertEquals(person.getPicture(), newPerson.getPicture(), "Person is retrieved");
+		assertEquals(person.getDescription(), newPerson.getDescription(), "Person is retrieved");
+		assertEquals(person.getName(), newPerson.getName(), "Person is retrieved");
+		assertEquals(person.getLastname(), newPerson.getLastname(), "Person is retrieved");
+		assertEquals(person.getPassword(), newPerson.getPassword(), "Person is retrieved");
+	}
+
+	@Test
+	@Order(4)
+	public void stage3_updatePerson() {
+		Person updatedPerson = person;
+		updatedPerson.setName("Updated Name");
+		updatedPerson.setLastname("Updated Lastname");
+		updatedPerson.setPhoneNumber("1234567890");
+		updatedPerson.setPicture("picture.jpg");
+		updatedPerson.setDescription("Updated Description");
+		PersonDao.INSTANCE.update(updatedPerson);
+		Person newPerson = PersonDao.INSTANCE.getUser(person.getId());
+		assertEquals(updatedPerson.getEmail(), newPerson.getEmail(), "Person is updated");
+		assertEquals(updatedPerson.getId(), newPerson.getId(), "Person is updated");
+		assertEquals(updatedPerson.getUsername(), newPerson.getUsername(), "Person is updated");
+		assertEquals(updatedPerson.getPhoneNumber(), newPerson.getPhoneNumber(), "Person is updated");
+		assertEquals(updatedPerson.getPicture(), newPerson.getPicture(), "Person is updated");
+		assertEquals(updatedPerson.getDescription(), newPerson.getDescription(), "Person is updated");
+		assertEquals(updatedPerson.getName(), newPerson.getName(), "Person is updated");
+		assertEquals(updatedPerson.getLastname(), newPerson.getLastname(), "Person is updated");
+		assertEquals(updatedPerson.getPassword(), newPerson.getPassword(), "Person is updated");
+	}
+
+	@Test
+	@Order(5)
+	public void stage4_deletePerson() {
+		PersonDao.INSTANCE.delete(person.getId());
+
+		assertThrows(NotFoundException.class, () -> {
+					PersonDao.INSTANCE.getUser(person.getId());
+				},
+				"Person is deleted");
 	}
 }

@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.NotSupportedException;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Security;
-import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Person;
 
 import java.sql.PreparedStatement;
@@ -54,14 +52,7 @@ public enum PersonDao {
 	public List<Person> getUsers(int pageSize, int pageNumber, String sortBy) {
 		// TODO implement getUsers or delete
 		List<Person> list = new ArrayList<>(users.values());
-
-		if (sortBy == null || sortBy.isEmpty() || "id".equals(sortBy))
-			list.sort((pt1, pt2) -> Utils.compare(pt1.getId(), pt2.getId()));
-		else if ("lastUpDate".equals(sortBy))
-			list.sort((pt1, pt2) -> Utils.compare(pt1.getLastUpdate(), pt2.getLastUpdate()));
-		else throw new NotSupportedException("Sort field not supported");
-
-		return (List<Person>) Utils.pageSlice(list, pageSize, pageNumber);
+		return list;
 	}
 
 	public Person getUser(int id) {
@@ -123,7 +114,6 @@ public enum PersonDao {
 	}
 
 	public Person update(Person updated) {
-		// TODO: add authentication layer
 		BaseUserDao.INSTANCE.update(updated);
 		String sql = """
 						UPDATE Person

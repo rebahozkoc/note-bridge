@@ -1,6 +1,7 @@
 let cardId = GetURLParameter('id');
 let isPerson=false;
 let postImages = document.getElementById("post-images");
+let images = {};
 
 
 const likeCountText= document.getElementById("like-countText");
@@ -47,19 +48,43 @@ function getPostImages() {
     })
         .then(res => res.json())
         .then(data => {
-            displayPostImages(data);
+            images = data;
+            displayPostImages();
         })
 }
 
-function displayPostImages(images) {
-    console.log(images);
-    console.log(images[0]);
+function displayPostImages() {
+    if(images.length === 0) {
+        postImages.innerHTML = `
+        <img src="assets/images/placeholder.jpg">
+        `;
+    } else {
+        postImages.innerHTML = `
+        <div id="carousel" class="carousel slide">
+        <div class="carousel-inner"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        </div>
+        `;
 
-    //document.getElementById("test-image").setAttribute('src', "data:image/jpg;base64," + images[0]);
+        // postImages.innerHTML += `
+        // ${images.data.map(image => `${displayPostImage(image)}`).join("\n")}
+        // `;
+    }
+}
 
-    // postImages.innerHTML = `
-    // <img src="data:image/jpeg;base64,${images[0]}" class="d-block w-100">
-    // `;
+function displayPostImage(image) {
+    return `
+    <div class="carousel-item active">
+      <img src="${image}" class="d-block w-100">
+    </div>
+    `;
 }
 
 function getUserId() {

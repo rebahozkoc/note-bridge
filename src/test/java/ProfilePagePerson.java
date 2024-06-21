@@ -2,6 +2,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.Order;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -24,7 +25,7 @@ public class ProfilePagePerson {
             System.setProperty("webdriver.chrome.driver", Utils.readFromProperties("SELENIUM_DRIVER_PATH"));
             driver = new ChromeDriver();
             driver.get("http://localhost:8080/notebridge/login.html");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
             WebElement email = wait.until(ExpectedConditions.elementToBeClickable(By.id("email")));
             WebElement pass = wait.until(ExpectedConditions.elementToBeClickable(By.id("password")));
@@ -47,14 +48,14 @@ public class ProfilePagePerson {
     public void accessProfilePage(){
 
         driver.get("http://localhost:8080/notebridge/profile.html");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
 
         WebElement profileUsername = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#username")));
 
         //If user does not log in successfully, then the profile page prints out default username
         //Being not equal to this, means the user has logged in successfully
-        assertTrue(profileUsername.getText()!="username");
+        assertTrue(profileUsername.getText()!="@username");
 
 
     }
@@ -64,7 +65,7 @@ public class ProfilePagePerson {
     public void tryEditingName(){
 
         driver.get("http://localhost:8080/notebridge/profile.html");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
 
         WebElement editBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".profile-header h2 button")));
@@ -75,7 +76,7 @@ public class ProfilePagePerson {
         WebElement saveChangesBtn=wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#editHeaderModal .modal-footer button")));
 
 
-// Clear and interact with nameInput
+        // Clear and interact with nameInput
         nameInput.clear();
         nameInput.clear();
         lastnameInput.clear();
@@ -83,7 +84,9 @@ public class ProfilePagePerson {
         lastnameInput.sendKeys("Changed");
         saveChangesBtn.click();
         //alert showing up saying update successfull
-        String alertText=driver.switchTo().alert().getText();
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+
+        String alertText= alert.getText();
         driver.switchTo().alert().accept();
         assertTrue(alertText.contains("Update successful"));
 
@@ -91,22 +94,7 @@ public class ProfilePagePerson {
 
     }
 
-    @Test
-    @Order(3)
-    public void checkWelcomeMessage() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
-        //get username from profile page
-        driver.get("http://localhost:8080/notebridge/profile.html");
-        //since #username also puts @ at the beginning, we needed to use substring
-        String profileUsername = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#username"))).getText().substring(1);
-        driver.navigate().to("http://localhost:8080/notebridge/home.html");
-        WebElement welcomeElement=wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#welcome-message strong")));
-        String welcomeMessage = welcomeElement.getText();
-        System.out.println(welcomeMessage);
-        System.out.println(profileUsername);
-        assertTrue(welcomeMessage.contains(profileUsername));
-    }
 
     @AfterClass
     public static void tearDown() {

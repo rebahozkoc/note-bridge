@@ -42,7 +42,7 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse) {
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId) {
 		List<PostDto> list = new ArrayList<>();
 		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
 
@@ -62,10 +62,27 @@ public enum PostDao {
 		} else if (reverse) {
 			sortBy += " DESC";
 		}
+		if (personId != null && personId > 0) {
+			sql = """
+					SELECT json_agg(t) FROM (
+						SELECT * FROM Post
+						WHERE personId=?
+						ORDER BY %s
+						LIMIT ?
+						OFFSET ?
+						) t;
+					""";
+		}
 		sql = String.format(sql, sortBy);
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			statement.setInt(1, pageSize);
-			statement.setInt(2, (pageNumber - 1) * pageSize);
+			if (personId != null && personId > 0) {
+				statement.setInt(1, personId);
+				statement.setInt(2, pageSize);
+				statement.setInt(3, (pageNumber - 1) * pageSize);
+			} else {
+				statement.setInt(1, pageSize);
+				statement.setInt(2, (pageNumber - 1) * pageSize);
+			}
 
 			ResultSet rs = statement.executeQuery();
 			ObjectMapper mapper = JsonMapper.builder()

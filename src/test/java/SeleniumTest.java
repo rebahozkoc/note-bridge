@@ -14,7 +14,7 @@ public class SeleniumTest {
     @BeforeClass
     public static void setUp() {
         try {
-            System.setProperty("webdriver.chrome.driver", Utils.readFromProperties("SELENIUM_DRIVER_PATH"));
+            System.setProperty("webdriver.chrome.driver", "D:\\Uni\\BIT 2023-2024\\MOD4\\.Project\\browserDriver\\chromedriver.exe");
             driver = new ChromeDriver();
             driver.get("http://localhost:8080/notebridge/");
         } catch (Exception e) {

@@ -22,7 +22,7 @@ public class CardsTest {
     @BeforeClass
     public static void setUp() {
         try {
-            System.setProperty("webdriver.chrome.driver", Utils.readFromProperties("SELENIUM_WEB_DRIVER"));
+            System.setProperty("webdriver.chrome.driver", "D:\\Uni\\BIT 2023-2024\\MOD4\\.Project\\browserDriver\\chromedriver.exe");
             driver = new ChromeDriver();
         } catch (Exception e) {
             System.err.println("Exception caught: " + e.getMessage());
@@ -111,6 +111,48 @@ public class CardsTest {
         Dimension len2 = cardsContainer.getSize();
 
         assertTrue(len2.height > len1.height);
+
+    }
+
+    @Test
+    public void likesTest() throws InterruptedException {
+
+        driver.get("http://localhost:8080/notebridge/");
+        driver.get("http://localhost:8080/notebridge/login.html");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        wait.until(ExpectedConditions.urlContains("http://localhost:8080/notebridge/login.html"));
+
+
+        WebElement email = driver.findElement(By.id("email"));
+        WebElement pass = driver.findElement(By.id("password"));
+        WebElement login = driver.findElement(By.id("login-button"));
+
+        email.sendKeys("a@email.com");
+        pass.sendKeys("A12345678!!");
+        login.click();
+
+        wait.until(ExpectedConditions.urlContains("http://localhost:8080/notebridge/home.html"));
+        driver.get("http://localhost:8080/notebridge/cards.html");
+
+        TimeUnit.SECONDS.sleep(3);
+
+        WebElement card = driver.findElement(By.id("displayed-card"));
+        new Actions(driver).moveToElement(card).click().perform();
+        TimeUnit.SECONDS.sleep(3);
+
+        WebElement likeBtn = driver.findElement(By.id("heart-icon"));
+
+        boolean initial = likeBtn.getAttribute("class").contains("bi-heart-fill");
+
+        new Actions(driver).moveToElement(likeBtn).click().perform();
+
+        TimeUnit.SECONDS.sleep(1);
+        boolean after = likeBtn.getAttribute("class").contains("bi-heart-fill");
+
+
+        assertTrue(initial != after);
+
 
     }
 

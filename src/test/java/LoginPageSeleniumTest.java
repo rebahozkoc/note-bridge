@@ -11,6 +11,7 @@ import ut.twente.notebridge.utils.Utils;
 import java.time.Duration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class LoginPageSeleniumTest {
     private static WebDriver driver;
@@ -53,23 +54,32 @@ public class LoginPageSeleniumTest {
         passwordField.sendKeys("Superpassword.123");
         loginBtn.click();
 
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.urlContains("http://localhost:8080/notebridge/home.html"));
+
         String expectedPageUrl = "http://localhost:8080/notebridge/home.html";
         String actualPageUrl = driver.getCurrentUrl();
         assertEquals(expectedPageUrl, actualPageUrl);
 
+        WebElement logoutBtn = driver.findElement(By.id("log-out-btn"));
+        WebElement messengerBtn = driver.findElement(By.id("messenger-btn"));
+        WebElement profileBtn = driver.findElement(By.id("profile-btn"));
 
+        assertTrue(logoutBtn.isDisplayed());
+        assertTrue(messengerBtn.isDisplayed());
+        assertTrue(profileBtn.isDisplayed());
     }
 
     /**
      * Tests if the 'Login' form does not allow users with incorrect credentials to log in.
-     * In this case, an alert is shown on the screen with a specific message.
+     * In this case, a warning message appears.
      */
     @Test
     @Order(3)
     public void testLoginFormWrongCredentials() {
         WebElement emailField = driver.findElement(By.id("email"));
         WebElement passwordField = driver.findElement(By.id("password"));
-        WebElement loginBtn = driver.findElement(By.id("login-btn"));
+        WebElement loginBtn = driver.findElement(By.id("login-button"));
         WebElement warningMessage = driver.findElement(By.id("warning-message"));
 
         emailField.sendKeys("wrongemail@example.com");
@@ -77,16 +87,9 @@ public class LoginPageSeleniumTest {
         loginBtn.click();
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-        alert.accept();
+        wait.until(ExpectedConditions.visibilityOf(warningMessage));
 
-        if (alertText != null) {
-            System.out.println("Alert is shown on the screen, its content is: " + alertText);
-        } else {
-            System.out.println("The alert did not appear.");
-        }
+        assertTrue(warningMessage.isDisplayed());
 
         if(warningMessage.isDisplayed()) {
             System.out.println("Warning message is displayed, its content is: " + warningMessage.getText());

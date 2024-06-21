@@ -19,7 +19,7 @@ public class CardDetailsSeleniumTest {
     @BeforeClass
     public static void setUp() {
         try {
-            System.setProperty("webdriver.chrome.driver", "\"C:\\Users\\simay\\OneDrive\\Masaüstü\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe\"");
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\simay\\OneDrive\\Masaüstü\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
             driver = new ChromeDriver();
             driver.get("http://localhost:8080/notebridge/");
         } catch (Exception e) {

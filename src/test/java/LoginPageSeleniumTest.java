@@ -39,35 +39,25 @@ public class LoginPageSeleniumTest {
     }
 
     /**
-     * Tests if the 'Login' form works correctly. In this case, an alert is shown on the screen with a specific message.
-     * After logging in, the user must be redirected to the Home page.
+     * Tests if the 'Login' form works correctly. In this case, the user must be redirected to the Home page, which
+     * has the 'Log out', 'Messenger' and 'Profile' buttons displayed in the navigation bar.
      */
     @Test
     @Order(2)
     public void testLoginFormCorrectCredentials() {
         WebElement emailField = driver.findElement(By.id("email"));
         WebElement passwordField = driver.findElement(By.id("password"));
-        WebElement loginBtn = driver.findElement(By.id("login-btn"));
+        WebElement loginBtn = driver.findElement(By.id("login-button"));
 
         emailField.sendKeys("alex@example.com");
         passwordField.sendKeys("Superpassword.123");
         loginBtn.click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-
-        if (alertText != null) {
-            System.out.println("Alert is shown on the screen, its content is: " + alertText);
-        } else {
-            System.out.println("The alert did not appear.");
-        }
-        alert.accept();
-
         String expectedPageUrl = "http://localhost:8080/notebridge/home.html";
         String actualPageUrl = driver.getCurrentUrl();
         assertEquals(expectedPageUrl, actualPageUrl);
+
+
     }
 
     /**

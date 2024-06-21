@@ -1,4 +1,5 @@
 package dao;
+import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.*;
 import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.SponsorDao;
@@ -8,6 +9,7 @@ import ut.twente.notebridge.utils.DatabaseConnection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -82,4 +84,51 @@ public class SponsorDaoTest {
         assertEquals(createdSponsor, sponsor, "Sponsor is created");
     }
 
+    @Test
+    @Order(3)
+    public void stage2_getSponsor() {
+        Sponsor newSponsor = SponsorDao.INSTANCE.getSponsor(sponsor.getId());
+        assertEquals(sponsor.getEmail(), newSponsor.getEmail(), "Sponsor is retrieved");
+        assertEquals(sponsor.getId(), newSponsor.getId(), "Sponsor is retrieved");
+        assertEquals(sponsor.getUsername(), newSponsor.getUsername(), "Sponsor is retrieved");
+        assertEquals(sponsor.getPhoneNumber(), newSponsor.getPhoneNumber(), "Sponsor is retrieved");
+        assertEquals(sponsor.getPicture(), newSponsor.getPicture(), "Sponsor is retrieved");
+        assertEquals(sponsor.getDescription(), newSponsor.getDescription(), "Sponsor is retrieved");
+        assertEquals(sponsor.getCompanyName(), newSponsor.getCompanyName(), "Sponsor is retrieved");
+        assertEquals(sponsor.getWebsiteURL(), newSponsor.getWebsiteURL(), "Sponsor is retrieved");
+        assertEquals(sponsor.getPassword(), newSponsor.getPassword(), "Sponsor is retrieved");
+    }
+
+    @Test
+    @Order(4)
+    public void stage3_updateSponsor() {
+        Sponsor updatedSponsor = sponsor;
+        updatedSponsor.setCompanyName("Updated Company Name");
+        updatedSponsor.setWebsiteURL("wwww.updated.com");
+        updatedSponsor.setPhoneNumber("1234567890");
+        updatedSponsor.setPicture("picture.jpg");
+        updatedSponsor.setDescription("Updated Description");
+        SponsorDao.INSTANCE.update(updatedSponsor);
+        Sponsor newSponsor = SponsorDao.INSTANCE.getSponsor(sponsor.getId());
+        assertEquals(updatedSponsor.getEmail(), newSponsor.getEmail(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getId(), newSponsor.getId(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getUsername(), newSponsor.getUsername(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getPhoneNumber(), newSponsor.getPhoneNumber(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getPicture(), newSponsor.getPicture(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getDescription(), newSponsor.getDescription(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getCompanyName(), newSponsor.getCompanyName(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getWebsiteURL(), newSponsor.getWebsiteURL(), "Sponsor is updated");
+        assertEquals(updatedSponsor.getPassword(), newSponsor.getPassword(), "Sponsor is updated");
+    }
+
+    @Test
+    @Order(5)
+    public void stage4_deleteSponsor() {
+        SponsorDao.INSTANCE.delete(sponsor.getId());
+
+        assertThrows(NotFoundException.class, () -> {
+                    SponsorDao.INSTANCE.getSponsor(sponsor.getId());
+                },
+                "Sponsor is deleted");
+    }
 }

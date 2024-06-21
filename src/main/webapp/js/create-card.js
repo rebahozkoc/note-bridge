@@ -1,4 +1,4 @@
-const createPostForm = document.getElementById("form");
+const createPostForm = document.getElementById("create-post-form");
 
 window.onload = function() {
     checkLoggedIn();
@@ -50,7 +50,7 @@ function sendRequestCreatePost(dataObject, userId) {
 
 function sendRequestAddImagesToPost(postId) {
     let formData = new FormData();
-    let images = document.getElementById("images").files;
+    let images = document.getElementById("images").files[0];
     formData.append("images", images);
 
     fetch("/notebridge/api/posts/" + postId + "/images", {

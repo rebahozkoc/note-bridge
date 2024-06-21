@@ -38,7 +38,7 @@
     </nav>
 
     <div class="d-flex mt-5 justify-content-center">
-        <form id="form" class="container main-content w-50 rounded-5 p-5" style="padding: 20px;">
+        <form id="create-post-form" class="container main-content w-50 rounded-5 p-5" style="padding: 20px;">
             <h1 class="fw-bold text-white py-2 fs-2">Create a post</h1>
             <div class="form-floating mb-3">
                 <textarea class="form-control" placeholder="Title" id="title" name="title"></textarea>
@@ -67,7 +67,7 @@
             </div>
             <div class="my-2">
                 <label for="images" class="form-label text-white">Add pictures.</label>
-                <input class="form-control" id="images" type="file" multiple name="images">
+                <input class="form-control" id="images" accept="image/*" type="file" multiple name="images">
             </div>
             <button type="submit" class="button-1 mt-3">Create post</button>
         </form>

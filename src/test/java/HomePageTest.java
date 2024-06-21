@@ -6,13 +6,12 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import ut.twente.notebridge.utils.Utils;
 
 import java.time.Duration;
 
 import static org.junit.Assert.assertEquals;
 
-public class HomePageSeleniumTest {
+public class HomePageTest {
     private static WebDriver driver;
 
     @BeforeClass

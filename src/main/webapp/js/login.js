@@ -13,9 +13,11 @@ form.addEventListener("submit", function(event) {
             "Content-type": 'application/x-www-form-urlencoded'}
         }).then(res => {
         if(res.status === 200) {
+            alert("Login successful!");
             window.location.replace("home.html")
         } else {
             res.text().then(data => {
+                alert("Login did not work!");
                 const warningMessage = document.querySelector("#warning-message");
                 warningMessage.innerHTML = data;
             });

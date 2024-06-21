@@ -111,4 +111,4 @@ public class RegisterPageSeleniumTest {
 //            driver.quit();
 //        }
 //    }
-//}
+}

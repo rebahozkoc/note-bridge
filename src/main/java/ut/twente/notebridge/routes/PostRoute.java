@@ -108,8 +108,14 @@ public class PostRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
 		// TODO this one gives error check it
-		HttpSession session = request.getSession(false);
-		int userId = (int) session.getAttribute("userId");
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
+		int userId = (int) userSession.getAttribute("userId");
+
 		boolean isPerson;
 		try{
 			isPerson=BaseUserDao.INSTANCE.isPerson(userId);
@@ -142,9 +148,20 @@ public class PostRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post updatePost(@PathParam("id") Integer id, Post post) {
+	public Response updatePost(@PathParam("id") Integer id, Post post, @Context HttpServletRequest request) {
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null || (int)userSession.getAttribute("userId") !=post.getPersonId() ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
 		post.setId(id);
-		return PostDao.INSTANCE.update(post);
+		try{
+			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.update(post)).build();
+
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@DELETE
@@ -161,7 +178,15 @@ public class PostRoute {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createPost(Post post) {
+	public Response createPost(Post post, @Context HttpServletRequest request) {
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null || (int)userSession.getAttribute("userId") !=post.getPersonId() ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
+
+
 		try {
 			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.create(post)).build();
 		} catch (Exception e) {

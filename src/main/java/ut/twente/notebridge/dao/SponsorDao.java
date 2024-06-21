@@ -21,13 +21,9 @@ public enum SponsorDao {
 
 	private final HashMap<Integer, Sponsor> sponsors = new HashMap<>();
 
-	public void delete(String id) {
+	public void delete(int id) {
 		// TODO implement delete
-		if (sponsors.containsKey(id)) {
-			sponsors.remove(id);
-		} else {
-			throw new NotFoundException("Sponsor '" + id + "' not found.");
-		}
+
 	}
 
 	public List<Sponsor> getSponsors(int pageSize, int pageNumber, String sortBy) {

@@ -12,14 +12,13 @@ import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.utils.DatabaseConnection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class BaseUserDaoTest {
 
 	private static BaseUser baseUser;
+	private static BaseUser maliciousBaseUser;
 
 	@BeforeAll
 	public static void setUpAll() {
@@ -33,6 +32,11 @@ public class BaseUserDaoTest {
 		}
 		System.out.println("Notebridge TEST initialized.");
 
+		//initalize malicious base user
+		maliciousBaseUser = new BaseUser();
+		maliciousBaseUser.setUsername("<script>alert('XSS');</script>\n");
+		maliciousBaseUser.setEmail("<a href=\"javascript:alert('XSS')\">Click me</a>\n");
+		maliciousBaseUser.setPassword("fkjnsdf");
 		// Clean the database
 		BaseUserDao.INSTANCE.deleteAll();
 	}
@@ -71,6 +75,7 @@ public class BaseUserDaoTest {
 		assertEquals(createdBaseUser, baseUser, "Base user is created");
 		BaseUserDaoTest.baseUser.setId(createdBaseUser.getId());
 	}
+
 
 	@Test
 	@Order(2)
@@ -134,5 +139,19 @@ public class BaseUserDaoTest {
 		}, "Base user is deleted");
 	}
 
+	@Test
+	@Order(7)
+	public void stage1_testCreateMaliciousBaseUser() {
+		BaseUser maliciousBaseUser1 = BaseUserDaoTest.maliciousBaseUser;
+
+		BaseUser userStoredInDatabase=BaseUserDao.INSTANCE.getUser(BaseUserDao.INSTANCE.create(maliciousBaseUser1).getId());
+
+		System.out.println(userStoredInDatabase.getUsername());
+		System.out.println(userStoredInDatabase.getEmail());
+
+		assertTrue(!userStoredInDatabase.getUsername().equals(maliciousBaseUser1.getUsername()));
+		assertTrue(!userStoredInDatabase.getEmail().equals(maliciousBaseUser1.getEmail()));
+
+	}
 
 }

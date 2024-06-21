@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import ut.twente.notebridge.utils.DatabaseConnection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class BaseUserDaoTest {
@@ -51,29 +53,86 @@ public class BaseUserDaoTest {
 
 	@BeforeEach
 	public void setUp() {
-		this.baseUser = new BaseUser();
-
-		this.baseUser.setUsername("testusername");
-		this.baseUser.setEmail("testemail@gmail.com");
-		this.baseUser.setPassword("Password.123");
+		if (baseUser == null) {
+			baseUser = new BaseUser();
+			baseUser.setUsername("testusername");
+			baseUser.setEmail("testemail@gmail.com");
+			baseUser.setPassword("Password.123");
+		}
 	}
 
 	@Test
 	@Order(1)
 	public void stage1_testCreateBaseUser() {
-		BaseUser baseUser = this.baseUser;
+		BaseUser baseUser = BaseUserDaoTest.baseUser;
 
 		BaseUser createdBaseUser = BaseUserDao.INSTANCE.create(baseUser);
 		assertNotEquals(createdBaseUser.getId(), 0, "Base user ID should not be null");
 		assertEquals(createdBaseUser, baseUser, "Base user is created");
-		this.baseUser.setId(createdBaseUser.getId());
+		BaseUserDaoTest.baseUser.setId(createdBaseUser.getId());
 	}
 
 	@Test
 	@Order(2)
-	public void stage2_getUser() {
-		BaseUser baseUser = BaseUserDao.INSTANCE.getUser(this.baseUser.getId());
-		assertEquals(baseUser, this.baseUser, "Base user is retrieved");
+	public void stage2_getBaseUser() {
+		BaseUser newBaseUser = BaseUserDao.INSTANCE.getUser(BaseUserDaoTest.baseUser.getId());
+		assertEquals(baseUser.getEmail(), newBaseUser.getEmail(), "Base user is retrieved by email");
+		assertEquals(baseUser.getId(), newBaseUser.getId(), "Base user is retrieved by email");
+		assertEquals(baseUser.getUsername(), newBaseUser.getUsername(), "Base user is retrieved by email");
+		assertNotEquals(baseUser.getPassword(), newBaseUser.getPassword(), "Base user is retrieved by email");
 	}
+
+	@Test
+	@Order(3)
+	public void stage3_testGetBaseUserByEmail() {
+		BaseUser newBaseUser = BaseUserDao.INSTANCE.getUserByEmail(BaseUserDaoTest.baseUser.getEmail());
+		assertEquals(baseUser.getEmail(), newBaseUser.getEmail(), "Base user is retrieved by email");
+		assertEquals(baseUser.getId(), newBaseUser.getId(), "Base user is retrieved by email");
+		assertEquals(baseUser.getUsername(), newBaseUser.getUsername(), "Base user is retrieved by email");
+		assertNotEquals(baseUser.getPassword(), newBaseUser.getPassword(), "Base user is retrieved by email");
+	}
+
+	@Test
+	@Order(4)
+	public void stage4_isPerson() {
+		Boolean isPerson = BaseUserDao.INSTANCE.isPerson(BaseUserDaoTest.baseUser.getId());
+		assertEquals(false, isPerson, "Base user is not a person");
+	}
+
+	@Test
+	@Order(5)
+	public void stage5_updateBaseUser() {
+		baseUser.setUsername("newusername");
+		BaseUser newBaseUser = BaseUserDao.INSTANCE.update(baseUser);
+		assertEquals(baseUser.getEmail(), newBaseUser.getEmail(), "Base user is updated");
+		assertEquals(baseUser.getId(), newBaseUser.getId(), "Base user is updated");
+		assertEquals(baseUser.getUsername(), newBaseUser.getUsername(), "Base user is updated");
+
+		baseUser.setDescription("new description");
+		newBaseUser = BaseUserDao.INSTANCE.update(baseUser);
+		assertEquals(baseUser.getDescription(), newBaseUser.getDescription(), "Base user is updated");
+		assertEquals(baseUser.getEmail(), newBaseUser.getEmail(), "Base user is updated");
+		assertEquals(baseUser.getId(), newBaseUser.getId(), "Base user is updated");
+		assertEquals(baseUser.getUsername(), newBaseUser.getUsername(), "Base user is updated");
+
+		baseUser.setPhoneNumber("+1234567890");
+		newBaseUser = BaseUserDao.INSTANCE.update(baseUser);
+		assertEquals(baseUser.getPhoneNumber(), newBaseUser.getPhoneNumber(), "Base user is updated");
+		assertEquals(baseUser.getDescription(), newBaseUser.getDescription(), "Base user is updated");
+		assertEquals(baseUser.getEmail(), newBaseUser.getEmail(), "Base user is updated");
+		assertEquals(baseUser.getId(), newBaseUser.getId(), "Base user is updated");
+		assertEquals(baseUser.getUsername(), newBaseUser.getUsername(), "Base user is updated");
+
+	}
+
+	@Test
+	@Order(6)
+	public void stage6_deleteBaseUser() {
+		BaseUserDao.INSTANCE.delete(BaseUserDaoTest.baseUser.getId());
+		assertThrows(NotFoundException.class, () -> {
+			BaseUserDao.INSTANCE.getUser(BaseUserDaoTest.baseUser.getId());
+		}, "Base user is deleted");
+	}
+
 
 }

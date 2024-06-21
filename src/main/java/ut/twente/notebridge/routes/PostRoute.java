@@ -45,7 +45,7 @@ public class PostRoute {
 			@QueryParam("reverse") @DefaultValue("false") boolean reverse,
 			@QueryParam("personId") Integer personId
 	) {
-		try{
+		try {
 			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
 			int pn = pageNumber > 0 ? pageNumber : 1;
 			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, reverse, personId).toArray(new PostDto[0]);
@@ -53,7 +53,7 @@ public class PostRoute {
 
 
 			return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();
-		}catch (Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 
@@ -82,8 +82,8 @@ public class PostRoute {
 	@GET
 	@Path("/{id}/like")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response didUserLike(@PathParam("id") int id, @Context HttpServletRequest request){
-		Map<String,Boolean> responseObj = new HashMap<>();
+	public Response didUserLike(@PathParam("id") int id, @Context HttpServletRequest request) {
+		Map<String, Boolean> responseObj = new HashMap<>();
 		// In case user is not authenticated, return unauthorized
 		if (request.getSession(false) == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
@@ -111,22 +111,22 @@ public class PostRoute {
 		HttpSession session = request.getSession(false);
 		int userId = (int) session.getAttribute("userId");
 		boolean isPerson;
-		try{
-			isPerson=BaseUserDao.INSTANCE.isPerson(userId);
-		} catch(Exception e){
+		try {
+			isPerson = BaseUserDao.INSTANCE.isPerson(userId);
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while checking if user is a person").build();
 		}
 		if (isPerson) {
-			Like like= new Like();
+			Like like = new Like();
 			like.setPostId(postId);
 			like.setPersonId(userId);
-			try{
+			try {
 				return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.toggleLike(like)).build();
-			}catch (Exception e){
+			} catch (Exception e) {
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while liking the post").build();
 			}
 
-		}else{
+		} else {
 			return Response.status(Response.Status.FORBIDDEN).entity("Only persons can like a post").build();
 		}
 	}

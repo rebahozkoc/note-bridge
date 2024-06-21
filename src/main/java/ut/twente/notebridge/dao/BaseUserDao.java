@@ -137,7 +137,7 @@ public enum BaseUserDao {
 	}
 
 	private BaseUser getUserByUsername(String username) {
-		String sql = "SELECT row_to_json(t) baseuser FROM(SELECT * FROM BaseUser WHERE username=?) t"; // Assuming delete_post takes one parameter
+		String sql = "SELECT row_to_json(t) baseuser FROM(SELECT * FROM BaseUser WHERE username=?) t";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setString(1, username);
@@ -164,7 +164,7 @@ public enum BaseUserDao {
 
 	public BaseUser getUser(int id) {
 
-		String sql = "SELECT row_to_json(t) baseuser FROM(SELECT * FROM BaseUser WHERE id=?) t"; // Assuming delete_post takes one parameter
+		String sql = "SELECT row_to_json(t) baseuser FROM(SELECT * FROM BaseUser WHERE id=?) t";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, id);
@@ -265,4 +265,38 @@ public enum BaseUserDao {
 		baseUser.setPicture(uuid + fileName);
 		return baseUser;
 	}
+
+	public void delete(int id) {
+		String sql = """
+						DELETE FROM BaseUser
+						WHERE id = ?;
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Deleting user failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Deleting user failed for user with id " + id);
+		}
+	}
+
+	public void deleteAll() {
+		String sql = """
+						DELETE FROM BaseUser;
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			int affectedRows = statement.executeUpdate();
+			System.out.println("Deleted " + affectedRows + " users");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Deleting all users failed.");
+		}
+	}
+
+
 }

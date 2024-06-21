@@ -90,7 +90,10 @@ public class PersonRoute {
 
 	@DELETE
 	@Path("/{id}")
-	public void deletePerson(@PathParam("id") String id) {
+	public void deletePerson(@PathParam("id") int id) {
+
+		//TODO: PREVENT UNAUTHORIZED DELETE(USERS SHOULD BE ABLE TO DELETE ONLY THEIR OWN ACCOUNT)
+
 		PersonDao.INSTANCE.delete(id);
 	}
 

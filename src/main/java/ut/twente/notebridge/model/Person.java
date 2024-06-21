@@ -5,7 +5,7 @@ public class Person extends BaseUser {
 	private String name;
 	private String lastname;
 
-	Person(){
+	public Person(){
 		super();
 		this.name = null;
 		this.lastname = null;

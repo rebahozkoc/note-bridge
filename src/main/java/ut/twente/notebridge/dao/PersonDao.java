@@ -23,12 +23,31 @@ public enum PersonDao {
 
 	private final HashMap<Integer, Person> users = new HashMap<>();
 
-	public void delete(String id) {
-		// TODO implement delete
-		if (users.containsKey(id)) {
-			users.remove(id);
-		} else {
-			throw new NotFoundException("Person '" + id + "' not found.");
+	public void delete(int id) {
+		String sql = "DELETE FROM person WHERE id = ?"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Deleting user failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while deleting person with id " + id);
+		}
+	}
+
+	public void deleteAll(){
+		String sql = "DELETE FROM person"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			int affectedRows = statement.executeUpdate();
+			System.out.println("Deleted " + affectedRows + " persons");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while deleting all persons");
 		}
 	}
 

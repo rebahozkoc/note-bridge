@@ -6,14 +6,15 @@ CREATE TABLE BaseUser (
     email VARCHAR(255) UNIQUE NOT NULL,
     picture VARCHAR(255),
     phoneNumber VARCHAR(15),
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    description TEXT
 );
 
 CREATE TABLE Person(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     lastname VARCHAR(255),
-    FOREIGN KEY(id) REFERENCES BaseUser(id) ,
+    FOREIGN KEY(id) REFERENCES BaseUser(id)
 );
 
 CREATE TABLE Sponsor (
@@ -35,6 +36,10 @@ CREATE TABLE PersonInstrument (
     PRIMARY KEY (personId, instrumentName)
 );
 
+CREATE TABLE EventType (
+    name VARCHAR(255) PRIMARY KEY
+);
+
 CREATE TABLE Post (
     id SERIAL PRIMARY KEY,
     createDate TIMESTAMP NOT NULL,
@@ -49,12 +54,6 @@ CREATE TABLE Post (
     personId INT NOT NULL,
     FOREIGN KEY(personId) REFERENCES Person(id) ON DELETE CASCADE
 );
-
-
-CREATE TABLE EventType (
-    name VARCHAR(255) PRIMARY KEY
-);
-
 
 CREATE TABLE Picture (
     pictureURL VARCHAR(255) PRIMARY KEY,
@@ -99,4 +98,4 @@ CREATE TABLE Feedback (
     lastUpdate TIMESTAMP,
     email VARCHAR(255) NOT NULL,
     message TEXT NOT NULL
-    );
+);

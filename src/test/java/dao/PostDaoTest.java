@@ -3,6 +3,8 @@ package dao;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
+import ut.twente.notebridge.dao.PostDao;
+import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.utils.DatabaseConnection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +37,8 @@ class PostDaoTest {
 
 	@Test
 	public void testCreatePost () {
+		Post post = new Post();
 
+		PostDao.INSTANCE.create(post);
 	}
 }

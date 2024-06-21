@@ -36,6 +36,10 @@ CREATE TABLE PersonInstrument (
     PRIMARY KEY (personId, instrumentName)
 );
 
+CREATE TABLE EventType (
+    name VARCHAR(255) PRIMARY KEY
+);
+
 CREATE TABLE Post (
     id SERIAL PRIMARY KEY,
     createDate TIMESTAMP NOT NULL,
@@ -50,12 +54,6 @@ CREATE TABLE Post (
     personId INT NOT NULL,
     FOREIGN KEY(personId) REFERENCES Person(id) ON DELETE CASCADE
 );
-
-
-CREATE TABLE EventType (
-    name VARCHAR(255) PRIMARY KEY
-);
-
 
 CREATE TABLE Picture (
     pictureURL VARCHAR(255) PRIMARY KEY,

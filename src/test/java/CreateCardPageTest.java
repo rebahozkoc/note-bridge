@@ -69,7 +69,7 @@ public class CreateCardPageTest {
      */
     @Test
     @Order(4)
-    public void testLoginFormCorrectCredentials() {
+    public void testCreateCard() {
         driver.get("http://localhost:8080/notebridge/login.html");
         WebElement emailField = driver.findElement(By.id("email"));
         WebElement passwordField = driver.findElement(By.id("password"));
@@ -96,6 +96,9 @@ public class CreateCardPageTest {
         String expectedPageUrl = "http://localhost:8080/notebridge/cards.html";
         String actualPageUrl = driver.getCurrentUrl();
         assertEquals(expectedPageUrl, actualPageUrl);
+
+        WebElement cardTitle = driver.findElement(By.cssSelector("#displayed-card > div > h5"));
+        assertEquals(title.getText(), cardTitle.getText());
     }
 
 

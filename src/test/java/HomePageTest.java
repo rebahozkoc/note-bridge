@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class HomePageTest {
     private static WebDriver driver;
@@ -70,6 +70,9 @@ public class HomePageTest {
     @Order(4)
     public void testHiddenProfileBtn() {
         WebElement profileBtn = driver.findElement(By.id("profile-btn"));
+
+        assertFalse(profileBtn.isDisplayed());
+
         if(profileBtn.isDisplayed()){
             System.out.println("Profile button is displayed.");
         } else {
@@ -84,6 +87,9 @@ public class HomePageTest {
     @Order(5)
     public void testHiddenMessengerBtn() {
         WebElement messengerBtn = driver.findElement(By.id("messenger-btn"));
+
+        assertFalse(messengerBtn.isDisplayed());
+
         if(messengerBtn.isDisplayed()){
             System.out.println("Messenger button is displayed.");
         } else {

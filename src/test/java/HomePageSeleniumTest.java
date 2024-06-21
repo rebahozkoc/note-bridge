@@ -52,23 +52,10 @@ public class HomePageSeleniumTest {
     }
 
     /**
-     * Tests if the 'Contact us' button redirects the user to the 'Contact us' form.
-     */
-    @Test
-    @Order(3)
-    public void testContactUsBtn() {
-        WebElement contactUsBtn = driver.findElement(By.id("contact-us-btn"));
-        contactUsBtn.click();
-        String expectedPageUrl = "http://localhost:8080/notebridge/#feedback-form-container";
-        String actualPageUrl = driver.getCurrentUrl();
-        assertEquals(expectedPageUrl, actualPageUrl);
-    }
-
-    /**
      * Tests if the Login button redirects the user to the Login page.
      */
     @Test
-    @Order(4)
+    @Order(3)
     public void testLoginBtn() {
         WebElement loginBtn = driver.findElement(By.id("login-btn"));
         loginBtn.click();
@@ -81,7 +68,7 @@ public class HomePageSeleniumTest {
      * Tests if the Profile button is hidden when the user is logged out.
      */
     @Test
-    @Order(5)
+    @Order(4)
     public void testHiddenProfileBtn() {
         WebElement profileBtn = driver.findElement(By.id("profile-btn"));
         if(profileBtn.isDisplayed()){
@@ -95,7 +82,7 @@ public class HomePageSeleniumTest {
      * Tests if the Messenger button is hidden when the user is logged out.
      */
     @Test
-    @Order(6)
+    @Order(5)
     public void testHiddenMessengerBtn() {
         WebElement messengerBtn = driver.findElement(By.id("messenger-btn"));
         if(messengerBtn.isDisplayed()){
@@ -103,6 +90,19 @@ public class HomePageSeleniumTest {
         } else {
             System.out.println("Messenger button is not displayed.");
         }
+    }
+
+    /**
+     * Tests if the 'Contact us' button redirects the user to the 'Contact us' form.
+     */
+    @Test
+    @Order(6)
+    public void testContactUsBtn() {
+        WebElement contactUsBtn = driver.findElement(By.id("contact-us-btn"));
+        contactUsBtn.click();
+        String expectedPageUrl = "http://localhost:8080/notebridge/#feedback-form-container";
+        String actualPageUrl = driver.getCurrentUrl();
+        assertEquals(expectedPageUrl, actualPageUrl);
     }
 
     /**
@@ -124,6 +124,7 @@ public class HomePageSeleniumTest {
         wait.until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();
         String alertText = alert.getText();
+        alert.accept();
 
         if (alertText != null) {
             System.out.println("Alert is shown on the screen, its content is: " + alertText);

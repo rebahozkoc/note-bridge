@@ -1,6 +1,5 @@
 package dao;
 
-import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,19 +8,23 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import ut.twente.notebridge.dao.BaseUserDao;
+import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PersonDao;
+import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.model.BaseUser;
+import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.model.Person;
+import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.utils.DatabaseConnection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PersonDaoTest {
+class LikeDaoTest {
 
 	private static Person person;
+	private static Post post;
 
 	@BeforeAll
 	public static void setUpAll() {
@@ -46,6 +49,7 @@ public class PersonDaoTest {
 
 		PersonDao.INSTANCE.deleteAll();
 		BaseUserDao.INSTANCE.deleteAll();
+		PostDao.INSTANCE.deleteAll();
 
 		try {
 			DatabaseConnection.INSTANCE.getConnection().close();
@@ -65,6 +69,12 @@ public class PersonDaoTest {
 			person.setPassword("Password.123");
 			person.setName("Test Person");
 			person.setLastname("Test Lastname");
+		}
+		if (post == null){
+			post = new Post();
+			post.setTitle("Test Post");
+			post.setDescription("Test Description");
+			post.setEventType("jam");
 		}
 	}
 
@@ -89,49 +99,45 @@ public class PersonDaoTest {
 
 	@Test
 	@Order(3)
-	public void stage2_getPerson() {
-		Person newPerson = PersonDao.INSTANCE.getUser(person.getId());
-		assertEquals(person.getEmail(), newPerson.getEmail(), "Person is retrieved");
-		assertEquals(person.getId(), newPerson.getId(), "Person is retrieved");
-		assertEquals(person.getUsername(), newPerson.getUsername(), "Person is retrieved");
-		assertEquals(person.getPhoneNumber(), newPerson.getPhoneNumber(), "Person is retrieved");
-		assertEquals(person.getPicture(), newPerson.getPicture(), "Person is retrieved");
-		assertEquals(person.getDescription(), newPerson.getDescription(), "Person is retrieved");
-		assertEquals(person.getName(), newPerson.getName(), "Person is retrieved");
-		assertEquals(person.getLastname(), newPerson.getLastname(), "Person is retrieved");
-		assertEquals(person.getPassword(), newPerson.getPassword(), "Person is retrieved");
+	public void stage3_testCreatePost() {
+		post.setPersonId(person.getId());
+		Post createdPost = PostDao.INSTANCE.create(post);
+		assertNotEquals(post.getId(), 0, "Post ID should not be null before creating Post");
+		assertEquals(createdPost, post, "Post is created");
 	}
 
 	@Test
 	@Order(4)
-	public void stage3_updatePerson() {
-		Person updatedPerson = person;
-		updatedPerson.setName("Updated Name");
-		updatedPerson.setLastname("Updated Lastname");
-		updatedPerson.setPhoneNumber("1234567890");
-		updatedPerson.setPicture("picture.jpg");
-		updatedPerson.setDescription("Updated Description");
-		PersonDao.INSTANCE.update(updatedPerson);
-		Person newPerson = PersonDao.INSTANCE.getUser(person.getId());
-		assertEquals(updatedPerson.getEmail(), newPerson.getEmail(), "Person is updated");
-		assertEquals(updatedPerson.getId(), newPerson.getId(), "Person is updated");
-		assertEquals(updatedPerson.getUsername(), newPerson.getUsername(), "Person is updated");
-		assertEquals(updatedPerson.getPhoneNumber(), newPerson.getPhoneNumber(), "Person is updated");
-		assertEquals(updatedPerson.getPicture(), newPerson.getPicture(), "Person is updated");
-		assertEquals(updatedPerson.getDescription(), newPerson.getDescription(), "Person is updated");
-		assertEquals(updatedPerson.getName(), newPerson.getName(), "Person is updated");
-		assertEquals(updatedPerson.getLastname(), newPerson.getLastname(), "Person is updated");
-		assertEquals(updatedPerson.getPassword(), newPerson.getPassword(), "Person is updated");
+	public void stage4_testIsLikedBeforeLike(){
+		Boolean isLiked = LikeDao.INSTANCE.isLiked(post.getId(), person.getId());
+		assertEquals(isLiked, false, "Post should not be liked");
 	}
 
 	@Test
 	@Order(5)
-	public void stage4_deletePerson() {
-		PersonDao.INSTANCE.delete(person.getId());
+	public void stage5_testIsLikedAfterLike(){
 
-		assertThrows(NotFoundException.class, () -> {
-					PersonDao.INSTANCE.getUser(person.getId());
-				},
-				"Person is deleted");
+		Like like = new Like();
+		like.setPersonId(person.getId());
+		like.setPostId(post.getId());
+		Boolean isLiked = LikeDao.INSTANCE.isLiked(post.getId(), person.getId());
+
+		assertEquals(isLiked, false, "Post should not be liked");
+
+		Like createdLike = PostDao.INSTANCE.toggleLike(like);
+		assertEquals(createdLike.getPersonId(), person.getId(), "Person id should be the same");
+		assertEquals(createdLike.getPostId(), post.getId(), "Post id should be the same");
+
+		isLiked = LikeDao.INSTANCE.isLiked(post.getId(), person.getId());
+		assertEquals(isLiked, true, "Post should be liked");
 	}
+
+	@Test
+	@Order(6)
+	public void stage6_testGetTotalLikes(){
+		int totalLikes = LikeDao.INSTANCE.getTotalLikes(post.getId());
+		assertEquals(totalLikes, 1, "Total likes should be 1");
+	}
+
+
 }

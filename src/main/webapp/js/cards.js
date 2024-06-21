@@ -67,7 +67,7 @@ function displayCard(card) {
         imageSource = "assets/images/placeholder.jpg";
     }
     return `
-    <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 25rem; margin: 35px 15px 15px;">
+    <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 25rem; margin: 35px 15px 15px;" id="displayed-card">
         <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
         <div class="card-body">
             <h5 class="card-title">${card.title}</h5>

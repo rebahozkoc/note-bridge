@@ -43,6 +43,19 @@ public enum PostDao {
 		}
 	}
 
+	public void deleteAll(){
+		String sql = "DELETE FROM post"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			int affectedRows = statement.executeUpdate();
+			System.out.println("Deleted " + affectedRows + " posts");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while deleting all posts");
+		}
+	}
+
 	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId) {
 		List<PostDto> list = new ArrayList<>();
 		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
@@ -268,6 +281,7 @@ public enum PostDao {
 	}
 
 	public List<Post> getPostsByPersonId(int personId) {
+		// TODO remove this method if not used in the future
 		String sql = """
 				SELECT json_agg(post) FROM post WHERE personId=?
 				""";

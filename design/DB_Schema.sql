@@ -75,8 +75,8 @@ CREATE TABLE Comment (
 
 
 CREATE TABLE PersonLikesPost (
-    personId INT REFERENCES Person(id),
-    postId INT REFERENCES Post(id),
+    personId INT REFERENCES Person(id) ON DELETE CASCADE,
+    postId INT REFERENCES Post(id) ON DELETE CASCADE,
     PRIMARY KEY (personId, postId)
 );
 

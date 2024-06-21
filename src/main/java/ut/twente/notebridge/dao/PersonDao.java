@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Person;
 
@@ -84,12 +85,12 @@ public enum PersonDao {
 			if (newPerson.getName() == null) {
 				statement.setNull(2, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(2, newPerson.getName());
+				statement.setString(2, Security.sanitizeInput(newPerson.getName()));
 			}
 			if (newPerson.getLastname() == null) {
 				statement.setNull(3, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(3, newPerson.getLastname());
+				statement.setString(3, Security.sanitizeInput(newPerson.getLastname()));
 			}
 
 			statement.executeUpdate();
@@ -112,8 +113,8 @@ public enum PersonDao {
 						WHERE id = ?;
 				""";
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			statement.setString(1, updated.getName());
-			statement.setString(2, updated.getLastname());
+			statement.setString(1, Security.sanitizeInput(updated.getName()));
+			statement.setString(2, Security.sanitizeInput(updated.getLastname()));
 			statement.setInt(3, updated.getId());
 			statement.executeUpdate();
 		} catch (SQLException e) {

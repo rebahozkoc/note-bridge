@@ -8,6 +8,7 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
 import ut.twente.notebridge.model.Sponsor;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 
 import java.sql.PreparedStatement;
@@ -82,12 +83,12 @@ public enum SponsorDao {
 			if (newSponsor.getCompanyName() == null) {
 				statement.setNull(2, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(2, newSponsor.getCompanyName());
+				statement.setString(2, Security.sanitizeInput(newSponsor.getCompanyName()));
 			}
 			if (newSponsor.getWebsiteURL() == null) {
 				statement.setNull(3, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(3, newSponsor.getWebsiteURL());
+				statement.setString(3, Security.sanitizeInput(newSponsor.getWebsiteURL()));
 			}
 
 			statement.executeUpdate();
@@ -110,8 +111,8 @@ public enum SponsorDao {
 						WHERE id = ?;
 				""";
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			statement.setString(1, updated.getCompanyName());
-			statement.setString(2, updated.getWebsiteURL());
+			statement.setString(1, Security.sanitizeInput(updated.getCompanyName()));
+			statement.setString(2, Security.sanitizeInput(updated.getWebsiteURL()));
 			statement.setInt(3, updated.getId());
 			statement.executeUpdate();
 		} catch (SQLException e) {

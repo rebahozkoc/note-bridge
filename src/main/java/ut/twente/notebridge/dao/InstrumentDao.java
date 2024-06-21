@@ -10,6 +10,7 @@ import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.model.Instrument;
 import ut.twente.notebridge.model.PersonInstrument;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Security;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,7 +72,7 @@ public enum InstrumentDao {
 
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)){
             statement.setInt(1, personInstrument.getPersonId());
-            statement.setString(2, personInstrument.getInstrumentName());
+            statement.setString(2, Security.sanitizeInput(personInstrument.getInstrumentName()));
             statement.setDouble(3, personInstrument.getYearsOfExperience());
             int affectedRows=statement.executeUpdate();
             if(affectedRows==0){

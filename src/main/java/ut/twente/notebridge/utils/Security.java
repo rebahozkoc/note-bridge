@@ -2,6 +2,8 @@ package ut.twente.notebridge.utils;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -80,6 +82,15 @@ public class Security {
 		} catch (SQLException e) {
 			throw new RuntimeException("Server not available");
 		}
+
+	}
+
+
+	public static String sanitizeInput(String input) {
+		if (input == null || input.isEmpty()) {
+			return input;
+		}
+		return Jsoup.clean(input, Safelist.basic());
 
 	}
 }

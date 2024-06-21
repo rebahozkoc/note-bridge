@@ -2,6 +2,7 @@ package ut.twente.notebridge.dao;
 
 import ut.twente.notebridge.model.Feedback;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Security;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,11 +30,11 @@ public enum FeedbackDao {
 			newFeedback.setLastUpdate(currentTime);
 			statement.setTimestamp(1, currentTime);
 			statement.setTimestamp(2, currentTime);
-			statement.setString(3, newFeedback.getEmail());
+			statement.setString(3, Security.sanitizeInput(newFeedback.getEmail()));
 			if (newFeedback.getMessage() == null) {
 				statement.setNull(4, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(4, newFeedback.getMessage());
+				statement.setString(4, Security.sanitizeInput(newFeedback.getMessage()));
 			}
 
 

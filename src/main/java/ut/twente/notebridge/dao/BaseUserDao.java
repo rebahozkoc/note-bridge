@@ -67,21 +67,21 @@ public enum BaseUserDao {
 			newUser.setLastUpdate(currentTime);
 			statement.setTimestamp(1, currentTime);
 			statement.setTimestamp(2, currentTime);
-			statement.setString(3, newUser.getUsername());
+			statement.setString(3, Security.sanitizeInput(newUser.getUsername()));
 			if (newUser.getPicture() == null) {
 				statement.setNull(4, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(4, newUser.getPicture());
+				statement.setString(4, Security.sanitizeInput(newUser.getPicture()));
 			}
 			if (newUser.getPhoneNumber() == null) {
 				statement.setNull(5, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(5, newUser.getPhoneNumber());
+				statement.setString(5, Security.sanitizeInput(newUser.getPhoneNumber()));
 			}
 			if (newUser.getDescription() == null) {
 				statement.setNull(8, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(8, newUser.getDescription());
+				statement.setString(8, Security.sanitizeInput(newUser.getDescription()));
 			}
 
 			String hashedPassword = Security.hashPassword(newUser.getPassword());
@@ -217,23 +217,23 @@ public enum BaseUserDao {
 			Timestamp currentTime = Timestamp.from(Instant.now());
 			user.setLastUpdate(currentTime);
 			statement.setTimestamp(1, currentTime);
-			statement.setString(2, user.getUsername());
+			statement.setString(2, Security.sanitizeInput(user.getUsername()));
 			if (user.getPicture() == null) {
 				statement.setNull(3, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(3, user.getPicture());
+				statement.setString(3, Security.sanitizeInput(user.getPicture()));
 			}
 			if (user.getPhoneNumber() == null) {
 				statement.setNull(4, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(4, user.getPhoneNumber());
+				statement.setString(4, Security.sanitizeInput(user.getPhoneNumber()));
 			}
 			if (user.getDescription() == null) {
 				statement.setNull(6, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(6, user.getDescription());
+				statement.setString(6, Security.sanitizeInput(user.getDescription()));
 			}
-			statement.setString(5, user.getEmail());
+			statement.setString(5, Security.sanitizeInput(user.getEmail()));
 			statement.setInt(7, user.getId());
 
 			int affectedRows = statement.executeUpdate();

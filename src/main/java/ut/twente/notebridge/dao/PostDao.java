@@ -12,6 +12,7 @@ import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.dto.PostDto;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
@@ -218,11 +219,11 @@ public enum PostDao {
 			statement.setTimestamp(1, currentTime);
 			statement.setTimestamp(2, currentTime);
 			statement.setInt(3, newPost.getPersonId());
-			statement.setString(4, newPost.getTitle());
+			statement.setString(4, Security.sanitizeInput(newPost.getTitle()));
 			if (newPost.getDescription() == null) {
 				statement.setNull(5, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(5, newPost.getDescription());
+				statement.setString(5, Security.sanitizeInput(newPost.getDescription()));
 			}
 			if (newPost.getSponsoredBy() == null) {
 				statement.setNull(6, java.sql.Types.INTEGER);
@@ -239,11 +240,11 @@ public enum PostDao {
 			} else {
 				statement.setTimestamp(8, newPost.getSponsoredUntil());
 			}
-			statement.setString(9, newPost.getEventType());
+			statement.setString(9, Security.sanitizeInput(newPost.getEventType()));
 			if (newPost.getLocation() == null) {
 				statement.setNull(10, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(10, newPost.getLocation());
+				statement.setString(10, Security.sanitizeInput(newPost.getLocation()));
 			}
 
 			int affectedRows = statement.executeUpdate();
@@ -330,7 +331,7 @@ public enum PostDao {
 					""";
 			try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 				statement.setInt(1, post.getId());
-				statement.setString(2, uuid + fileName);
+				statement.setString(2, Security.sanitizeInput(uuid + fileName));
 				statement.executeUpdate();
 			} catch (SQLException e) {
 				e.printStackTrace();

@@ -2,6 +2,7 @@ package ut.twente.notebridge.dao;
 
 import ut.twente.notebridge.model.Comment;
 import ut.twente.notebridge.utils.DatabaseConnection;
+import ut.twente.notebridge.utils.Security;
 
 import java.sql.*;
 import java.time.Instant;
@@ -23,7 +24,7 @@ public enum CommentDao {
             comment.setLastUpdate(currentTime);
             statement.setTimestamp(1, currentTime);
             statement.setTimestamp(2, currentTime);
-            statement.setString(3, comment.getContent());
+            statement.setString(3, Security.sanitizeInput(comment.getContent()));
             statement.setInt(4, comment.getPostId());
             statement.setInt(5, comment.getPersonId());
 

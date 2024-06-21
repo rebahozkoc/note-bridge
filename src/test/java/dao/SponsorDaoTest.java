@@ -61,8 +61,6 @@ public class SponsorDaoTest {
             sponsor.setUsername("iamsponsor");
             sponsor.setPassword("Password.123");
             sponsor.setPhoneNumber("1234567890");
-
-
         }
 
     }

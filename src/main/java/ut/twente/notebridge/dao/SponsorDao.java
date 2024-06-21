@@ -22,8 +22,30 @@ public enum SponsorDao {
 	private final HashMap<Integer, Sponsor> sponsors = new HashMap<>();
 
 	public void delete(int id) {
-		// TODO implement delete
+		String sql = "DELETE FROM sponsor WHERE id = ?";
 
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, id);
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Deleting sponsor failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while deleting sponsor with id " + id);
+		}
+	}
+	public void deleteAll(){
+		String sql = "DELETE FROM sponsor"; // Assuming delete_post takes one parameter
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			int affectedRows = statement.executeUpdate();
+			System.out.println("Deleted " + affectedRows + " persons");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while deleting all persons");
+		}
 	}
 
 	public List<Sponsor> getSponsors(int pageSize, int pageNumber, String sortBy) {
@@ -98,7 +120,6 @@ public enum SponsorDao {
 	}
 
 	public Sponsor update(Sponsor updated) {
-		// TODO: add authentication layer
 		BaseUserDao.INSTANCE.update(updated);
 		String sql = """
 						UPDATE Sponsor

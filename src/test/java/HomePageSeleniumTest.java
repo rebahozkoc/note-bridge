@@ -70,7 +70,7 @@ public class HomePageSeleniumTest {
     @Test
     @Order(4)
     public void testLoginBtn() {
-        WebElement loginBtn = driver.findElement(By.id("login-btn"));
+        WebElement loginBtn = driver.findElement(By.id("log-in-btn"));
         loginBtn.click();
         String expectedPageUrl = "http://localhost:8080/notebridge/login.html";
         String actualPageUrl = driver.getCurrentUrl();

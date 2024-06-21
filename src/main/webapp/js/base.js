@@ -107,7 +107,7 @@ function checkLoggedIn() {
 function updateNavbar(loggedIn) {
     if(loggedIn) {
         logInBtn.innerHTML = `
-        <a href="home.html" class="button-cover ms-2" role="button" onclick="logOut()"><span class="text px-2">Log out</span><span>Log out</span></a>
+        <a href="home.html" id="log-out-btn" class="button-cover ms-2" role="button" onclick="logOut()"><span class="text px-2">Log out</span><span>Log out</span></a>
         `
 
         messengerBtn.innerHTML = `
@@ -119,7 +119,7 @@ function updateNavbar(loggedIn) {
         `;
     } else {
         logInBtn.innerHTML = `
-        <a href="login.html" class="button-cover ms-2" role="button"><span class="text px-2">Log in</span><span>Log in</span></a>
+        <a href="login.html" id="log-in-btn" class="button-cover ms-2" role="button"><span class="text px-2">Log in</span><span>Log in</span></a>
         `
         messengerBtn.innerHTML = ``;
         profileBtn.innerHTML = ``;

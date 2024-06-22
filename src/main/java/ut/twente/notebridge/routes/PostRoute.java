@@ -11,10 +11,12 @@ import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import ut.twente.notebridge.dao.BaseUserDao;
+import ut.twente.notebridge.dao.InterestDao;
 import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.dto.PostDto;
+import ut.twente.notebridge.model.Interest;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
@@ -78,6 +80,25 @@ public class PostRoute {
 
 	}
 
+
+	@GET
+	@Path("/{id}/interests")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInterests(@PathParam("id") int id) {
+		Map<String, Integer> responseObj = new HashMap<>();
+
+		try {
+			int totalInterests = InterestDao.INSTANCE.getTotalInterest(id);
+			responseObj.put("totalInterests", totalInterests);
+			ObjectMapper mapper = new ObjectMapper();
+			return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(responseObj)).build();
+
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while getting total likes").build();
+		}
+
+	}
+
 	//Returns if the user liked the post with a given id
 	@GET
 	@Path("/{id}/like")
@@ -102,12 +123,35 @@ public class PostRoute {
 		}
 	}
 
+	@GET
+	@Path("/{id}/interested")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response isUserInterested(@PathParam("id") int id, @Context HttpServletRequest request) {
+		Map<String, Boolean> responseObj = new HashMap<>();
+		// In case user is not authenticated, return unauthorized
+		if (request.getSession(false) == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
+		}
+		int userId = (int) request.getSession().getAttribute("userId");
+		try {
+			// Check if user liked the post
+			Boolean isInterested = InterestDao.INSTANCE.isInterested(id, userId);
+			// Create the return Object & return as JSON
+			responseObj.put("isInterested", isInterested);
+			ObjectMapper mapper = new ObjectMapper();
+			return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(responseObj)).build();
+		} catch (Exception e) {
+			// In case there is an exception while checking if the user liked or not, return internal server error
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while checking if user liked the post").build();
+		}
+	}
+
+
 	@POST
 	@Path("/{id}/likes")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
-		// TODO this one gives error check it
 		HttpSession userSession=request.getSession(false);
 		if(userSession == null ) {
 			{
@@ -136,6 +180,55 @@ public class PostRoute {
 			return Response.status(Response.Status.FORBIDDEN).entity("Only persons can like a post").build();
 		}
 	}
+
+	@POST
+	@Path("/{id}/interested")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response interestedInPost(@PathParam("id") int postId,@Context HttpServletRequest request){
+		HttpSession userSession=request.getSession(false);
+		if(userSession == null ) {
+			{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+			}
+		}
+		int userId = (int) userSession.getAttribute("userId");
+
+		boolean isPerson;
+		try {
+			isPerson = BaseUserDao.INSTANCE.isPerson(userId);
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while checking if user is a person").build();
+		}
+		if (isPerson) {
+			Interest interest = new Interest();
+			interest.setPostId(postId);
+			interest.setPersonId(userId);
+			try {
+				return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.toggleInterest(interest)).build();
+			} catch (Exception e) {
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while liking the post").build();
+			}
+
+		} else {
+			return Response.status(Response.Status.FORBIDDEN).entity("Only persons can like a post").build();
+		}
+	}
+
+	@GET
+	@Path("/{id}/interestedusers")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInterestedUsernames(@PathParam("id") int id) {
+		try{
+			String usernameListJson=InterestDao.INSTANCE.getInterestedUsernames(id);
+			return Response.status(Response.Status.OK).entity(usernameListJson).build();
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+
+		}
+	}
+
+
 
 	@GET
 	@Path("/{id}/comments")

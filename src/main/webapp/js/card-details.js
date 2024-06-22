@@ -101,7 +101,7 @@ function getUserId() {
         .then(res => {
             if (res.status === 200) {
                 return res.json().then(data => {
-                    getAuthor(data.userId);
+                    getAuthor(data.userId,data.role);
                     showCommentsSection();
                 });
             } else {
@@ -114,12 +114,15 @@ function getUserId() {
         })
 }
 
-function getAuthor(userId) {
+function getAuthor(userId,role) {
     fetch("/notebridge/api/posts/" + cardId)
         .then(res => res.json())
         .then(data => {
             checkPostBelongsToUser(userId, data.personId);
-            displayInterestedButton(userId, data.personId);
+            if(role==="person"){
+                displayInterestedButton(userId, data.id ,data.personId);
+
+            }
         })
 }
 
@@ -138,14 +141,71 @@ function checkPostBelongsToUser(userId, author) {
 }
 
 
-function displayInterestedButton(userId, author) {
+function displayInterestedButton(userId, postId,author) {
 
     if(author !== userId) {
-        interestButton.innerHTML = `
-        <a class="btn btn-primary" href="#" role="button">I'm Interested!</a>
 
-        `
+        //Check if user is already interested in the post before loading
+        fetch("/notebridge/api/posts/" + postId + "/interested")
+            .then(res => {
+                if(res.status === 200) {
+                    return res.json();
+                }else{
+                    return res.text().then(errorText => {
+                        throw new Error(`${errorText}`);
+                    });
+                }
+            }).then(data => {
+                if(data.isInterested) {
+                    interestButton.innerHTML = `
+                    <a class="btn btn-secondary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">You are already interested in this post!</a>
+                    `;
+                }else{
+                    interestButton.innerHTML = `
+                        <a class="btn btn-primary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">I'm Interested!</a>
+
+                        `
+                }
+            }
+            ).catch(err => {
+                interestButton.innerHTML = `
+                        <a class="btn btn-danger" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">Failed to fetch interest information!</a>
+
+                        `
+            });
+
     }
+}
+function toggleInterest(element){
+    const postId=element.dataset.postId;
+
+    fetch("/notebridge/api/posts/" + postId + "/interested", {
+        method: "POST"
+    }).then(res => {
+        if (res.status === 200) {
+            if(element.classList.contains("btn-primary")){
+                //User will show interest
+                element.classList.add("btn-secondary");
+                element.classList.remove("btn-primary");
+                element.innerHTML="You are already interested in this post!";
+
+            }else{
+                //User will remove interest
+                element.classList.add("btn-primary");
+                element.classList.remove("btn-secondary");
+                element.innerHTML="I'm Interested!";
+
+            }
+
+
+        } else {
+            return res.text().then(errorText => {
+                throw new Error(`${errorText}`);
+            });
+        }
+    }).catch(err => {
+        console.error(err);
+    });
 }
 
 function rerouteInterestedButton() {

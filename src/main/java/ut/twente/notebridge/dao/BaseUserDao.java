@@ -87,7 +87,7 @@ public enum BaseUserDao {
 			String hashedPassword = Security.hashPassword(newUser.getPassword());
 			newUser.setPassword(hashedPassword);
 			statement.setString(6, hashedPassword);
-			statement.setString(7, newUser.getEmail());
+			statement.setString(7, Security.sanitizeInput(newUser.getEmail()));
 
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {

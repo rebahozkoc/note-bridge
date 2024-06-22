@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.dto.PostDto;
+import ut.twente.notebridge.model.Interest;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Security;
@@ -58,7 +59,8 @@ public enum PostDao {
 
 	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId) {
 		List<PostDto> list = new ArrayList<>();
-		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
+		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title",
+				"description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
 
 		System.out.println("GET posts called");
 
@@ -213,6 +215,46 @@ public enum PostDao {
 		}
 	}
 
+	public Interest toggleInterest(Interest interest) {
+		String sqlDoAction = "";
+		String sqlCheck = """
+					SELECT EXISTS(SELECT personid,postid FROM personinterestedinpost WHERE personid=? AND postid=?);
+				""";
+		try (PreparedStatement statementCheck = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sqlCheck)) {
+			statementCheck.setInt(1, interest.getPersonId());
+			statementCheck.setInt(2, interest.getPostId());
+			ResultSet rs = statementCheck.executeQuery();
+			if (rs.next()) {
+				if (rs.getBoolean(1)) {
+					sqlDoAction = """
+							DELETE FROM personinterestedinpost WHERE personid=? AND postid=?;
+							""";
+				} else {
+					sqlDoAction = """
+							INSERT INTO personinterestedinpost (personid, postid) VALUES (?, ?);
+							""";
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while checking if user is a person");
+		}
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sqlDoAction)) {
+			statement.setInt(1, interest.getPersonId());
+			statement.setInt(2, interest.getPostId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 1) {
+				return interest;
+			} else {
+				throw new BadRequestException("Like failed");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while liking post");
+		}
+	}
+
 	public Post create(Post newPost) {
 		String sql = """
 						INSERT INTO Post (createDate,
@@ -304,7 +346,7 @@ public enum PostDao {
 	}
 
 	public Post update(Post updated) {
-		// TODO delete this method if not used
+		// TODO implement this method
 
 		return updated;
 	}

@@ -1,3 +1,5 @@
+package integrationTests;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -6,11 +8,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ut.twente.notebridge.utils.Utils;
 
 import java.time.Duration;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class CreateCardPageTest {
     private static WebDriver driver;
@@ -18,7 +20,7 @@ public class CreateCardPageTest {
     @BeforeClass
     public static void setUp() {
         try {
-            System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\chromedriver-win32\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", Utils.readFromProperties("SELENIUM_DRIVER_PATH"));
             driver = new ChromeDriver();
             driver.get("http://localhost:8080/notebridge/create-card.html");
         } catch (Exception e) {
@@ -44,7 +46,7 @@ public class CreateCardPageTest {
     @Test
     @Order(2)
     public void testBrowsePostsBtn() {
-        WebElement browsePostsBtn = driver.findElement(By.id("browse-posts-btn"));
+        WebElement browsePostsBtn = driver.findElement(By.cssSelector("#navbarTogglerDemo03 > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(1) > a"));
         browsePostsBtn.click();
         String expectedPageUrl = "http://localhost:8080/notebridge/cards.html";
         String actualPageUrl = driver.getCurrentUrl();
@@ -57,19 +59,20 @@ public class CreateCardPageTest {
     @Test
     @Order(3)
     public void testContactUsBtn() {
-        WebElement contactUsBtn = driver.findElement(By.id("contact-us-btn"));
+        WebElement contactUsBtn = driver.findElement(By.cssSelector("#navbarTogglerDemo03 > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > a"));
         contactUsBtn.click();
-        String expectedPageUrl = "http://localhost:8080/notebridge/#feedback-form-container";
+        String expectedPageUrl = "http://localhost:8080/notebridge/home.html#feedback-form-container";
         String actualPageUrl = driver.getCurrentUrl();
         assertEquals(expectedPageUrl, actualPageUrl);
     }
 
     /**
      * Tests if the form to create posts works correctly. After a post is created, the user is redirected to the 'Cards' page.
+     * The title of the most recent post of the card page must be the same as the title of the post created.
      */
     @Test
     @Order(4)
-    public void testLoginFormCorrectCredentials() {
+    public void testCreateCard() {
         driver.get("http://localhost:8080/notebridge/login.html");
         WebElement emailField = driver.findElement(By.id("email"));
         WebElement passwordField = driver.findElement(By.id("password"));
@@ -96,6 +99,9 @@ public class CreateCardPageTest {
         String expectedPageUrl = "http://localhost:8080/notebridge/cards.html";
         String actualPageUrl = driver.getCurrentUrl();
         assertEquals(expectedPageUrl, actualPageUrl);
+
+        WebElement cardTitle = driver.findElement(By.cssSelector("#displayed-card > div > h5"));
+        assertEquals("New post title", cardTitle.getText());
     }
 
 

@@ -50,11 +50,20 @@ function sendRequestCreatePost(dataObject, userId) {
 
 function sendRequestAddImagesToPost(postId) {
     let formData = new FormData();
-    let images = document.getElementById("images").files[0];
-    formData.append("images", images);
+    let images = document.getElementById("images").files;
 
-    fetch("/notebridge/api/posts/" + postId + "/images", {
-        method: "POST",
-        body: formData
-    })
+    if(images !== undefined) {
+        if(images.length === 1) {
+            formData.append("images", images[0]);
+        } else {
+            for(let i= 0; i < images.length; i++) {
+                formData.append("images", images[i]);
+            }
+        }
+
+        fetch("/notebridge/api/posts/" + postId + "/images", {
+            method: "POST",
+            body: formData
+        })
+    }
 }

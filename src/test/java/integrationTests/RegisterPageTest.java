@@ -1,3 +1,5 @@
+package integrationTests;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -6,6 +8,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ut.twente.notebridge.utils.Utils;
 
 import java.time.Duration;
 
@@ -18,7 +21,7 @@ public class RegisterPageTest {
     @BeforeClass
     public static void setUp() {
         try {
-            System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\chromedriver-win32\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", Utils.readFromProperties("SELENIUM_DRIVER_PATH"));
             driver = new ChromeDriver();
             driver.get("http://localhost:8080/notebridge/register.html");
         } catch (Exception e) {
@@ -58,9 +61,9 @@ public class RegisterPageTest {
 
         firstName.sendKeys("Test first name");
         lastName.sendKeys("Test last name");
-        username.sendKeys("Test username 5");
+        username.sendKeys("Test username 8");
         phoneNumber.sendKeys("123456789");
-        emailField.sendKeys("email105@example.com");
+        emailField.sendKeys("email108@example.com");
         passwordField.sendKeys("Superpassword.123");
         repeatPasswordField.sendKeys("Superpassword.123");
         registerBtn.click();
@@ -103,7 +106,7 @@ public class RegisterPageTest {
         lastName.sendKeys("Test last name");
         username.sendKeys("alex2");
         phoneNumber.sendKeys("123456789");
-        emailField.sendKeys("email105@example.com");
+        emailField.sendKeys("email150@example.com");
         passwordField.sendKeys("Superpassword.123");
         repeatPasswordField.sendKeys("Superpassword.123");
         registerBtn.click();
@@ -139,7 +142,7 @@ public class RegisterPageTest {
 
         firstName.sendKeys("Test first name");
         lastName.sendKeys("Test last name");
-        username.sendKeys("username105");
+        username.sendKeys("username150");
         phoneNumber.sendKeys("123456789");
         emailField.sendKeys("alex@example.com");
         passwordField.sendKeys("Superpassword.123");

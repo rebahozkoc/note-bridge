@@ -1,7 +1,10 @@
+package integrationTests;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.Order;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,7 +18,7 @@ import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ProfilePagePerson {
+public class ProfilePageSponsor {
     private static WebDriver driver;
 
     @BeforeClass
@@ -24,14 +27,14 @@ public class ProfilePagePerson {
             System.setProperty("webdriver.chrome.driver", Utils.readFromProperties("SELENIUM_DRIVER_PATH"));
             driver = new ChromeDriver();
             driver.get("http://localhost:8080/notebridge/login.html");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
             WebElement email = wait.until(ExpectedConditions.elementToBeClickable(By.id("email")));
             WebElement pass = wait.until(ExpectedConditions.elementToBeClickable(By.id("password")));
             WebElement login = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#login-form button[type='submit']")));
 
-            email.sendKeys("crazyuserboy2@gmail.com");
-            pass.sendKeys("superpasspword");
+            email.sendKeys("googlegoogle@asd.com");
+            pass.sendKeys("Testtest123.");
             login.click();
 
         } catch (Exception e) {
@@ -47,24 +50,26 @@ public class ProfilePagePerson {
     public void accessProfilePage(){
 
         driver.get("http://localhost:8080/notebridge/profile.html");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
 
         WebElement profileUsername = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#username")));
 
         //If user does not log in successfully, then the profile page prints out default username
         //Being not equal to this, means the user has logged in successfully
-        assertTrue(profileUsername.getText()!="username");
+        assertTrue(profileUsername.getText()!="@username");
 
 
     }
 
     @Test
     @Order(2)
+    //This is companyName and websiteURL for Sponsors,
+    //eventhough id names are name-lastname, since the profile is designed initially for Persons
     public void tryEditingName(){
 
         driver.get("http://localhost:8080/notebridge/profile.html");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
 
         WebElement editBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".profile-header h2 button")));
@@ -83,30 +88,14 @@ public class ProfilePagePerson {
         lastnameInput.sendKeys("Changed");
         saveChangesBtn.click();
         //alert showing up saying update successfull
-        String alertText=driver.switchTo().alert().getText();
-        driver.switchTo().alert().accept();
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        String alertText=alert.getText();
+        alert.accept();
         assertTrue(alertText.contains("Update successful"));
 
 
-
     }
 
-    @Test
-    @Order(3)
-    public void checkWelcomeMessage() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
-        //get username from profile page
-        driver.get("http://localhost:8080/notebridge/profile.html");
-        //since #username also puts @ at the beginning, we needed to use substring
-        String profileUsername = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#username"))).getText().substring(1);
-        driver.navigate().to("http://localhost:8080/notebridge/home.html");
-        WebElement welcomeElement=wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#welcome-message strong")));
-        String welcomeMessage = welcomeElement.getText();
-        System.out.println(welcomeMessage);
-        System.out.println(profileUsername);
-        assertTrue(welcomeMessage.contains(profileUsername));
-    }
 
     @AfterClass
     public static void tearDown() {

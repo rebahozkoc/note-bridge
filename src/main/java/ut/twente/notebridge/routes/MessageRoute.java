@@ -9,6 +9,7 @@ import ut.twente.notebridge.dao.MessageDao;
 import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Message;
+import ut.twente.notebridge.model.MessageHistory;
 import ut.twente.notebridge.model.ResourceCollection;
 
 @Path("/message")
@@ -36,7 +37,10 @@ public class MessageRoute {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public void newMessageHistory(@PathParam("user1") String user1, @PathParam("user2") String user2) {
-        MessageDao.INSTANCE.create(user1, user2);
+        MessageHistory mh=new MessageHistory();
+        mh.setUser1(user1);
+        mh.setUser2(user2);
+        MessageDao.INSTANCE.create(mh);
     }
 
     @POST

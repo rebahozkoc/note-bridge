@@ -56,33 +56,41 @@ function getPostImages() {
 function displayPostImages() {
     if(images.length === 0) {
         postImages.innerHTML = `
-        <img src="assets/images/placeholder.jpg">
+        <img src="assets/images/placeholder.jpg" class="img-fluid border border-dark border-2 rounded-2" width="30%" height="30%" alt="post image placeholder">
+        `;
+    } else if(images.length === 1) {
+        postImages.innerHTML = `
+        <img src="data:image/png;base64,${images[0]}" width="40%" height="40%" alt="post image" class="img-fluid border border-dark border-2 rounded-2">
         `;
     } else {
         postImages.innerHTML = `
-        <div id="carousel" class="carousel slide">
-        <div class="carousel-inner"></div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+        <div id="carouselExampleFade" class="carousel slide carousel-fade">
+            <div class="carousel-inner" id="multiple-images">
+                <div class="carousel-item active" style="display: flex; justify-content: center">
+                    <img src="data:image/png;base64,${images.shift()}" class="img-fluid border border-dark border-2 rounded-2 d-block" alt="post image" width="40%" height="40%">
+                </div>       
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
         `;
 
-        // postImages.innerHTML += `
-        // ${images.data.map(image => `${displayPostImage(image)}`).join("\n")}
-        // `;
+        document.getElementById("multiple-images").innerHTML += `
+        ${images.map(image => `${displayPostImage(image)}`).join("\n")}
+        `;
     }
 }
 
 function displayPostImage(image) {
     return `
-    <div class="carousel-item active">
-      <img src="${image}" class="d-block w-100">
+    <div class="carousel-item" style="display: flex; justify-content: center">
+        <img src="data:image/png;base64,${image}" class="d-block img-fluid border border-dark border-2 rounded-2" width="40%" height="40%" alt="post image">
     </div>
     `;
 }
@@ -94,8 +102,9 @@ function getUserId() {
         .then(res => {
             if (res.status === 200) {
                 return res.json().then(data => {
-                    getAuthor(data.userId);
+                    getAuthor(data.userId,data.role);
                     showCommentsSection();
+                    loadComments();
                 });
             } else {
                 return res.text().then(errorText => {
@@ -107,12 +116,15 @@ function getUserId() {
         })
 }
 
-function getAuthor(userId) {
+function getAuthor(userId,role) {
     fetch("/notebridge/api/posts/" + cardId)
         .then(res => res.json())
         .then(data => {
             checkPostBelongsToUser(userId, data.personId);
-            displayInterestedButton(userId, data.personId);
+            if(role==="person"){
+                displayInterestedButton(userId, data.id ,data.personId);
+
+            }
         })
 }
 
@@ -131,14 +143,71 @@ function checkPostBelongsToUser(userId, author) {
 }
 
 
-function displayInterestedButton(userId, author) {
+function displayInterestedButton(userId, postId,author) {
 
     if(author !== userId) {
-        interestButton.innerHTML = `
-        <a class="btn btn-primary" href="#" role="button">I'm Interested!</a>
 
-        `
+        //Check if user is already interested in the post before loading
+        fetch("/notebridge/api/posts/" + postId + "/interested")
+            .then(res => {
+                if(res.status === 200) {
+                    return res.json();
+                }else{
+                    return res.text().then(errorText => {
+                        throw new Error(`${errorText}`);
+                    });
+                }
+            }).then(data => {
+                if(data.isInterested) {
+                    interestButton.innerHTML = `
+                    <a class="btn btn-secondary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">You are already interested in this post!</a>
+                    `;
+                }else{
+                    interestButton.innerHTML = `
+                        <a class="btn btn-primary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">I'm Interested!</a>
+
+                        `
+                }
+            }
+            ).catch(err => {
+                interestButton.innerHTML = `
+                        <a class="btn btn-danger" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">Failed to fetch interest information!</a>
+
+                        `
+            });
+
     }
+}
+function toggleInterest(element){
+    const postId=element.dataset.postId;
+
+    fetch("/notebridge/api/posts/" + postId + "/interested", {
+        method: "POST"
+    }).then(res => {
+        if (res.status === 200) {
+            if(element.classList.contains("btn-primary")){
+                //User will show interest
+                element.classList.add("btn-secondary");
+                element.classList.remove("btn-primary");
+                element.innerHTML="You are already interested in this post!";
+
+            }else{
+                //User will remove interest
+                element.classList.add("btn-primary");
+                element.classList.remove("btn-secondary");
+                element.innerHTML="I'm Interested!";
+
+            }
+
+
+        } else {
+            return res.text().then(errorText => {
+                throw new Error(`${errorText}`);
+            });
+        }
+    }).catch(err => {
+        console.error(err);
+    });
 }
 
 function rerouteInterestedButton() {
@@ -387,14 +456,54 @@ function toggleHeart() {
     }
 }
 
-function showCommentsSection() {
-    commentsSection.style.display = "block";
+document.addEventListener("DOMContentLoaded", function() {
+    loadComments();
+});
+
+function loadComments() {
+    fetch(`/notebridge/api/posts/${cardId}/comments`)
+        .then(res => {
+            if (res.status === 200) {
+                return res.json();
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+        .then(data => {
+            const comments = data.comments;
+            comments.forEach(comment => {
+                addCommentToPage(comment);
+            });
+        })
+        .catch(err => {
+            console.error("Error loading comments:", err);
+        });
 }
 
-function hideCommentsSection() {
-    commentsSection.style.display = "none";
-}
+function addCommentToPage(comment) {
+    const commentsContainer = document.getElementById("comments-container");
+    const commentElement = document.createElement("div");
+    commentElement.classList.add("comment");
 
+    const formattedDate = new Date(comment.createDate).toLocaleDateString();
+    const formattedTime = new Date(comment.createDate).toLocaleTimeString();
+
+    commentElement.innerHTML = `
+        <div class="row mb-2">
+            <div class="col-md-2 text-left">
+                <img src="${comment.picture || 'https://via.placeholder.com/50'}" class="img-fluid mb-2" alt="Author" style="width: 50px; height: 50px;">
+                <h6 class="mb-2">@${comment.username}</h6> 
+                <small>${formattedDate} ${formattedTime}</small>
+            </div>
+            <div class="col-md-10">
+                <p>${comment.content}</p>
+            </div>
+        </div>
+    `;
+    commentsContainer.appendChild(commentElement);
+}
 
 function submitComment() {
     const commentText = document.getElementById("comment-text").value;
@@ -404,42 +513,49 @@ function submitComment() {
         return;
     }
 
-    const comment = {
-        text: commentText,
-        postId: cardId,
+    fetch("/notebridge/api/auth/status", {
+        method: "GET"
+    })
+        .then(res => res.json())
+        .then(user => {
+            const comment = {
+                content: commentText,
+                postId: cardId,
+                personId: user.userId
+            };
 
-    };
-
-    fetch("/notebridge/api/comments", {
-        method: "POST",
-        body: JSON.stringify(comment),
-        headers: {
-            "Content-type": "application/json"
-        }
-    }).then(res => {
-        if (res.status === 200) {
-            alert("Comment added!");
-            return res.json();
-        } else {
-            return res.text().then(errorText => {
-                throw new Error(`${errorText}`);
+            return fetch("/notebridge/api/comments", {
+                method: "POST",
+                body: JSON.stringify(comment),
+                headers: {
+                    "Content-type": "application/json"
+                }
             });
-        }
-    }).then(data => {
-        addCommentToPage(comment);
-        document.getElementById("comment-text").value = "";
-    }).catch(err => {
-        console.error("Error submitting comment:", err);
-    });
+        })
+        .then(res => {
+            if (res.status === 200) {
+                return res.json();
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+        .then(data => {
+            addCommentToPage(data);
+            document.getElementById("comment-text").value = "";
+        })
+        .catch(err => {
+            console.error("Error submitting comment:", err);
+        });
 }
 
+function showCommentsSection() {
+    commentsSection.style.display = "block";
+}
 
-function addCommentToPage(comment) {
-    const commentsContainer = document.getElementById("comments-container");
-    const commentElement = document.createElement("div");
-    commentElement.classList.add("comment");
-    commentElement.innerHTML = `<p>${comment.text}</p>`;
-    commentsContainer.appendChild(commentElement);
+function hideCommentsSection() {
+    commentsSection.style.display = "none";
 }
 
 function getUser(){

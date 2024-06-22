@@ -103,6 +103,7 @@ function getUserId() {
                 return res.json().then(data => {
                     getAuthor(data.userId,data.role);
                     showCommentsSection();
+                    loadComments();
                 });
             } else {
                 return res.text().then(errorText => {
@@ -454,6 +455,32 @@ function toggleHeart() {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    loadComments();
+});
+
+function loadComments() {
+    fetch(`/notebridge/api/posts/${cardId}/comments`)
+        .then(res => {
+            if (res.status === 200) {
+                return res.json();
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+        .then(data => {
+            const comments = data.comments;
+            comments.forEach(comment => {
+                addCommentToPage(comment);
+            });
+        })
+        .catch(err => {
+            console.error("Error loading comments:", err);
+        });
+}
+
 function showCommentsSection() {
     commentsSection.style.display = "block";
 }
@@ -477,35 +504,61 @@ function submitComment() {
 
     };
 
-    fetch("/notebridge/api/comments", {
-        method: "POST",
-        body: JSON.stringify(comment),
-        headers: {
-            "Content-type": "application/json"
-        }
-    }).then(res => {
-        if (res.status === 200) {
-            alert("Comment added!");
-            return res.json();
-        } else {
-            return res.text().then(errorText => {
-                throw new Error(`${errorText}`);
+    fetch("/notebridge/api/auth/status", {
+        method: "GET"
+    })
+        .then(res => res.json())
+        .then(user => {
+            const comment = {
+                content: commentText,
+                postId: cardId,
+                personId: user.userId
+            };
+
+            return fetch("/notebridge/api/comments", {
+                method: "POST",
+                body: JSON.stringify(comment),
+                headers: {
+                    "Content-type": "application/json"
+                }
             });
-        }
-    }).then(data => {
-        addCommentToPage(comment);
-        document.getElementById("comment-text").value = "";
-    }).catch(err => {
-        console.error("Error submitting comment:", err);
-    });
+        })
+        .then(res => {
+            if (res.status === 200) {
+                alert("Comment added!");
+                return res.json();
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+        .then(data => {
+            addCommentToPage(data);
+            document.getElementById("comment-text").value = "";
+        })
+        .catch(err => {
+            console.error("Error submitting comment:", err);
+        });
 }
+
 
 
 function addCommentToPage(comment) {
     const commentsContainer = document.getElementById("comments-container");
     const commentElement = document.createElement("div");
     commentElement.classList.add("comment");
-    commentElement.innerHTML = `<p>${comment.text}</p>`;
+    commentElement.innerHTML = `
+        <div class="row mb-2">
+            <div class="col-md-2 text-left">
+                <img src="${comment.picture}" class="img-fluid mb-2" alt="Author" style="width: 50px; height: 50px;">
+                <h6 class="mb-2">${comment.username}</h6>
+            </div>
+            <div class="col-md-10">
+                <p>${comment.content}</p>
+            </div>
+        </div>
+    `;
     commentsContainer.appendChild(commentElement);
 }
 

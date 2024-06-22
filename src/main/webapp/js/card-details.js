@@ -56,18 +56,18 @@ function getPostImages() {
 function displayPostImages() {
     if(images.length === 0) {
         postImages.innerHTML = `
-        <img src="assets/images/placeholder.jpg" width="350vh" height="350vh">
+        <img src="assets/images/placeholder.jpg" class="img-fluid border border-dark border-2 rounded-2" width="30%" height="30%" alt="post image placeholder">
         `;
     } else if(images.length === 1) {
         postImages.innerHTML = `
-        <img src="data:image/png;base64,${images[0]}" width="350vh" height="350vh">
+        <img src="data:image/png;base64,${images[0]}" width="40%" height="40%" alt="post image" class="img-fluid border border-dark border-2 rounded-2">
         `;
     } else {
         postImages.innerHTML = `
         <div id="carouselExampleFade" class="carousel slide carousel-fade">
             <div class="carousel-inner" id="multiple-images">
-                <div class="carousel-item active">
-                    <img src="data:image/png;base64,${images.shift()}" class="d-block w-100" alt="post image" width="350vh" height="350vh">
+                <div class="carousel-item active" style="display: flex; justify-content: center">
+                    <img src="data:image/png;base64,${images.shift()}" class="img-fluid border border-dark border-2 rounded-2 d-block" alt="post image" width="40%" height="40%">
                 </div>       
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
@@ -89,8 +89,8 @@ function displayPostImages() {
 
 function displayPostImage(image) {
     return `
-    <div class="carousel-item">
-        <img src="data:image/png;base64,${image}" class="d-block w-100" width="350vh" height="350vh">
+    <div class="carousel-item" style="display: flex; justify-content: center">
+        <img src="data:image/png;base64,${image}" class="d-block img-fluid border border-dark border-2 rounded-2" width="40%" height="40%" alt="post image">
     </div>
     `;
 }

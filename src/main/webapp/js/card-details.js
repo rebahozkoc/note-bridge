@@ -481,14 +481,28 @@ function loadComments() {
         });
 }
 
-function showCommentsSection() {
-    commentsSection.style.display = "block";
-}
+function addCommentToPage(comment) {
+    const commentsContainer = document.getElementById("comments-container");
+    const commentElement = document.createElement("div");
+    commentElement.classList.add("comment");
 
-function hideCommentsSection() {
-    commentsSection.style.display = "none";
-}
+    const formattedDate = new Date(comment.createDate).toLocaleDateString();
+    const formattedTime = new Date(comment.createDate).toLocaleTimeString();
 
+    commentElement.innerHTML = `
+        <div class="row mb-2">
+            <div class="col-md-2 text-left">
+                <img src="${comment.picture || 'https://via.placeholder.com/50'}" class="img-fluid mb-2" alt="Author" style="width: 50px; height: 50px;">
+                <h6 class="mb-2">@${comment.username}</h6> 
+                <small>${formattedDate} ${formattedTime}</small>
+            </div>
+            <div class="col-md-10">
+                <p>${comment.content}</p>
+            </div>
+        </div>
+    `;
+    commentsContainer.appendChild(commentElement);
+}
 
 function submitComment() {
     const commentText = document.getElementById("comment-text").value;
@@ -497,12 +511,6 @@ function submitComment() {
         alert("Please enter a comment.");
         return;
     }
-
-    const comment = {
-        text: commentText,
-        postId: cardId,
-
-    };
 
     fetch("/notebridge/api/auth/status", {
         method: "GET"
@@ -525,7 +533,6 @@ function submitComment() {
         })
         .then(res => {
             if (res.status === 200) {
-                alert("Comment added!");
                 return res.json();
             } else {
                 return res.text().then(errorText => {
@@ -542,24 +549,12 @@ function submitComment() {
         });
 }
 
+function showCommentsSection() {
+    commentsSection.style.display = "block";
+}
 
-
-function addCommentToPage(comment) {
-    const commentsContainer = document.getElementById("comments-container");
-    const commentElement = document.createElement("div");
-    commentElement.classList.add("comment");
-    commentElement.innerHTML = `
-        <div class="row mb-2">
-            <div class="col-md-2 text-left">
-                <img src="${comment.picture}" class="img-fluid mb-2" alt="Author" style="width: 50px; height: 50px;">
-                <h6 class="mb-2">${comment.username}</h6>
-            </div>
-            <div class="col-md-10">
-                <p>${comment.content}</p>
-            </div>
-        </div>
-    `;
-    commentsContainer.appendChild(commentElement);
+function hideCommentsSection() {
+    commentsSection.style.display = "none";
 }
 
 function getUser(){

@@ -53,8 +53,10 @@ function sendRequestAddImagesToPost(postId) {
     let images = document.getElementById("images").files[0];
     formData.append("images", images);
 
-    fetch("/notebridge/api/posts/" + postId + "/images", {
-        method: "POST",
-        body: formData
-    })
+    if(images !== undefined) {
+        fetch("/notebridge/api/posts/" + postId + "/images", {
+            method: "POST",
+            body: formData
+        })
+    }
 }

@@ -54,9 +54,16 @@ function getPostImages() {
 }
 
 function displayPostImages() {
+    console.log("Data received: " + images);
+    console.log("Images length: " + images.length);
+
     if(images.length === 0) {
         postImages.innerHTML = `
         <img src="assets/images/placeholder.jpg">
+        `;
+    } else if(images.length === 1) {
+        postImages.innerHTML = `
+        <img src="assets/images/picture.jpg">
         `;
     } else {
         postImages.innerHTML = `

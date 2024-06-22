@@ -6,6 +6,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ut.twente.notebridge.utils.Utils;
 
 import java.time.Duration;
 
@@ -17,7 +18,7 @@ public class HomePageTest {
     @BeforeClass
     public static void setUp() {
         try {
-            System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\chromedriver-win32\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", Utils.readFromProperties("SELENIUM_DRIVER_PATH"));
             driver = new ChromeDriver();
             driver.get("http://localhost:8080/notebridge/");
         } catch (Exception e) {

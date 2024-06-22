@@ -54,42 +54,43 @@ function getPostImages() {
 }
 
 function displayPostImages() {
-    console.log("Data received: " + images);
-    console.log("Images length: " + images.length);
-
     if(images.length === 0) {
         postImages.innerHTML = `
-        <img src="assets/images/placeholder.jpg">
+        <img src="assets/images/placeholder.jpg" width="350vh" height="350vh">
         `;
     } else if(images.length === 1) {
         postImages.innerHTML = `
-        <img src="assets/images/picture.jpg">
+        <img src="data:image/png;base64,${images[0]}" width="350vh" height="350vh">
         `;
     } else {
         postImages.innerHTML = `
-        <div id="carousel" class="carousel slide">
-        <div class="carousel-inner"></div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+        <div id="carouselExampleFade" class="carousel slide carousel-fade">
+            <div class="carousel-inner" id="multiple-images">
+                <div class="carousel-item active">
+                    <img src="data:image/png;base64,${images.shift()}" class="d-block w-100" alt="post image" width="350vh" height="350vh">
+                </div>       
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
         `;
 
-        // postImages.innerHTML += `
-        // ${images.data.map(image => `${displayPostImage(image)}`).join("\n")}
-        // `;
+        document.getElementById("multiple-images").innerHTML += `
+        ${images.map(image => `${displayPostImage(image)}`).join("\n")}
+        `;
     }
 }
 
 function displayPostImage(image) {
     return `
-    <div class="carousel-item active">
-      <img src="${image}" class="d-block w-100">
+    <div class="carousel-item">
+        <img src="data:image/png;base64,${image}" class="d-block w-100" width="350vh" height="350vh">
     </div>
     `;
 }

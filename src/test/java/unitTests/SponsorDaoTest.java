@@ -1,4 +1,4 @@
-package dao;
+package unitTests;
 import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.*;
 import ut.twente.notebridge.dao.BaseUserDao;

@@ -1,4 +1,4 @@
-package dao;
+package unitTests;
 
 import java.sql.Timestamp;
 import org.junit.jupiter.api.*;
@@ -8,7 +8,6 @@ import ut.twente.notebridge.dao.PersonDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.MessageHistory;
-import ut.twente.notebridge.model.Person;
 import ut.twente.notebridge.utils.DatabaseConnection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

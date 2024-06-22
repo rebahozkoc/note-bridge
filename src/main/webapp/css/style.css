@@ -41,7 +41,7 @@
 }
 
 .navbar {
-    background-color: rgba(17, 24, 39, 0.8);
+    background-color: rgb(17, 24, 39);
     z-index: 1; /* Stay on top */
 }
 

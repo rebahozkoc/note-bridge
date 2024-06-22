@@ -57,9 +57,9 @@ public enum InterestDao {
 
     public String getInterestedUsernames(int postId) {
         String sql = """
-            SELECT jsonb_agg(b.username)
-            FROM personinterestedinpost i, baseuser b
-            WHERE i.personid=b.id AND i.postid=?
+            SELECT jsonb_agg(jsonb_build_object('id',b.id,'username',b.username))
+                        FROM personinterestedinpost i, baseuser b
+                        WHERE i.personid=b.id AND i.postid=?
         """;
 
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {

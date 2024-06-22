@@ -8,10 +8,83 @@ const profilePicture= document.getElementById("current-profile-picture");
 
 const loadingScreen=document.getElementById("loading-screen");
 
-window.onload = function() {
-    checkLoggedIn();
-}
+//In case another user is trying to access the profile page of another user who is Person
+let searchedUserId=GetURLParameter("id");
 
+window.onload = function() {
+    if(searchedUserId){
+        //User tries to access to another users' profile
+        for(let editIcon of document.querySelectorAll(".edit-icon")){
+            editIcon.style.display="none";
+        }
+        document.getElementById("editProfileBtn").style.display="none";
+
+        //Since only Person can show interest, we know for sure that the id provided is person's id
+
+        //Get Person's data
+        fetch("/notebridge/api/persons/"+searchedUserId)
+            .then(res=>{
+                if(res.status===200){
+                    return res.json();
+                }else{
+                    throw new Error("User not found");
+                }
+
+            })
+            .then(data=>{
+                console.log(data)
+                nameSurnameSpan.innerHTML = data.name + " " + data.lastname;
+                usernameHeader.innerHTML=`@${data.username}`;
+                descriptionElement.innerHTML=data.description;
+                emailElement.innerHTML=data.email;
+                phoneNumberElement.innerHTML=data.phoneNumber;
+
+
+            }).catch(error=>{
+                console.error("Error while trying to fetch another user's data", error.toString());
+            })
+
+        //Get person's image
+        fetch(`/notebridge/api/persons/${searchedUserId}/image`)
+            .then(res => {
+                if(res.status===200) {
+                    return res.blob();
+                }else{
+                    return res.text().then(errorText => {
+                        throw new Error(`${errorText}`);
+                    });
+                }
+            })
+            .then(blob => {
+                const imageUrl = URL.createObjectURL(blob);
+                // Set the src attribute of the img element
+                profilePicture.src = imageUrl;
+                document.getElementById("img").src=imageUrl;
+                loadingScreen.style.display="none";
+            })
+            .catch(error=>{
+                console.error("Error", error.toString());
+                loadingScreen.style.display="none";
+            });
+    }else{
+        //No id is provided, user is viewing his/her own profile
+        modifyPageIfSponsor();
+        loadUserData();
+        loadUserImage();
+    }
+}
+function GetURLParameter(sParam) {
+    const sPageURL = window.location.search.substring(1);
+    const sURLVariables = sPageURL.split('&');
+    for (let i = 0; i < sURLVariables.length; i++)
+    {
+        let sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam)
+        {
+            return sParameterName[1];
+        }
+    }
+}
 
 
 
@@ -23,8 +96,9 @@ descriptionModal=document.getElementById("editDescriptionModal");
 contactInformationModal=document.getElementById("editContactModal");
 
 
+//modifyPageIfSponsor();
 
-modifyPageIfSponsor();
+
 
 nameLastnameModal.querySelector(".btn-primary").addEventListener("click",saveChangesNameLastname);
 contactInformationModal.querySelector(".btn-primary").addEventListener("click",saveChangesContactInformation);
@@ -89,8 +163,8 @@ document.getElementById('upload-img').onsubmit = function (e) {
 
 
 //When the page is requested, loading user data along with picture from the server
-loadUserData();
-loadUserImage();
+//loadUserData();
+//loadUserImage();
 
 //MAKING PUT REQUEST TO UPDATE USER INFORMATION IN THE SERVER
 async function updateUserInformation(updatedInfo) {

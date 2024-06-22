@@ -19,7 +19,7 @@ const editIcon = document.getElementById("edit-icon");
 const interestButton = document.getElementById("interested-button");
 const postCreateDateSpan = document.getElementById("post-create-date");
 const postLastUpdateDateSpan = document.getElementById("post-lastupdate-date");
-
+const listOfUsernames = document.getElementById("list-of-usernames");
 
 const authorImage=document.getElementById("author-img");
 const authorName=document.getElementById("author-name");
@@ -40,6 +40,61 @@ window.onload = function() {
     checkLoggedIn();
     getUserId();
     getPostImages();
+}
+
+
+function viewInterested(element){
+
+    if(element.classList.contains("btn-primary")){
+
+        element.classList.remove("btn-primary");
+        element.classList.add("btn-secondary");
+        element.innerHTML="Hide Interested Users";
+        if(listOfUsernames.hasChildNodes()){
+            fetch("/notebridge/api/posts/" + cardId + "/interestedusers")
+                .then(res => {
+                    if(res.status === 200) {
+                        return res.json();
+                    }else{
+                        return res.text().then(errorText => {
+                            throw new Error(`${errorText}`);
+                        });
+                    }
+
+                }).then(data => {
+
+                    data.forEach(user => {
+                        const listElement =document.createElement("li");
+                        const anchorElement=document.createElement("a");
+                        anchorElement.onclick = () => { window.location.href = "profile.html?id=" + user.id; };
+                        anchorElement.innerHTML = user.username;
+                        anchorElement.classList.add("link-primary");
+                        listElement.append(anchorElement);
+                        listOfUsernames.appendChild(listElement);
+                    })
+
+            }).catch(
+                err => {
+                    console.error(err);
+                }
+            )
+        }else{
+            for (let liElement of listOfUsernames.children) {
+                liElement.style.display="block";
+            }
+        }
+
+    }else{
+        element.classList.add("btn-primary");
+        element.classList.remove("btn-secondary");
+        element.innerHTML="View Interested Users";
+        for (let liElement of listOfUsernames.children) {
+            liElement.style.display="none";
+        }
+    }
+
+
+
 }
 
 function getPostImages() {
@@ -171,7 +226,7 @@ function displayInterestedButton(userId, postId,author) {
             }
             ).catch(err => {
                 interestButton.innerHTML = `
-                        <a class="btn btn-danger" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">Failed to fetch interest information!</a>
+                        <a class="btn btn-danger" data-post-id="${postId}" href="#" role="button">Failed to fetch interest information!</a>
 
                         `
             });

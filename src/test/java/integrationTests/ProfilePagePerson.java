@@ -1,3 +1,5 @@
+package integrationTests;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,12 +14,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ut.twente.notebridge.utils.Utils;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ProfilePageSponsor {
+public class ProfilePagePerson {
     private static WebDriver driver;
 
     @BeforeClass
@@ -32,8 +33,8 @@ public class ProfilePageSponsor {
             WebElement pass = wait.until(ExpectedConditions.elementToBeClickable(By.id("password")));
             WebElement login = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#login-form button[type='submit']")));
 
-            email.sendKeys("googlegoogle@asd.com");
-            pass.sendKeys("Testtest123.");
+            email.sendKeys("crazyuserboy2@gmail.com");
+            pass.sendKeys("superpasspword");
             login.click();
 
         } catch (Exception e) {
@@ -63,8 +64,6 @@ public class ProfilePageSponsor {
 
     @Test
     @Order(2)
-    //This is companyName and websiteURL for Sponsors,
-    //eventhough id names are name-lastname, since the profile is designed initially for Persons
     public void tryEditingName(){
 
         driver.get("http://localhost:8080/notebridge/profile.html");
@@ -79,7 +78,7 @@ public class ProfilePageSponsor {
         WebElement saveChangesBtn=wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#editHeaderModal .modal-footer button")));
 
 
-// Clear and interact with nameInput
+        // Clear and interact with nameInput
         nameInput.clear();
         nameInput.clear();
         lastnameInput.clear();
@@ -88,12 +87,15 @@ public class ProfilePageSponsor {
         saveChangesBtn.click();
         //alert showing up saying update successfull
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-        String alertText=alert.getText();
-        alert.accept();
+
+        String alertText= alert.getText();
+        driver.switchTo().alert().accept();
         assertTrue(alertText.contains("Update successful"));
 
 
+
     }
+
 
 
     @AfterClass

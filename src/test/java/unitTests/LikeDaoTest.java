@@ -1,4 +1,4 @@
-package dao;
+package unitTests;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

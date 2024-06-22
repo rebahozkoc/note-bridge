@@ -59,7 +59,8 @@ public enum PostDao {
 
 	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId) {
 		List<PostDto> list = new ArrayList<>();
-		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
+		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title",
+				"description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
 
 		System.out.println("GET posts called");
 
@@ -345,7 +346,7 @@ public enum PostDao {
 	}
 
 	public Post update(Post updated) {
-		// TODO delete this method if not used
+		// TODO implement this method
 
 		return updated;
 	}

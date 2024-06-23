@@ -11,6 +11,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.SponsorDao;
 import ut.twente.notebridge.model.BaseUser;
+import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.Sponsor;
 import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
@@ -47,10 +48,10 @@ public class SponsorRoute {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSponsor(@PathParam("id") int id) {
-		try{
+		try {
 			return Response.status(Response.Status.OK).entity(SponsorDao.INSTANCE.getSponsor(id)).build();
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
@@ -59,28 +60,28 @@ public class SponsorRoute {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateSponsor(@PathParam("id") Integer id, Sponsor sponsor, @Context HttpServletRequest request){
+	public Response updateSponsor(@PathParam("id") Integer id, Sponsor sponsor, @Context HttpServletRequest request) {
 
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+		HttpSession userSession = request.getSession(false);
+		if (!Security.isAuthorized(userSession, "sponsor") || (int) userSession.getAttribute("userId") != id) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
 		}
 		Sponsor existingSponsor = SponsorDao.INSTANCE.getSponsor(id);
-		if(sponsor.getUsername()!=null){
+		if (sponsor.getUsername() != null) {
 			existingSponsor.setUsername(sponsor.getUsername());
 		}
-		if(sponsor.getEmail()!=null){
+		if (sponsor.getEmail() != null) {
 			existingSponsor.setEmail(sponsor.getEmail());
 		}
-		if(sponsor.getPhoneNumber()!=null){
+		if (sponsor.getPhoneNumber() != null) {
 			existingSponsor.setPhoneNumber(sponsor.getPhoneNumber());
 		}
-		if(sponsor.getCompanyName()!=null){
+		if (sponsor.getCompanyName() != null) {
 			existingSponsor.setCompanyName(sponsor.getCompanyName());
 		}
-		if(sponsor.getWebsiteURL()!=null){
+		if (sponsor.getWebsiteURL() != null) {
 			existingSponsor.setWebsiteURL(sponsor.getWebsiteURL());
 		}
 		if (sponsor.getDescription() != null) {
@@ -88,27 +89,27 @@ public class SponsorRoute {
 		}
 
 
-		try{
+		try {
 			return Response.status(Response.Status.OK).entity(SponsorDao.INSTANCE.update(existingSponsor)).build();
-		}catch (Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 
 	@DELETE
 	@Path("/{id}")
-	public Response deleteSponsor(@PathParam("id") int id, @Context HttpServletRequest request){
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+	public Response deleteSponsor(@PathParam("id") int id, @Context HttpServletRequest request) {
+		HttpSession userSession = request.getSession(false);
+		if (!Security.isAuthorized(userSession, "sponsor") || (int) userSession.getAttribute("userId") != id) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
 		}
-		try{
+		try {
 			SponsorDao.INSTANCE.delete(id);
 			return Response.status(Response.Status.OK).entity("Sponsor deleted").build();
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
@@ -152,6 +153,27 @@ public class SponsorRoute {
 			return response.build();
 		} catch (IOException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading file").build();
+		}
+	}
+
+
+	@PUT
+	@Path("{id}/post")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response sponsorPost(@PathParam("id") Integer id,  Post post, @Context HttpServletRequest request) {
+		System.out.println("SponsorRoute.sponsorPost is called");
+		HttpSession userSession = request.getSession(false);
+		if (!Security.isAuthorized(userSession, "sponsor") || (int) userSession.getAttribute("userId") != post.getSponsoredBy()) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+		}
+
+		try {
+			post.setId(id);
+			return Response.status(Response.Status.OK).entity(SponsorDao.INSTANCE.sponsorPost(post)).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 }

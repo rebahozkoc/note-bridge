@@ -246,7 +246,7 @@ public class PostRoute {
 	public Response updatePost(@PathParam("id") Integer id, Post post, @Context HttpServletRequest request) {
 		post.setId(id);
 		HttpSession userSession = request.getSession(false);
-		if (Security.isAuthorized(userSession, "person") || (int) userSession.getAttribute("userId") != post.getPersonId()) {
+		if (!Security.isAuthorized(userSession, "person") || (int) userSession.getAttribute("userId") != post.getPersonId()) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 		}
 		post.setId(id);
@@ -274,7 +274,7 @@ public class PostRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createPost(Post post, @Context HttpServletRequest request) {
 		HttpSession userSession = request.getSession(false);
-		if (Security.isAuthorized(userSession, "person") || (int) userSession.getAttribute("userId") != post.getPersonId()) {
+		if (!Security.isAuthorized(userSession, "person") || (int) userSession.getAttribute("userId") != post.getPersonId()) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}

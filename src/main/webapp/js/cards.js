@@ -6,6 +6,7 @@ let totalNumberOfCards=0;
 
 
 
+
 const loadingScreen = document.getElementById("loading-screen");
 const loadMoreButton = document.getElementById("load-more-btn");
 loadMoreButton.addEventListener("click", loadMore);
@@ -82,4 +83,12 @@ function displayCard(card) {
 function selectCard(card) {
     const cardId = card.getAttribute("data-card-id");
     window.location.href = 'card-details.html?id=' + cardId;
+}
+
+function sortBy(sort) {
+
+}
+
+function filterBy(filter) {
+
 }

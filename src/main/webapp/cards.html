@@ -83,46 +83,37 @@
                     <a href="#" class="search-icon">
                       <i class="fa fa-search"></i>
                     </a>
-                  </div>
-                </div>
 
-                <div class="row mt-4 g-1 px-4 mb-5">
-                <div class="col-md-2 ms-5">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Jam sessions</span>
-                    </div>
+                  </div>
+                  <div class="dropdown" data-bs-theme="dark" style="margin-top: 20px">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                      <img src="assets/images/filter.png" alt="filter" style="width: 20px; height: 20px">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                      <li><span class="mg-text">Filter By</span><li>
+                      <li><a class="dropdown-item" onclick="filterBy(jam)">Jam Sessions</a></li>
+                      <li><a class="dropdown-item" onclick="filterBy(live)">Live Events</a></li>
+                      <li><a class="dropdown-item" onclick="filterBy(band)">Band Members</a></li>
+                      <li><a class="dropdown-item" onclick="filterBy(instruments)">Find Instruments</a></li>
+                      <li><a class="dropdown-item" onclick="filterBy(discover)">Discover More</a></li>
+
+                    </ul>
+                  </div>
+
+                  <div class="dropdown" data-bs-theme="dark" style="margin-top: 19px">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                      <img src="assets/images/sort.png" alt="filter" style="width: 25px; height: 25px">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" >
+                      <li><span class="mg-text">Sort By</span><li>
+                      <li><a class="dropdown-item" onclick="sortBy(latest)">Latest</a></li>
+                      <li><a class="dropdown-item" onclick="sortBy(oldest)">Oldest</a></li>
+                      <li><a class="dropdown-item" onclick="sortBy(likes)">Most Likes</a></li>
+                      <li><a class="dropdown-item" onclick="sortBy(interested)">Most Interested</a></li>
+
+                    </ul>
                   </div>
                 </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Music events</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Band members</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Find instruments</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Discover more</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

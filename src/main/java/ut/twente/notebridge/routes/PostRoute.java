@@ -20,6 +20,7 @@ import ut.twente.notebridge.model.Interest;
 import ut.twente.notebridge.model.Like;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.ResourceCollection;
+import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 
 import java.io.File;
@@ -240,11 +241,10 @@ public class PostRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updatePost(@PathParam("id") Integer id, Post post, @Context HttpServletRequest request) {
+		post.setId(id);
 		HttpSession userSession = request.getSession(false);
-		if (userSession == null || (int) userSession.getAttribute("userId") != post.getPersonId()) {
-			{
-				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
-			}
+		if (Security.isAuthorized(userSession, "person") || (int) userSession.getAttribute("userId") != post.getPersonId()) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 		}
 		post.setId(id);
 		try {
@@ -271,12 +271,11 @@ public class PostRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createPost(Post post, @Context HttpServletRequest request) {
 		HttpSession userSession = request.getSession(false);
-		if (userSession == null || (int) userSession.getAttribute("userId") != post.getPersonId()) {
+		if (Security.isAuthorized(userSession, "person") || (int) userSession.getAttribute("userId") != post.getPersonId()) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
 		}
-
 
 		try {
 			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.create(post)).build();

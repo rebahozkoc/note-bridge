@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
+import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.model.Sponsor;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Security;
@@ -138,5 +139,14 @@ public enum SponsorDao {
 		}
 
 		return updated;
+	}
+
+	public Post sponsorPost(Post post) {
+		Post currentPost = PostDao.INSTANCE.getPost(post.getId());
+		currentPost.setSponsoredBy(post.getSponsoredBy());
+		currentPost.setSponsoredFrom(post.getSponsoredFrom());
+		currentPost.setSponsoredUntil(post.getSponsoredUntil());
+
+		return PostDao.INSTANCE.update(currentPost);
 	}
 }

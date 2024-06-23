@@ -2,6 +2,7 @@ package ut.twente.notebridge.utils;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import jakarta.servlet.http.HttpSession;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
@@ -73,11 +74,11 @@ public class Security {
 				if (verifyHashedPassword(password, hashedPassword)) {
 
 					return true;
-				}else{
+				} else {
 					return false;
 				}
-			}else{
-				    return false;
+			} else {
+				return false;
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException("Server not available");
@@ -92,5 +93,12 @@ public class Security {
 		}
 		return Jsoup.clean(input, Safelist.basic());
 
+	}
+
+	public static boolean isAuthorized(HttpSession session, String role) {
+		if (session == null || session.getAttribute("role") == null) {
+			return false;
+		}
+		return session.getAttribute("role").equals(role);
 	}
 }

@@ -108,11 +108,6 @@ html {
 
 /* Search bar */
 
-.card{
-    border: none;
-    background: #eee;
-}
-
 .search {
     width: 100%;
     margin-bottom: auto;

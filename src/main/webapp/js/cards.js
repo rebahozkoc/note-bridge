@@ -48,7 +48,7 @@ window.onload = function() {
     checkLoggedIn();
 }
 
-function fetchPosts(pageSize,pageNumber) {
+function fetchPosts(pageSize,pageNumber,searchValue) {
     fetch(`/notebridge/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${searchValue}`)
         .then(res => res.json())
         .then(data => {

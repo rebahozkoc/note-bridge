@@ -45,13 +45,16 @@ public class PostRoute {
 			@QueryParam("pageNumber") Integer pageNumber,
 			@QueryParam("sortBy") String sortBy,
 			@QueryParam("reverse") @DefaultValue("false") boolean reverse,
-			@QueryParam("personId") Integer personId
+			@QueryParam("personId") Integer personId,
+			@QueryParam("search") String search
 	) {
 		try {
 			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
 			int pn = pageNumber > 0 ? pageNumber : 1;
-			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, reverse, personId).toArray(new PostDto[0]);
-			var total = PostDao.INSTANCE.getTotalPosts(personId);
+			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, reverse, personId,search).toArray(new PostDto[0]);
+
+
+			int total = PostDao.INSTANCE.getTotalPosts(personId,search);
 
 
 			return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();

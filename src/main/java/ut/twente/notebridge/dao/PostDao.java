@@ -17,6 +17,7 @@ import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,14 +58,18 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId) {
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId, String search) {
 		List<PostDto> list = new ArrayList<>();
 		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title",
 				"description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
 
-		System.out.println("GET posts called");
+		String sql;
+		String tsquery="";
+		boolean isSearchGiven=false;
 
-		String sql = """
+
+		if(search==null || search.isEmpty() || search.equals("undefined") ){
+			sql = """
 				SELECT json_agg(t) FROM (
 					SELECT * FROM Post
 					ORDER BY %s
@@ -73,13 +78,13 @@ public enum PostDao {
 					) t;
 				""";
 
-		if (sortBy == null || sortBy.isEmpty() || !allowedSortableColumns.contains(sortBy)) {
-			sortBy = "createDate DESC";
-		} else if (reverse) {
-			sortBy += " DESC";
-		}
-		if (personId != null && personId > 0) {
-			sql = """
+			if (sortBy == null || sortBy.isEmpty() || !allowedSortableColumns.contains(sortBy)) {
+				sortBy = "createDate DESC";
+			} else if (reverse) {
+				sortBy += " DESC";
+			}
+			if (personId != null && personId > 0) {
+				sql = """
 					SELECT json_agg(t) FROM (
 						SELECT * FROM Post
 						WHERE personId=?
@@ -88,14 +93,37 @@ public enum PostDao {
 						OFFSET ?
 						) t;
 					""";
+			}
+			sql = String.format(sql, sortBy);
+		}else{
+			isSearchGiven=true;
+			tsquery=String.join("&",Arrays.asList(search.split(" "))) ;
+			sql= """
+					SELECT json_agg(t) FROM (SELECT *FROM post
+					WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
+					ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
+	         		LIMIT ?
+	         		OFFSET ?) t;
+				""";
 		}
-		sql = String.format(sql, sortBy);
+
+		System.out.println("GET posts called");
+
+
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			if (personId != null && personId > 0) {
+				//PersonID is provided
 				statement.setInt(1, personId);
 				statement.setInt(2, pageSize);
 				statement.setInt(3, (pageNumber - 1) * pageSize);
-			} else {
+			} else if(isSearchGiven){
+				//Search is asked for
+				statement.setString(1, tsquery);
+				statement.setString(2, tsquery);
+				statement.setInt(3, pageSize);
+				statement.setInt(4, (pageNumber - 1) * pageSize);
+			}else{
+				//personID is not provided
 				statement.setInt(1, pageSize);
 				statement.setInt(2, (pageNumber - 1) * pageSize);
 			}
@@ -410,17 +438,28 @@ public enum PostDao {
 		}
 	}
 
-	public int getTotalPosts(Integer personId) {
+	public int getTotalPosts(Integer personId,String search) {
 		String sql = "SELECT COUNT(*) FROM post ";
 
 		if (personId != null && personId > 0) {
 			sql = "SELECT COUNT(*) FROM post WHERE personId=? ";
+		}else if(search!=null && !search.isEmpty() && !search.equals("undefined") ){
+			sql= """
+				SELECT COUNT(*) FROM (SELECT *FROM post
+					WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
+					ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
+	         		) t;
+				""";
 		}
 
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			if (personId != null && personId > 0) {
 				statement.setInt(1, personId);
+			}else if(search!=null && !search.isEmpty() && !search.equals("undefined") ){
+				String tsquery=String.join("&",Arrays.asList(search.split(" "))) ;
+				statement.setString(1, tsquery);
+				statement.setString(2, tsquery);
 			}
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {

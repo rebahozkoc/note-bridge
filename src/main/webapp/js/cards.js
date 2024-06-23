@@ -5,11 +5,35 @@ let pageNumber=1;
 let totalNumberOfCards=0;
 
 
+let searchValue = decodeURIComponent(GetURLParameter("search"));
+
 
 const loadingScreen = document.getElementById("loading-screen");
 const loadMoreButton = document.getElementById("load-more-btn");
+const searchBtn=document.getElementById("search-btn");
+
+searchBtn.addEventListener("click", setQueryParam);
 loadMoreButton.addEventListener("click", loadMore);
 
+function GetURLParameter(sParam) {
+    const sPageURL = window.location.search.substring(1);
+    const sURLVariables = sPageURL.split('&');
+    for (let i = 0; i < sURLVariables.length; i++)
+    {
+        let sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam)
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
+function setQueryParam(){
+    const searchBarInput=searchBtn.parentNode.firstElementChild;
+    const searchValue=searchBarInput.value;
+    console.log(searchValue);
+    window.location.href=`cards.html?search=${encodeURIComponent(searchValue)}`;
+}
 
 function loadMore(){
     pageNumber++;
@@ -19,17 +43,20 @@ function loadMore(){
 
 
 window.onload = function() {
-    fetchPosts(pageSize,pageNumber);
+
+    fetchPosts(pageSize,pageNumber,searchValue);
     checkLoggedIn();
 }
 
 function fetchPosts(pageSize,pageNumber) {
-    fetch(`/notebridge/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+    fetch(`/notebridge/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${searchValue}`)
         .then(res => res.json())
         .then(data => {
             totalNumberOfCards=data.meta.total;
 
-
+            if(totalNumberOfCards===0){
+                loadMoreButton.style.display="none";
+            }
             cardsList = data;
             displayAllCards();
         })

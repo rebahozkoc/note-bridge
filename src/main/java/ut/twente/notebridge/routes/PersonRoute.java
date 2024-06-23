@@ -61,27 +61,27 @@ public class PersonRoute {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updatePerson(@PathParam("id") Integer id, Person person, @Context HttpServletRequest request) {
 
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+		HttpSession userSession = request.getSession(false);
+		if (userSession == null || (int) userSession.getAttribute("userId") != id) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
 		}
 
 		Person existingPerson = PersonDao.INSTANCE.getUser(id);
-		if(person.getUsername()!=null){
+		if (person.getUsername() != null) {
 			existingPerson.setUsername(person.getUsername());
 		}
-		if(person.getEmail()!=null){
+		if (person.getEmail() != null) {
 			existingPerson.setEmail(person.getEmail());
 		}
-		if(person.getPhoneNumber()!=null){
+		if (person.getPhoneNumber() != null) {
 			existingPerson.setPhoneNumber(person.getPhoneNumber());
 		}
-		if(person.getName()!=null){
+		if (person.getName() != null) {
 			existingPerson.setName(person.getName());
 		}
-		if(person.getLastname()!=null){
+		if (person.getLastname() != null) {
 			existingPerson.setLastname(person.getLastname());
 		}
 		if (person.getDescription() != null) {
@@ -89,27 +89,28 @@ public class PersonRoute {
 		}
 
 
-		try{
+		try {
 			return Response.status(Response.Status.OK).entity(PersonDao.INSTANCE.update(existingPerson)).build();
-		}catch (Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 
 	@DELETE
 	@Path("/{id}")
-	public Response deletePerson(@PathParam("id") int id, @Context HttpServletRequest request){
+	public Response deletePerson(@PathParam("id") int id, @Context HttpServletRequest request) {
 
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+		HttpSession userSession = request.getSession(false);
+		if (userSession == null || (int) userSession.getAttribute("userId") != id) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
 		}
-
-		try{
-			return Response.status(Response.Status.OK).entity("Person deleted").build();
-		}catch(Exception e){
+		try {
+			PersonDao.INSTANCE.delete(id);
+			BaseUserDao.INSTANCE.delete(id);
+			return Response.status(Response.Status.OK).entity("Person with id " + id + " is deleted").build();
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
@@ -123,8 +124,8 @@ public class PersonRoute {
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail, @Context HttpServletRequest request) {
 
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null || (int)userSession.getAttribute("userId") !=id ) {
+		HttpSession userSession = request.getSession(false);
+		if (userSession == null || (int) userSession.getAttribute("userId") != id) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}

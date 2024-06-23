@@ -74,7 +74,7 @@ class PostDaoTest {
 			person.setName("Test Person");
 			person.setLastname("Test Lastname");
 		}
-		if (post == null){
+		if (post == null) {
 			post = new Post();
 			post.setTitle("Test Post");
 			post.setDescription("Test Description");
@@ -146,7 +146,7 @@ class PostDaoTest {
 		post3.setEventType("jam");
 		post3.setPersonId(person.getId());
 		PostDao.INSTANCE.create(post3);
-		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5,1, null, false, null);
+		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5, 1, null, false, null);
 		assertEquals(returnedPosts.size(), 3, "There should be 3 posts");
 
 		PostDao.INSTANCE.delete(post2.getId());
@@ -181,7 +181,7 @@ class PostDaoTest {
 		post3.setPersonId(person2.getId());
 		PostDao.INSTANCE.create(post3);
 
-		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5,1, null, false, person.getId());
+		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5, 1, null, false, person.getId());
 		assertEquals(returnedPosts.size(), 2, "There should be 2 posts of this user");
 
 		PostDao.INSTANCE.delete(post2.getId());
@@ -192,10 +192,9 @@ class PostDaoTest {
 	}
 
 
-
 	@Test
 	@Order(8)
-	public void stage8_testToggleLike(){
+	public void stage8_testToggleLike() {
 		Like like = new Like();
 		like.setPersonId(person.getId());
 		like.setPostId(post.getId());
@@ -207,8 +206,8 @@ class PostDaoTest {
 
 	@Test
 	@Order(9)
-	public void state9_testGetTotalPosts(){
-		int totalPosts = PostDao.INSTANCE.getTotalPosts();
+	public void state9_testGetTotalPosts() {
+		int totalPosts = PostDao.INSTANCE.getTotalPosts(null);
 		assertEquals(totalPosts, 1, "There should be 1 post");
 	}
 

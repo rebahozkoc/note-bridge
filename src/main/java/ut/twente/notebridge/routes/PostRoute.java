@@ -51,7 +51,7 @@ public class PostRoute {
 			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
 			int pn = pageNumber > 0 ? pageNumber : 1;
 			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, reverse, personId).toArray(new PostDto[0]);
-			var total = PostDao.INSTANCE.getTotalPosts();
+			var total = PostDao.INSTANCE.getTotalPosts(personId);
 
 
 			return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();
@@ -152,8 +152,8 @@ public class PostRoute {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response likePost(@PathParam("id") int postId, @Context HttpServletRequest request) {
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null ) {
+		HttpSession userSession = request.getSession(false);
+		if (userSession == null) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
@@ -185,9 +185,9 @@ public class PostRoute {
 	@Path("/{id}/interested")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response interestedInPost(@PathParam("id") int postId,@Context HttpServletRequest request){
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null ) {
+	public Response interestedInPost(@PathParam("id") int postId, @Context HttpServletRequest request) {
+		HttpSession userSession = request.getSession(false);
+		if (userSession == null) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
@@ -219,16 +219,14 @@ public class PostRoute {
 	@Path("/{id}/interestedusers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getInterestedUsernames(@PathParam("id") int id) {
-		try{
-			String usernameListJson=InterestDao.INSTANCE.getInterestedUsernames(id);
+		try {
+			String usernameListJson = InterestDao.INSTANCE.getInterestedUsernames(id);
 			return Response.status(Response.Status.OK).entity(usernameListJson).build();
-		}catch(Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 
 		}
 	}
-
-
 
 	@GET
 	@Path("/{id}/comments")
@@ -242,17 +240,17 @@ public class PostRoute {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updatePost(@PathParam("id") Integer id, Post post, @Context HttpServletRequest request) {
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null || (int)userSession.getAttribute("userId") !=post.getPersonId() ) {
+		HttpSession userSession = request.getSession(false);
+		if (userSession == null || (int) userSession.getAttribute("userId") != post.getPersonId()) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}
 		}
 		post.setId(id);
-		try{
+		try {
 			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.update(post)).build();
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
@@ -272,8 +270,8 @@ public class PostRoute {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createPost(Post post, @Context HttpServletRequest request) {
-		HttpSession userSession=request.getSession(false);
-		if(userSession == null || (int)userSession.getAttribute("userId") !=post.getPersonId() ) {
+		HttpSession userSession = request.getSession(false);
+		if (userSession == null || (int) userSession.getAttribute("userId") != post.getPersonId()) {
 			{
 				return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 			}

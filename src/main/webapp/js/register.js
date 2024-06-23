@@ -19,6 +19,25 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
+    if (!password.value.includes("!") &&
+        !password.value.includes("@") &&
+        !password.value.includes("#") &&
+        !password.value.includes("$") &&
+        !password.value.includes("%") &&
+        !password.value.includes("^") &&
+        !password.value.includes("&") &&
+        !password.value.includes("*") &&
+        !password.value.includes("(") &&
+        !password.value.includes(")") &&
+        !password.value.includes("-") &&
+        !password.value.includes("_") &&
+        !password.value.includes("+") &&
+        !password.value.includes("=") &&
+        !password.value.includes(".")) {
+        warningMessage.innerHTML = "The password must include at least one character from: !@#$%^&*()-_+=.";
+        return;
+    }
+
     const data = new FormData(form);
     let dataObject = {};
     let uriToSendRequest;
@@ -88,8 +107,7 @@ function showRegisterSponsorForm() {
     `;
 }
 
-    myInput.onkeyup = function() {
-
+myInput.onkeyup = function() {
     let specialCharacters = "!@#$%^&*()-_+=.";
     let hasSpecialCharacter = false;
 

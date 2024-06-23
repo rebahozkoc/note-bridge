@@ -17,7 +17,6 @@ import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
 import ut.twente.notebridge.model.Post;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,24 +58,23 @@ public enum PostDao {
 	}
 
 	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId, String search) {
+		System.out.println("GET posts called");
 		List<PostDto> list = new ArrayList<>();
-		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title",
-				"description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
+		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
 
 		String sql;
-		String tsquery="";
-		boolean isSearchGiven=false;
+		String tsquery = "";
+		boolean isSearchGiven = search != null && !search.isEmpty() && !search.equals("undefined");
 
-
-		if(search==null || search.isEmpty() || search.equals("undefined") ){
+		if (!isSearchGiven) {
 			sql = """
-				SELECT json_agg(t) FROM (
-					SELECT * FROM Post
-					ORDER BY %s
-					LIMIT ?
-					OFFSET ?
-					) t;
-				""";
+					SELECT json_agg(t) FROM (
+						SELECT * FROM Post
+						ORDER BY %s
+						LIMIT ?
+						OFFSET ?
+						) t;
+					""";
 
 			if (sortBy == null || sortBy.isEmpty() || !allowedSortableColumns.contains(sortBy)) {
 				sortBy = "createDate DESC";
@@ -85,29 +83,26 @@ public enum PostDao {
 			}
 			if (personId != null && personId > 0) {
 				sql = """
-					SELECT json_agg(t) FROM (
-						SELECT * FROM Post
-						WHERE personId=?
-						ORDER BY %s
-						LIMIT ?
-						OFFSET ?
-						) t;
-					""";
+						SELECT json_agg(t) FROM (
+							SELECT * FROM Post
+							WHERE personId=?
+							ORDER BY %s
+							LIMIT ?
+							OFFSET ?
+							) t;
+						""";
 			}
 			sql = String.format(sql, sortBy);
-		}else{
-			isSearchGiven=true;
-			tsquery=String.join("&",Arrays.asList(search.split(" "))) ;
-			sql= """
-					SELECT json_agg(t) FROM (SELECT *FROM post
-					WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
-					ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
-	         		LIMIT ?
-	         		OFFSET ?) t;
-				""";
+		} else {
+			tsquery = String.join("&", Arrays.asList(Security.sanitizeInput(search).split(" ")));
+			sql = """
+						SELECT json_agg(t) FROM (SELECT *FROM post
+						WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
+						ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
+					    LIMIT ?
+					    OFFSET ?) t;
+					""";
 		}
-
-		System.out.println("GET posts called");
 
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
@@ -116,22 +111,20 @@ public enum PostDao {
 				statement.setInt(1, personId);
 				statement.setInt(2, pageSize);
 				statement.setInt(3, (pageNumber - 1) * pageSize);
-			} else if(isSearchGiven){
+			} else if (isSearchGiven) {
 				//Search is asked for
 				statement.setString(1, tsquery);
 				statement.setString(2, tsquery);
 				statement.setInt(3, pageSize);
 				statement.setInt(4, (pageNumber - 1) * pageSize);
-			}else{
+			} else {
 				//personID is not provided
 				statement.setInt(1, pageSize);
 				statement.setInt(2, (pageNumber - 1) * pageSize);
 			}
 
 			ResultSet rs = statement.executeQuery();
-			ObjectMapper mapper = JsonMapper.builder()
-					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-					.build();
+			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
 			if (rs.next() && rs.getString("json_agg") != null) {
 				list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), PostDto[].class));
 				for (PostDto post : list) {
@@ -146,7 +139,7 @@ public enum PostDao {
 	}
 
 	public Post getPost(int id) {
-		String sql = "SELECT row_to_json(t) post FROM(SELECT * FROM Post WHERE id=?) t"; // Assuming delete_post takes one parameter
+		String sql = "SELECT row_to_json(t) post FROM(SELECT * FROM Post WHERE id=?) t";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, id);
@@ -155,9 +148,7 @@ public enum PostDao {
 			if (rs.next()) {
 				String json = rs.getString("post");
 
-				ObjectMapper mapper = JsonMapper.builder()
-						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-						.build();
+				ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
 				return mapper.readValue(json, Post.class);
 
 			} else {
@@ -182,7 +173,7 @@ public enum PostDao {
 				       )
 				FROM BaseUser b, Comment c
 				WHERE b.id = c.personid AND c.postid =?
-				GROUP BY c.postid;	
+				GROUP BY c.postid;
 				""";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
@@ -190,9 +181,7 @@ public enum PostDao {
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				String json = rs.getString("jsonb_build_object");
-				ObjectMapper mapper = JsonMapper.builder()
-						.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-						.build();
+				ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
 				return mapper.readValue(json, CommentDtoList.class);
 			} else {
 				throw new NotFoundException("No comments found for post with id " + id);
@@ -359,9 +348,7 @@ public enum PostDao {
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, personId);
 			ResultSet rs = statement.executeQuery();
-			ObjectMapper mapper = JsonMapper.builder()
-					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-					.build();
+			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
 			if (rs.next()) {
 				return Arrays.asList(mapper.readValue(rs.getString("json_agg"), Post[].class));
 			} else {
@@ -374,7 +361,6 @@ public enum PostDao {
 	}
 
 	public Post update(Post updatedPost) {
-		// TODO implement this method
 		String sql = """
 						UPDATE Post
 						SET lastUpdate = ?,
@@ -438,26 +424,27 @@ public enum PostDao {
 		}
 	}
 
-	public int getTotalPosts(Integer personId,String search) {
+	public int getTotalPosts(Integer personId, String search) {
 		String sql = "SELECT COUNT(*) FROM post ";
 
+		boolean searchDefined = search != null && !search.isEmpty() && !search.equals("undefined");
 		if (personId != null && personId > 0) {
 			sql = "SELECT COUNT(*) FROM post WHERE personId=? ";
-		}else if(search!=null && !search.isEmpty() && !search.equals("undefined") ){
-			sql= """
-				SELECT COUNT(*) FROM (SELECT *FROM post
-					WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
-					ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
-	         		) t;
-				""";
+		} else if (searchDefined) {
+			sql = """
+					SELECT COUNT(*) FROM (SELECT *FROM post
+						WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
+						ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
+					      		) t;
+					""";
 		}
 
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			if (personId != null && personId > 0) {
 				statement.setInt(1, personId);
-			}else if(search!=null && !search.isEmpty() && !search.equals("undefined") ){
-				String tsquery=String.join("&",Arrays.asList(search.split(" "))) ;
+			} else if (searchDefined) {
+				String tsquery = String.join("&", Arrays.asList(search.split(" ")));
 				statement.setString(1, tsquery);
 				statement.setString(2, tsquery);
 			}

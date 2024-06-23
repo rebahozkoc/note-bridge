@@ -14,10 +14,6 @@ public class BaseEntity {
 		this.lastUpdate = null;
 	}
 
-	public boolean isValid() {
-		return id != 0;
-	}
-
 	public int getId() {
 		return id;
 	}

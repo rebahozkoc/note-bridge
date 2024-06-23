@@ -260,12 +260,19 @@ public class PostRoute {
 
 	@DELETE
 	@Path("/{id}")
-	public void deletePost(@PathParam("id") int id) {
+	public Response deletePost(@PathParam("id") int id, @Context HttpServletRequest request) {
+		HttpSession userSession = request.getSession(false);
+		Post post = PostDao.INSTANCE.getPost(id);
+		if (!Security.isAuthorized(userSession, "person") || (int) userSession.getAttribute("userId") != post.getPersonId()) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
+		}
 		try {
 			PostDao.INSTANCE.delete(id);
+			return Response.status(Response.Status.OK).entity("Post deleted").build();
 
 		} catch (Exception e) {
-			throw new NotFoundException("Post '" + id + "' not found!");
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 

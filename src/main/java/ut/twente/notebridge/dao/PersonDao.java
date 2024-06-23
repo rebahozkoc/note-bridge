@@ -22,7 +22,7 @@ public enum PersonDao {
 	private final HashMap<Integer, Person> users = new HashMap<>();
 
 	public void delete(int id) {
-		String sql = "DELETE FROM person WHERE id = ?"; // Assuming delete_post takes one parameter
+		String sql = "DELETE FROM person WHERE id = ?";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			statement.setInt(1, id);
@@ -37,7 +37,7 @@ public enum PersonDao {
 	}
 
 	public void deleteAll(){
-		String sql = "DELETE FROM person"; // Assuming delete_post takes one parameter
+		String sql = "DELETE FROM person";
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			int affectedRows = statement.executeUpdate();

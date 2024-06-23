@@ -60,7 +60,7 @@ public enum PostDao {
 	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId, String search) {
 		System.out.println("GET posts called");
 		List<PostDto> list = new ArrayList<>();
-		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location");
+		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location","totalInterested","totalLikes");
 
 		String sql;
 		String tsquery = "";
@@ -69,7 +69,7 @@ public enum PostDao {
 		if (!isSearchGiven) {
 			sql = """
 					SELECT json_agg(t) FROM (
-						SELECT * FROM Post
+						SELECT * FROM postdetailed
 						ORDER BY %s
 						LIMIT ?
 						OFFSET ?
@@ -84,7 +84,7 @@ public enum PostDao {
 			if (personId != null && personId > 0) {
 				sql = """
 						SELECT json_agg(t) FROM (
-							SELECT * FROM Post
+							SELECT * FROM postdetailed
 							WHERE personId=?
 							ORDER BY %s
 							LIMIT ?
@@ -96,7 +96,7 @@ public enum PostDao {
 		} else {
 			tsquery = String.join("&", Arrays.asList(Security.sanitizeInput(search).split(" ")));
 			sql = """
-						SELECT json_agg(t) FROM (SELECT *FROM post
+						SELECT json_agg(t) FROM (SELECT *FROM postdetailed
 						WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
 						ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
 					    LIMIT ?

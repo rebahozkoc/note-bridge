@@ -45,7 +45,7 @@ public class PostRoute {
 			@QueryParam("pageSize") Integer pageSize,
 			@QueryParam("pageNumber") Integer pageNumber,
 			@QueryParam("sortBy") String sortBy,
-			@QueryParam("reverse") @DefaultValue("false") boolean reverse,
+			@QueryParam("reverse") @DefaultValue("true") boolean reverse,
 			@QueryParam("personId") Integer personId,
 			@QueryParam("search") String search
 	) {

@@ -5,6 +5,8 @@ import ut.twente.notebridge.model.Post;
 
 public class PostDto extends Post {
 
+	private int totalInterested;
+	private int totalLikes;
 	private boolean hasImage;
 	private String image;
 
@@ -12,6 +14,24 @@ public class PostDto extends Post {
 		super();
 		this.hasImage = false;
 		this.image = null;
+		this.totalInterested = 0;
+		this.totalLikes = 0;
+	}
+
+	public int getTotalInterested() {
+		return totalInterested;
+	}
+
+	public void setTotalInterested(int totalInterested) {
+		this.totalInterested = totalInterested;
+	}
+
+	public int getTotalLikes() {
+		return totalLikes;
+	}
+
+	public void setTotalLikes(int totalLikes) {
+		this.totalLikes = totalLikes;
 	}
 
 	public void setHasImage(boolean hasImage) {

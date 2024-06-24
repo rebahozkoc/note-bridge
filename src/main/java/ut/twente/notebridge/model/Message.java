@@ -7,6 +7,7 @@ public class Message extends BaseEntity {
     private Integer user_id;
     private Timestamp createddate;
     private String content;
+    private boolean isread;
 
     public String getContent() {
         return content;
@@ -17,15 +18,24 @@ public class Message extends BaseEntity {
     }
 
     public Message() {
-        messagehistory_id =0;
-        user_id =null;
-        createddate =null;
-        content =null;
+        messagehistory_id = 0;
+        user_id = null;
+        createddate = null;
+        content = null;
+        isread=false;
     }
 
     public Message(Integer user_id, String content) {
         this.user_id = user_id;
         this.content = content;
+    }
+
+    public boolean isIsread() {
+        return isread;
+    }
+
+    public void setIsread(boolean isread) {
+        this.isread = isread;
     }
 
     public int getMessagehistory_id() {

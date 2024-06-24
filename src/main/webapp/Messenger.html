@@ -34,7 +34,7 @@
                     <a href="Messenger.html" class="button-cover me-3" role="button"><span class="text px-5">Messenger</span><span>Messenger</span></a>
                 </li>
                 <li class="nav-item">
-                    <a href="#feedback-form-container" class="button-cover" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
+                    <a href="#feedback-form-container" class="button-cover me-3" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
                 </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-lg-0">
@@ -173,6 +173,39 @@
 
 
     setInterval(fetchContacts, 2000);
+
+    function countUnreadMessages(id){
+        let count=0;
+        for(let message in messages){
+            if (message.messagehistory_id===id && message.user_id!==userID && message.isread===false){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    function updateSeenMessages(){
+        let unreadmessages=[];
+        for (let i = 0; i < messages['data'].length; i++) {
+            if (messages['data'][i].messagehistory_id===selectedContact && messages['data'][i].user_id!==userID && messages['data'][i].isread===false){
+                unreadmessages.push(messages['data'][i].id);
+            }
+        }
+        console.log(unreadmessages);
+        if (!(!Array.isArray(unreadmessages) || !unreadmessages.length)) {
+            let unreadmessagesString = unreadmessages.toString();
+            console.log(unreadmessagesString);
+            let encodedReadMessages = encodeURIComponent(unreadmessagesString);
+            fetch(`/notebridge/api/message/readmessages/${encodedReadMessages}`, {method: "PUT"})
+                .then(r => {
+
+                })
+                .catch(err => {
+                    console.error(`Unable to read messages: ${err.status}`);
+                    console.error(err);
+                })
+        }
+    }
 
     function loadPosts(){
         fetch(`/notebridge/api/posts/person/${userID}`, {method: "GET"})
@@ -336,8 +369,9 @@
             .then(res => res.json())
             .then(data => {
                 noChangeInMessages(data,id,username);
-            })
-            .catch(err => {
+            }).then(r=>{
+                updateSeenMessages();
+        }).catch(err => {
                 console.error(`Unable to fetch messages: ${err.status}`);
                 console.error(err);
             })
@@ -412,12 +446,9 @@
          <div class="left">
          <p style="color: white;text-align: left; margin: 0;padding: 0;">${username}</p>
          <div class="dropup-center dropup message" style="justify-self: left">
-            <button class="btn data-toggle disabled" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%">
                 ${message.content}
             </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="deleteMessage(this)">Delete</a></li>
-            </ul>
          </div>
          <p style="color: white">${formattedTime}</p>
          </div>

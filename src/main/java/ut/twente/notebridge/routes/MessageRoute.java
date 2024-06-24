@@ -75,6 +75,13 @@ public class MessageRoute {
         }
     }
 
+    @PUT
+    @Path("/readmessages/{ids}")
+    public void readMessages(@PathParam("ids") String ids){
+        ids=URLDecoder.decode(ids, StandardCharsets.UTF_8);
+        MessageDao.INSTANCE.readMessages(ids);
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/messages/{user1}/{user2}")

@@ -20,6 +20,7 @@ const interestButton = document.getElementById("interested-button");
 const postCreateDateSpan = document.getElementById("post-create-date");
 const postLastUpdateDateSpan = document.getElementById("post-lastupdate-date");
 const listOfUsernames = document.getElementById("list-of-usernames");
+const confirmDeleteBtn = document.getElementById("confirmDelete");
 
 const authorImage=document.getElementById("author-img");
 const authorName=document.getElementById("author-name");
@@ -31,7 +32,7 @@ const loadingScreen=document.getElementById("loading-screen");
 const commentsSection = document.getElementById("comments-section");
 
 heartIcon.addEventListener("click", toggleLike);
-
+confirmDeleteBtn.addEventListener("click", deletePost);
 
 loadPostDetailsAndLikes(cardId);
 
@@ -42,6 +43,26 @@ window.onload = function() {
     getPostImages();
 }
 
+function deletePost() {
+    fetch(`/notebridge/api/posts/${cardId}`, {
+        method: "DELETE"
+    })
+        .then(res => {
+            if (res.status === 200) {
+                alert("Post deleted successfully!");
+                window.location.href = "cards.html";
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+        .catch(err => {
+            alert("Error deleting post!");
+            console.error("Error deleting post:", err);
+        });
+
+}
 
 function viewInterested(element){
 
@@ -189,7 +210,7 @@ function checkPostBelongsToUser(userId, author) {
 
     if(author === userId) {
         deleteIcon.innerHTML = `
-        <button type="button" class="button" style="background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </button>
+        <span class="button"  data-bs-toggle="modal" data-bs-target="#deleteModal" style="cursor: pointer; background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </span>
         `
         editIcon.innerHTML = `
         <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal" style="visibility: visible" id="edit-button">&#9998;</span>

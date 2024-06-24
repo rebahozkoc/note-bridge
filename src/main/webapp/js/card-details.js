@@ -22,6 +22,8 @@ const postCreateDateSpan = document.getElementById("post-create-date");
 const postLastUpdateDateSpan = document.getElementById("post-lastupdate-date");
 const listOfUsernames = document.getElementById("list-of-usernames");
 const confirmDeleteBtn = document.getElementById("confirmDelete");
+const editPostModal = document.getElementById("editPostModal");
+const editPostModalSaveBtn = document.getElementById("saveChangesPost");
 
 const authorImage=document.getElementById("author-img");
 const authorName=document.getElementById("author-name");
@@ -322,6 +324,10 @@ async function loadPostDetailsAndLikes(cardId) {
         const post= await fetch('/notebridge/api/posts/' + cardId);
 
         const postData= await post.json();
+
+        editPostModal.querySelector("#titleInput").value=postData.title;
+        editPostModal.querySelector("#descriptionInput").value=postData.description;
+        editPostModal.querySelector("#locationInput").value=postData.location;
 
 
         cardTitle.innerHTML = `<h3>${postData.title}</h3>`;

@@ -29,6 +29,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Path("/posts")
 public class PostRoute {
@@ -42,20 +43,33 @@ public class PostRoute {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPosts(
-			@QueryParam("pageSize") Integer pageSize,
+			@QueryParam("pageSize")  Integer pageSize,
 			@QueryParam("pageNumber") Integer pageNumber,
 			@QueryParam("sortBy") String sortBy,
-			@QueryParam("reverse") @DefaultValue("true") boolean reverse,
 			@QueryParam("personId") Integer personId,
-			@QueryParam("search") String search
+			@QueryParam("search") String search,
+			@QueryParam("filterBy") String filterBy
 	) {
 		try {
 			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
 			int pn = pageNumber > 0 ? pageNumber : 1;
-			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, reverse, personId,search).toArray(new PostDto[0]);
+
+			StringBuilder query = new StringBuilder();
 
 
-			int total = PostDao.INSTANCE.getTotalPosts(personId,search);
+			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, personId,search,filterBy,query).toArray(new PostDto[0]);
+
+			//Changing json_agg(t) to COUNT in order to get total posts query
+			String s = "json_agg(t)";
+			String r = "COUNT(t)";
+			int start = query.indexOf(s);
+			while (start != -1) {
+				int end = start + s.length();
+				query.replace(start, end, r);
+				start = query.indexOf(s, start + r.length());
+			}
+
+			int total = PostDao.INSTANCE.getTotalPosts(query.toString());
 
 
 			return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();

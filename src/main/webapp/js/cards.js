@@ -45,12 +45,17 @@ function loadMore(){
 
 window.onload = function() {
 
-    fetchPosts(pageSize,pageNumber,searchValue);
+    fetchPosts(pageSize,pageNumber);
     checkLoggedIn();
 }
 
-function fetchPosts(pageSize,pageNumber,searchValue) {
-    fetch(`/notebridge/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${searchValue}`)
+function fetchPosts(pageSize,pageNumber) {
+    requestedUrl = `/notebridge/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if(window.location.href.includes("?")){
+        requestedUrl+=`&${window.location.href.substring(window.location.href.indexOf("?")+1)}`;
+    }
+
+    fetch(requestedUrl)
         .then(res => res.json())
         .then(data => {
             totalNumberOfCards=data.meta.total;
@@ -112,10 +117,29 @@ function selectCard(card) {
     window.location.href = 'card-details.html?id=' + cardId;
 }
 
-function sortBy(sort) {
-
+function sortBy(element) {
+    if(!window.location.href.includes("?") || window.location.href.includes("search")){
+        window.location.href=`?sortBy=${element.dataset.sortBy}`;
+    }else if(window.location.href.includes("sortBy")){
+        let baseUrl = window.location.href.split("?")[0]; // Get the base URL without query parameters
+        let queryParams = new URLSearchParams(window.location.search);
+        queryParams.set('sortBy', element.dataset.sortBy); // Update sortBy parameter value
+        window.location.href = `${baseUrl}?${queryParams.toString()}`;
+    }else{
+        window.location.href+=`&sortBy=${element.dataset.sortBy}`;
+    }
 }
 
-function filterBy(filter) {
+function filterBy(element) {
+    if(!window.location.href.includes("?")){
+        window.location.href=`?filterBy=${element.dataset.filterBy}`;
+    }else if(window.location.href.includes("filterBy")){
+        let baseUrl = window.location.href.split("?")[0]; // Get the base URL without query parameters
+        let queryParams = new URLSearchParams(window.location.search);
+        queryParams.set('filterBy', element.dataset.filterBy); // Update filterBy parameter value
+        window.location.href = `${baseUrl}?${queryParams.toString()}`;
 
+    }else{
+        window.location.href+=`&filterBy=${element.dataset.filterBy}`;
+    }
 }

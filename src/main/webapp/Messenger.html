@@ -69,7 +69,7 @@
     <div id="contactsHolder" class="contacts ib">
         <div style="display: flex;flex-direction: column;">
             <div class="contact">
-                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#contactModal" style="float: right; height: 100%; width: 100%;">
+                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#contactModal" style="float: right; height: 100%; width: 100%;">
                     New Contact
                 </button>
             </div>
@@ -87,8 +87,8 @@
         </div>
         <div class="g-0">
             <form id='newMessage' class="d-flex">
-                <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: #34A1FD">
-                <button class="btn btn-outline-info" type="submit" id="but" >Send</button>
+                <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: white" >
+                <button class="btn" type="submit" id="but" style="background-color: rgba(17, 24, 39, 255);color: white">Send</button>
             </form>
         </div>
     </div>
@@ -177,7 +177,7 @@
     function countUnreadMessages(id){
         let count=0;
         for(let message in messages){
-            if (message.messagehistory_id===id && message.user_id!==userID && message.isread===false){
+            if (message.user_id!==userID && message.isread===false){
                 count++;
             }
         }
@@ -187,7 +187,7 @@
     function updateSeenMessages(){
         let unreadmessages=[];
         for (let i = 0; i < messages['data'].length; i++) {
-            if (messages['data'][i].messagehistory_id===selectedContact && messages['data'][i].user_id!==userID && messages['data'][i].isread===false){
+            if (messages['data'][i].user_id!==userID && messages['data'][i].isread===false){
                 unreadmessages.push(messages['data'][i].id);
             }
         }

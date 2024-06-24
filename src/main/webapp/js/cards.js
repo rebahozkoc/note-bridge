@@ -8,6 +8,7 @@ let totalNumberOfCards=0;
 let searchValue = decodeURIComponent(GetURLParameter("search"));
 
 
+
 const loadingScreen = document.getElementById("loading-screen");
 const loadMoreButton = document.getElementById("load-more-btn");
 const searchBtn=document.getElementById("search-btn");
@@ -109,4 +110,12 @@ function displayCard(card) {
 function selectCard(card) {
     const cardId = card.getAttribute("data-card-id");
     window.location.href = 'card-details.html?id=' + cardId;
+}
+
+function sortBy(sort) {
+
+}
+
+function filterBy(filter) {
+
 }

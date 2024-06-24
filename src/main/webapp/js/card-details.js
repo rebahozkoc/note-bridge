@@ -17,6 +17,7 @@ const heartIcon = document.getElementById("heart-icon");
 const deleteIcon = document.getElementById("delete-icon");
 const editIcon = document.getElementById("edit-icon");
 const interestButton = document.getElementById("interested-button");
+const sponsorButton = document.getElementById("sponsor-button");
 const postCreateDateSpan = document.getElementById("post-create-date");
 const postLastUpdateDateSpan = document.getElementById("post-lastupdate-date");
 const listOfUsernames = document.getElementById("list-of-usernames");
@@ -200,8 +201,16 @@ function getAuthor(userId,role) {
             if(role==="person"){
                 displayInterestedButton(userId, data.id ,data.personId);
 
+            } else if (role === "sponsor"){
+                displaySponsorButton();
             }
         })
+}
+
+function displaySponsorButton() {
+    sponsorButton.innerHTML = `
+       <a class="btn btn-primary" href="#" role="button">Sponsor Post</a>
+    `
 }
 
 function checkPostBelongsToUser(userId, author) {
@@ -254,6 +263,7 @@ function displayInterestedButton(userId, postId,author) {
 
     }
 }
+
 function toggleInterest(element){
     const postId=element.dataset.postId;
 

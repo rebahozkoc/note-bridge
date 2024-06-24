@@ -4,6 +4,25 @@ body {
     background-size: cover;
     overflow: hidden;
 }
+
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.input-wrapper input {
+    padding-right: 40px;
+}
+
+.input-wrapper button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 #particles-js canvas {
     display: block;
     vertical-align: bottom;
@@ -27,6 +46,7 @@ body {
 .header{
     background: white;
     height: 7vh;
+    width: 100%;
 }
 
 

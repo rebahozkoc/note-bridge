@@ -63,9 +63,11 @@ public enum InstrumentDao {
 
 	public PersonInstrument addPersonInstrument(PersonInstrument personInstrument) throws SQLException {
 		String sql = """
-				INSERT INTO personinstrument(personid,instrumentname,yearsofexperience)
-				    VALUES(?,?,?)
-				    """;
+							INSERT INTO personinstrument(personid,instrumentname,yearsofexperience)
+							VALUES(?,?,?)
+							ON CONFLICT (personid, instrumentname)
+						    DO UPDATE SET yearsofexperience = EXCLUDED.yearsofexperience
+				""";
 
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {

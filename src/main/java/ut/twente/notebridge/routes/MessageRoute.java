@@ -2,11 +2,10 @@ package ut.twente.notebridge.routes;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import ut.twente.notebridge.dao.MessageDao;
-import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.MessageHistory;
@@ -18,29 +17,33 @@ public class MessageRoute {
     @GET
     @Path("/contact/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ResourceCollection<BaseUser> getContacts(
+    public Response getContacts(
             @QueryParam("sortBy") String sortBy,
             @QueryParam("pageSize") int pageSize,
             @QueryParam("pageNumber") int pageNumber,
             @PathParam("id") String id
     ){
-        int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
-        int pn = pageNumber > 0 ? pageNumber : 1;
-        var resources = MessageDao.INSTANCE.getContacts(ps, pn, sortBy, id).toArray(new BaseUser[0]);
-        var total = MessageDao.INSTANCE.getTotalMessages();
+        try{
+            int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
+            int pn = pageNumber > 0 ? pageNumber : 1;
+            var resources = MessageDao.INSTANCE.getContacts(ps, pn, sortBy, id).toArray(new BaseUser[0]);
+            var total = MessageDao.INSTANCE.getTotalMessages();
 
-        return new ResourceCollection<>(resources, ps, pn, total);
+            return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
-    @PUT
-    @Path("/newhistory{user1}/{user2}")
+    @POST
+    @Path("/newhistory/{user1}/{user2}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void newMessageHistory(@PathParam("user1") String user1, @PathParam("user2") String user2) {
+    public MessageHistory newMessageHistory(@PathParam("user1") String user1, @PathParam("user2") String user2) {
         MessageHistory mh=new MessageHistory();
         mh.setUser1(user1);
         mh.setUser2(user2);
-        MessageDao.INSTANCE.create(mh);
+        return MessageDao.INSTANCE.create(mh);
     }
 
     @POST
@@ -61,10 +64,11 @@ public class MessageRoute {
     }
 
     @DELETE
-    @Path("/deletemessage/{id}")
-    public void deleteMessage(@PathParam("id") int id) {
+    @Path("/deletemessage/{user_id}/{timestamp}/{content}")
+    public void deleteMessage(@PathParam("user_id") int id, @PathParam("timestamp") String timestamp,@PathParam("content") String content) {
         try{
-            MessageDao.INSTANCE.deleteMessage(id);
+            content=URLDecoder.decode(content, StandardCharsets.UTF_8);
+            MessageDao.INSTANCE.deleteMessage(id,timestamp,content);
 
         } catch (Exception e) {
             throw new NotFoundException("Message '" + id + "' not found!");
@@ -74,18 +78,22 @@ public class MessageRoute {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/messages/{user1}/{user2}")
-    public ResourceCollection<Message> getMessages(
+    public Response getMessages(
             @QueryParam("sortBy") String sortBy,
             @QueryParam("pageSize") int pageSize,
             @QueryParam("pageNumber") int pageNumber,
             @PathParam("user1") String user1,
             @PathParam("user2") String user2
     ){
-        int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
-        int pn = pageNumber > 0 ? pageNumber : 1;
-        var resources = MessageDao.INSTANCE.getMessages(ps, pn, sortBy, user1, user2).toArray(new Message[0]);
-        var total = MessageDao.INSTANCE.getTotalMessages();
+        try{
+            int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
+            int pn = pageNumber > 0 ? pageNumber : 1;
+            var resources = MessageDao.INSTANCE.getMessages(ps, pn, sortBy, user1, user2).toArray(new Message[0]);
+            var total = MessageDao.INSTANCE.getTotalMessages();
 
-        return new ResourceCollection<>(resources, ps, pn, total);
+            return Response.ok().entity(new ResourceCollection<>(resources, ps, pn, total)).build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 }

@@ -133,4 +133,26 @@ public enum PersonDao {
 
 		return updated;
 	}
+
+	public Integer getID(String username) {
+		String sql = "SELECT id FROM baseuser WHERE username=?";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setString(1, username);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt(1);
+
+			} else {
+				//no rows returned, post with that id does not exist
+				throw new NotFoundException();
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting id");
+		}
+	}
+
 }

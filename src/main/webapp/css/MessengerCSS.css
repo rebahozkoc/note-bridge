@@ -32,21 +32,17 @@ body {
 
 .ib {
     border: 1px solid #ccc;
-    display: table-cell;
+    display: inline-block;
 }
 
 .contactAndChat{
-    display: table;
+    display: flex;
     width: 100%;
 }
 .chat{
     /*float:left; display:inline; width: 75%;*/
     /*position: relative;*/
     width: 73.8%;
-}
-.row {
-    position: relative;
-    display: flex;
 }
 #navbar{
     display: table;
@@ -65,6 +61,7 @@ body {
 .message{
     border-radius: 25px;
     background-color: #34A1FD;
+    width: fit-content;
     max-height: fit-content;
     max-width: 30vh;
     color: #201d1d;
@@ -73,21 +70,23 @@ body {
 .left{
     align-self: flex-start;
     margin-bottom: 0.3vh;
+    display: grid;
 }
 .right{
     align-self: flex-end;
     margin-right: 0.5vh;
+    display: grid;
 }
 .contacts{
     background:white;
     padding: 1px;
     width: 25.7%;
-    height: 89vh;
+    height: 90.3vh;
     overflow-y: scroll;
 }
 .contact{
     border-radius: 5px;
-    margin: 5px;
+    margin: 0.7vh;
     box-shadow: 2px 2px grey;
 }
 /* width */

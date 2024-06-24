@@ -5,14 +5,18 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
+import ut.twente.notebridge.dto.PostDto;
+import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.model.Person;
 
+import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -153,6 +157,41 @@ public enum PersonDao {
 			e.printStackTrace();
 			throw new RuntimeException("Error while getting id");
 		}
+	}
+
+	public List<PostDto> getInterestedPosts(int personId){
+		String sql= """
+				SELECT json_agg(t) FROM(SELECT p.*
+				FROM post p, personinterestedinpost i
+				WHERE p.id=i.postid AND i.personid=?) t;
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, personId);
+			ResultSet rs = statement.executeQuery();
+			//Since we get json_agg column, in case there is no instance we return null value for our json
+			if (rs.next()) {
+				String json = rs.getString(1);
+				if(json== null){
+					return new ArrayList<>();
+				}else{
+					ObjectMapper mapper = JsonMapper.builder()
+							.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+							.build();
+
+					List<PostDto> posts =Arrays.asList(mapper.readValue(json, PostDto[].class));
+					for (PostDto post : posts) {
+						post.setImage(PostDao.INSTANCE.getFirstImage(post.getId()));
+					}
+					return posts;
+				}
+			}else{
+				throw new SQLException();
+			}
+		} catch (SQLException | JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while getting interested posts");
+		}
+
 	}
 
 }

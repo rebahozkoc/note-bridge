@@ -172,4 +172,16 @@ public class PersonRoute {
 		return Response.status(Response.Status.OK).entity(PersonDao.INSTANCE.getID(username)).build();
 	}
 
+	@GET
+	@Path("{id}/interestedposts")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInterestedPosts(@PathParam("id") int id) {
+		try{
+			return Response.status(Response.Status.OK).entity(PersonDao.INSTANCE.getInterestedPosts(id)).build();
+
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
 }

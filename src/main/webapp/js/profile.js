@@ -5,6 +5,8 @@ const descriptionElement=document.getElementById("description");
 const emailElement=document.getElementById("email");
 const phoneNumberElement=document.getElementById("phone-number");
 const profilePicture= document.getElementById("current-profile-picture");
+const carouselInterestedPosts=document.getElementById("interestedPostsCarousel");
+const innerCarousel=carouselInterestedPosts.querySelector(".carousel-inner");
 
 const loadingScreen=document.getElementById("loading-screen");
 
@@ -340,6 +342,7 @@ function loadUserData(){
                     .then(data => {
 
                         loadModalDataPerson(data);
+                        getInterestedPosts(data.id);
 
                         const createDate = new Date(parseInt(data.createDate));
                         const formattedDate = createDate.toLocaleDateString();
@@ -402,4 +405,112 @@ function loadUserImage(){
             console.error("Error", error.toString());
             loadingScreen.style.display="none";
         });
+}
+
+
+function getInterestedPosts(personId){
+    fetch("/notebridge/api/persons/" + personId + "/interestedposts")
+        .then(res =>{
+            if(res.status===200) {
+                return res.json();
+            }else{
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        }).then(data => {
+            if(data.length!==0){
+                displayInterestedPosts(data);
+            }
+        }).catch(error=>{
+            console.error("Error", error.toString());
+
+        })
+}
+
+function displayInterestedPosts(data){
+    carouselInterestedPosts.parentNode.style.display="block";
+    if(data.length<=3) {
+        for(card of data){
+            appendActiveCarousel(card);
+
+        }
+        const nextPrevIcons=carouselInterestedPosts.querySelectorAll("a");
+        for(icon of nextPrevIcons){
+            icon.style.display="none";
+        }
+    }else{
+        let i=0;
+        for(i;i<3;i++){
+            appendActiveCarousel(data[i]);
+        }
+        while(i+3<=data.length){
+            appendRegularCarousel(data.slice(i,i+3));
+            i+=3;
+
+        }
+        appendRegularCarousel(data.slice(i));
+    }
+}
+
+function selectCard(card) {
+    const cardId = card.getAttribute("data-card-id");
+    window.location.href = 'card-details.html?id=' + cardId;
+}
+function appendActiveCarousel(card){
+    const activeCarousel=innerCarousel.querySelector(".active");
+
+    if(!card.hasImage){
+        imageSource="assets/images/placeholder.jpg";
+    }else{
+        imageSource="data:image/png;base64,";
+        imageSource += card.image;
+    }
+
+    activeCarousel.innerHTML += `
+                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 27rem; margin: 35px 15px 15px;" id="displayed-card">
+                    <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
+                    <div class="card-body">
+                        <h5 class="card-title">${card.title}</h5>
+                        <p class="card-text">${card.description}</p>
+                        <p class="card-text">Event type: ${card.eventType}</p>
+                        <p class="card-text">Location: ${card.location}</p>
+                    </div>
+                </div>
+                            `;
+
+
+}
+function appendRegularCarousel(cards) {
+    if(cards.length!==0){
+        const regularCarousel=document.createElement("div");
+        regularCarousel.classList.add("carousel-item");
+        regularCarousel.style.display="flex";
+        regularCarousel.style.justifyContent="center";
+
+        for(card of cards) {
+            if (!card.hasImage) {
+                imageSource = "assets/images/placeholder.jpg";
+            } else {
+                imageSource="data:image/png;base64,";
+                imageSource += card.image;
+            }
+            regularCarousel.innerHTML += `
+                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 27rem; margin: 35px 15px 15px;" id="displayed-card">
+                    <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
+                    <div class="card-body">
+                        <h5 class="card-title">${card.title}</h5>
+                        <p class="card-text">${card.description}</p>
+                        <p class="card-text">Event type: ${card.eventType}</p>
+                        <p class="card-text">Location: ${card.location}</p>
+                    </div>
+                </div>
+                            `;
+        }
+        innerCarousel.appendChild(regularCarousel);
+    }
+
+
+
+
 }

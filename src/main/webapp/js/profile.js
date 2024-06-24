@@ -371,6 +371,8 @@ function loadUserData() {
 
 function loadInstrumentData(personId) {
     // Get Person's instrument interests
+
+    loadInstrumentOptions(personId);
     fetch("/notebridge/api/instruments/persons/" + personId)
         .then(res => {
             if (res.status === 200) {
@@ -433,6 +435,69 @@ function deleteInstrument(name) {
             }
         })
         .catch(error => console.error('Error:', error));
+}
+
+function loadInstrumentOptions(personId) {
+    fetch('/notebridge/api/instruments')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const instrumentSelect = document.getElementById('instrumentSelect');
+            instrumentSelect.innerHTML = ''; // Clear existing options
+
+            data.forEach(instrument => {
+                const option = document.createElement('option');
+                option.value = instrument; // Assuming the API returns an array of objects with a 'name' property
+                option.textContent = instrument;
+                instrumentSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching instrument options:', error);
+        });
+}
+
+function saveInstruments() {
+    const instrumentSelect = document.getElementById('instrumentSelect');
+    const yearsInput = document.getElementById('yearsInput');
+
+    const selectedInstrument = instrumentSelect.value;
+    const yearsOfExperience = yearsInput.value;
+
+    getStatus().
+        then(data => {
+        saveInstrumentData(selectedInstrument, yearsOfExperience, data.userId)
+            .then(response => {
+                if (response.ok) {
+                    // Handle successful save
+                    console.log('Instrument data saved successfully');
+                    // Optionally close the modal
+                    const modalElement = document.getElementById('editInstrumentsModal');
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    modal.hide();
+
+                    // Update the UI with the new data
+                    loadInstrumentData(data.userId);
+                } else {
+                    console.error('Failed to save instrument data');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+}
+
+function saveInstrumentData(instrument, years, personId) {
+    return fetch('/notebridge/api/instruments/persons', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            personId : personId,
+            instrumentName: instrument,
+            yearsOfExperience: years
+        })
+    });
 }
 
 

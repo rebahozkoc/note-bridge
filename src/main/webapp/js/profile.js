@@ -223,19 +223,21 @@ function saveChangesNameLastname(event) {
                 lastname: lastname
             }
         }
-        if (updateUserInformation(updatedInfo)) {
-            alert("Update successful");
-            if (data.role === "sponsor") {
-                nameSurnameSpan.innerHTML = name;
-                nameSurnameSpan.parentNode.nextSibling.innerHTML = `<a href="https://${lastname}" target="_blank">${lastname}</a>`;
-            } else {
-                nameSurnameSpan.innerHTML = name + " " + lastname;
+        updateUserInformation(updatedInfo).then(res => {
+            if (res) {
+                if (data.role === "sponsor") {
+                    nameSurnameSpan.innerHTML = name;
+                    nameSurnameSpan.parentNode.nextSibling.innerHTML = `<a href="https://${lastname}" target="_blank">${lastname}</a>`;
+                } else {
+                    nameSurnameSpan.innerHTML = name + " " + lastname;
 
+                }
+            } else {
+                alert("Update failed")
+                loadUserData();
             }
-        } else {
-            alert("Update failed")
-            loadUserData();
-        }
+        });
+
         nameLastnameModal.querySelector(".btn-close").click();
 
     }).catch(error => {
@@ -248,21 +250,29 @@ function saveChangesNameLastname(event) {
 //Function to save changes in description for CONTACT INFORMATION MODAL
 function saveChangesContactInformation(event) {
     event.preventDefault();
-    const email = contactInformationModal.querySelector("#emailInput").value;
+
+    const email = contactInformationModal.querySelector("#emailInput");
+    if (!email.checkValidity()) {
+        email.classList.add('is-invalid');
+        return;
+    } else {
+        email.classList.remove('is-invalid');
+    }
     const phoneNumber = contactInformationModal.querySelector("#phoneInput").value;
     const updatedInfo = {
-        email: email,
+        email: email.value,
         phoneNumber: phoneNumber
     }
-    if (updateUserInformation(updatedInfo)) {
-        alert("Contact Information updated successfully");
-        emailElement.innerHTML = email;
-        phoneNumberElement.innerHTML = phoneNumber;
-    } else {
-        alert("Contact Information update failed")
-        loadUserData();
-
-    }
+    updateUserInformation(updatedInfo).then(res => {
+        if (res) {
+            alert("Contact Information updated successfully");
+            emailElement.innerHTML = email.value;
+            phoneNumberElement.innerHTML = phoneNumber;
+        } else {
+            alert("Contact Information update failed")
+            loadUserData();
+        }
+    });
     contactInformationModal.querySelector(".btn-close").click();
 }
 
@@ -273,15 +283,15 @@ function saveChangesDescription(event) {
         description: description
 
     }
-    if (updateUserInformation(updatedInfo)) {
-        alert("Description updated successfully");
-        descriptionElement.innerHTML = description;
-
-    } else {
-        alert("Description update failed")
-        loadUserData();
-
-    }
+    updateUserInformation(updatedInfo).then(res => {
+        if (res) {
+            alert("Description updated successfully");
+            descriptionElement.innerHTML = description;
+        } else {
+            alert("Description update failed")
+            loadUserData();
+        }
+    });
     descriptionModal.querySelector(".btn-close").click();
 }
 
@@ -372,7 +382,7 @@ function loadUserData() {
 function loadInstrumentData(personId) {
     // Get Person's instrument interests
 
-    loadInstrumentOptions(personId);
+    loadInstrumentOptions();
     fetch("/notebridge/api/instruments/persons/" + personId)
         .then(res => {
             if (res.status === 200) {
@@ -437,7 +447,7 @@ function deleteInstrument(name) {
         .catch(error => console.error('Error:', error));
 }
 
-function loadInstrumentOptions(personId) {
+function loadInstrumentOptions() {
     fetch('/notebridge/api/instruments')
         .then(response => response.json())
         .then(data => {
@@ -464,8 +474,7 @@ function saveInstruments() {
     const selectedInstrument = instrumentSelect.value;
     const yearsOfExperience = yearsInput.value;
 
-    getStatus().
-        then(data => {
+    getStatus().then(data => {
         saveInstrumentData(selectedInstrument, yearsOfExperience, data.userId)
             .then(response => {
                 if (response.ok) {
@@ -493,7 +502,7 @@ function saveInstrumentData(instrument, years, personId) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            personId : personId,
+            personId: personId,
             instrumentName: instrument,
             yearsOfExperience: years
         })

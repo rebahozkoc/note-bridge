@@ -1,16 +1,16 @@
-.card-body{
+.card-body {
     background-color: rgba(17, 24, 39, 0.8);
     color: rgb(225, 225, 225);
-    box-shadow: rgba(138,62,183,0.3) 1px -5px 40px;
+    box-shadow: rgba(138, 62, 183, 0.3) 1px -5px 40px;
 }
 
-.profile-details-box{
+.profile-details-box {
     margin: 20px auto;
     padding: 20px;
     border-radius: 25px;
     background-color: rgba(17, 24, 39, 0.8);
     color: rgb(225, 225, 225);
-    box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
+    box-shadow: rgba(138, 62, 183, 0.3) 5px 5px 15px;
 }
 
 .profile-header {
@@ -19,7 +19,7 @@
     border-radius: 25px;
     background-color: rgba(17, 24, 39, 0.8);
     color: rgb(225, 225, 225);
-    box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
+    box-shadow: rgba(138, 62, 183, 0.3) 5px 5px 15px;
 }
 
 .profile-details-box h3 {
@@ -69,8 +69,8 @@
     border: none;
 }
 
-.btn-primary:hover{
-    background-color:#0b032e;
+.btn-primary:hover {
+    background-color: #0b032e;
 }
 
 .btn-save {
@@ -90,7 +90,7 @@
     position: relative;
 }
 
-.calendar-header h4{
+.calendar-header h4 {
     flex: 1;
     text-align: left;
 }
@@ -205,7 +205,7 @@
     border-radius: 25px;
     color: #fff;
     background-color: rgba(17, 24, 39, 0.8);
-    box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
+    box-shadow: rgba(138, 62, 183, 0.3) 5px 5px 15px;
 
 }
 
@@ -329,23 +329,33 @@ footer {
     color: #fff;
     cursor: pointer;
     margin-left: 10px;
-    font-size:1.2em;
+    font-size: 1.2em;
 }
 
 .edit-icon:hover {
     color: #ccc;
 }
 
-.account-info{
+.account-info {
     font-size: 0.9em;
     color: #bbb;
     text-align: left;
-    margin-top:10px;
+    margin-top: 10px;
 }
 
-.edit-header-icon{
+.edit-header-icon {
     display: inline-flex;
     align-items: center;
+}
+
+.instrument-item {
+    font-size: 16px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.instrument-item:last-child {
+    border-bottom: none;
 }
 
 

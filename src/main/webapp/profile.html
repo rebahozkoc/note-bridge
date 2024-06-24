@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NoteBridge</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/loadingScreen.css">
@@ -12,31 +13,33 @@
 
 <body class="page-settings">
 
-    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="home.html">
-                <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
-            </a>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a href="cards.html" class="button-cover ms-2 me-3" role="button"><span class="text px-5">Browse Posts</span><span>Browse Posts</span></a>
-                    </li>
-                    <li id="messenger-btn" class="nav-item"></li>
-                    <li class="nav-item">
-                        <a href="home.html#form" class="button-cover" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li id="profile-btn"></li>
-                    <li id="login-btn"></li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
+                aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="home.html">
+            <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href="cards.html" class="button-cover ms-2 me-3" role="button"><span class="text px-5">Browse Posts</span><span>Browse Posts</span></a>
+                </li>
+                <li id="messenger-btn" class="nav-item"></li>
+                <li class="nav-item">
+                    <a href="home.html#form" class="button-cover" role="button"><span
+                            class="text px-5">Contact Us</span><span>Contact Us</span></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li id="profile-btn"></li>
+                <li id="login-btn"></li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
 <main class="container mt-5">
 
@@ -46,15 +49,19 @@
         <p>Loading...</p>
     </div>
     <div class="profile-header text-center mb-4">
-        <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture" class="profile-picture rounded-circle mx-auto d-block mb-3" id="current-profile-picture">
-        <h2><span id="name-surname">Name Surname </span> <button class="btn p-0 edit-header-icon" data-bs-toggle="modal" data-bs-target="#editHeaderModal">
-            <span class="edit-icon">&#9998;</span>
-        </button></h2>
+        <img src="assets/images/profile-picture-placeholder.png" alt="Profile Picture"
+             class="profile-picture rounded-circle mx-auto d-block mb-3" id="current-profile-picture">
+        <h2><span id="name-surname">Name Surname </span>
+            <button class="btn p-0 edit-header-icon" data-bs-toggle="modal" data-bs-target="#editHeaderModal">
+                <span class="edit-icon">&#9998;</span>
+            </button>
+        </h2>
         <p id="username">@username</p>
         <p id="create-date">Account Created On: January 15, 2022</p>
-        <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
+        <button class="btn btn-primary edit-profile-button" id="editProfileBtn" data-bs-toggle="modal"
+                data-bs-target="#editProfileModal">Edit Profile Picture
+        </button>
     </div>
-
 
 
     <div class="profile-details-box">
@@ -83,15 +90,14 @@
         <p id="phone-number">Phone: (123) 456-7890</p>
     </div>
 
-    <div class="profile-details-box">
+    <div class="profile-details-box" id="instrument-box-container">
         <div class="d-flex justify-content-between align-items-center">
             <h3>Instruments Interested In</h3>
             <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editInstrumentsModal">&#9998;</span>
         </div>
-        <ul>
-            <li>Piano</li>
-            <li>Violin</li>
-            <li>Guitar</li>
+
+        <ul id="instrument-box">
+            <li>Loading...</li>
         </ul>
     </div>
 
@@ -101,35 +107,38 @@
         <h3 id="interested-posts-header"> Interested Posts</h3>
 
 
-        <div id="interestedPostsCarousel" class="carousel carousel-fade" >
+        <div id="interestedPostsCarousel" class="carousel carousel-fade">
             <div class="carousel-inner">
-                <div class="carousel-item active"  style="display: flex; justify-content: center">
+                <div class="carousel-item active" style="display: flex; justify-content: center">
 
                 </div>
 
                 <!-- Add more testimonials here -->
             </div>
             <!-- Carousel controls -->
-            <a class="carousel-control-prev" type="button" data-bs-target="#interestedPostsCarousel" data-bs-slide="prev">
+            <a class="carousel-control-prev" type="button" data-bs-target="#interestedPostsCarousel"
+               data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             </a>
-            <a class="carousel-control-next" type="button" data-bs-target="#interestedPostsCarousel" data-bs-slide="next">
+            <a class="carousel-control-next" type="button" data-bs-target="#interestedPostsCarousel"
+               data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
             </a>
         </div>
     </div>
 
 
-
     <!------------------------------------- MODALS -->
 
     <!-- Edit ProfileInfo Modal -->
-    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editHeaderModal" tabindex="-1" aria-labelledby="editHeaderModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editHeaderModalLabel">Edit Name Surname</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-floating">
@@ -148,12 +157,14 @@
         </div>
     </div>
     <!-- Edit Description Modal -->
-    <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editDescriptionModalLabel">Edit Description</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-floating">
@@ -169,12 +180,14 @@
     </div>
 
     <!-- Edit Contact Information Modal -->
-    <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editContactModalLabel">Edit Contact Information</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
@@ -194,12 +207,14 @@
     </div>
 
     <!-- Edit Instruments Modal -->
-    <div class="modal fade" id="editInstrumentsModal" tabindex="-1" aria-labelledby="editInstrumentsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editInstrumentsModal" tabindex="-1" aria-labelledby="editInstrumentsModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editInstrumentsModalLabel">Edit Instruments Interested In</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
@@ -214,17 +229,20 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="false">
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+         aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="editProfileModalLabel">Edit Profile Picture</h1>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="upload-img">
                         <input type="file" name="file" id="file" accept="image/*" class="form-control mb-3">
-                        <img id="img" src="assets/images/profile-picture-placeholder.png" alt="Image preview..." class="profile-picture rounded-circle mt-3">
+                        <img id="img" src="assets/images/profile-picture-placeholder.png" alt="Image preview..."
+                             class="profile-picture rounded-circle mt-3">
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-save btn-primary">Save Changes</button>
                         </div>

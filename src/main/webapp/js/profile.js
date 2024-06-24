@@ -370,7 +370,7 @@ function loadUserData() {
 
 
 function loadInstrumentData(personId) {
-    //Get Person's instrument interests
+    // Get Person's instrument interests
     fetch("/notebridge/api/instruments/persons/" + personId)
         .then(res => {
             if (res.status === 200) {
@@ -378,27 +378,61 @@ function loadInstrumentData(personId) {
             } else {
                 throw new Error("User not found");
             }
-
         })
         .then(data => {
-            console.log(data)
+            console.log(data);
 
             instrumentBox.innerHTML = '';
 
             data.forEach(instrument => {
                 const liElement = document.createElement('li');
+                liElement.setAttribute('data-name', instrument.instrumentName); // Set the data-name attribute
 
-                // Add a class to the li element
+                // Add the instrument-item class to liElement
                 liElement.classList.add('instrument-item');
 
-                liElement.textContent = "Playing " + instrument.instrumentName + " for " + instrument.yearsOfExperience + " years.";
+                // Create a span for the text content
+                const textSpan = document.createElement('span');
+                textSpan.textContent = "Playing " + instrument.instrumentName + " for " + instrument.yearsOfExperience + " years.";
+
+                // Create the trash icon
+                const trashIcon = document.createElement('i');
+                trashIcon.classList.add('fa', 'fa-trash');
+                trashIcon.style.cursor = 'pointer';
+                trashIcon.addEventListener('click', function () {
+                    // Handle the click event on the trash icon
+                    deleteInstrument(instrument.instrumentName);
+                });
+
+                // Append the text span and trash icon to the li element
+                liElement.appendChild(textSpan);
+                liElement.appendChild(trashIcon);
 
                 instrumentBox.appendChild(liElement);
             });
+        })
+        .catch(error => {
+            console.error("Error while trying to fetch another user's data", error.toString());
+        });
+}
 
-        }).catch(error => {
-        console.error("Error while trying to fetch another user's data", error.toString());
+function deleteInstrument(name) {
+    // Make a DELETE request to the server to delete the instrument
+    fetch(`/notebridge/api/instruments/persons/${name}`, {
+        method: 'DELETE',
     })
+        .then(response => {
+            if (response.ok) {
+                // If the deletion was successful, remove the instrument from the list
+                const liElement = document.querySelector('#instrument-box li[data-name="' + name + '"]');
+                if (liElement) {
+                    liElement.remove();
+                }
+            } else {
+                console.error('Failed to delete instrument');
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 

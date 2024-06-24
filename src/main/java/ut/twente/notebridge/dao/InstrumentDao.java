@@ -82,4 +82,18 @@ public enum InstrumentDao {
 			throw new SQLException("Failed to attach instrument to a person", e);
 		}
 	}
+
+	public void deletePersonInstrument(PersonInstrument instrument) {
+		String sql = "DELETE FROM personinstrument WHERE personid=? AND instrumentname=?";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, instrument.getPersonId());
+			statement.setString(2, Security.sanitizeInput(instrument.getInstrumentName()));
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Could not delete person instrument.");
+		}
+	}
+
 }

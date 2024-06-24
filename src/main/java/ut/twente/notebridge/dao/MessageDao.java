@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import jakarta.ws.rs.core.Response;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -75,7 +76,7 @@ public enum MessageDao {
     public void delete(Integer id, Integer user) {
         try {
             PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-					UPDATE notebridge.privatemessagehistory
+					UPDATE privatemessagehistory
 					SET user1 = CASE WHEN user1 = ? THEN NULL ELSE user1 END,
 					user2 = CASE WHEN user2 = ? THEN NULL ELSE user2 END
 					WHERE id = ? AND (user1 = ? OR user2 = ?);
@@ -117,7 +118,7 @@ public enum MessageDao {
     public Message createNewMessage(String contact, Message message) {
         try {
             PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-				INSERT INTO privatemessage(content,createdate,user_id,messagehistory_id)
+				INSERT INTO privatemessage(content,createddate,user_id,messagehistory_id)
 				VALUES(?,current_timestamp(3),?,get_history_id(?,?));
 					""");
             ps.setString(1,message.getContent());
@@ -186,7 +187,27 @@ public enum MessageDao {
         }
     }
 
-    public int getTotalMessages() {
+    public void readMessages(String ids) {
+        String[] idarr = ids.split(",");
+        String sql = "UPDATE privatemessage SET isread=true WHERE ";
+        for (int i = 0; i < idarr.length; i++) {
+            if (i < idarr.length - 1) {
+                sql += " id=" + idarr[i] + " AND ";
+            } else {
+                sql += " id=" + idarr[i];
+            }
+        }
+        try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection()
+                .prepareStatement(sql)) {
+            int affectedRows = statement.executeUpdate();
+            System.out.println("Read " + affectedRows + " messages");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+        public int getTotalMessages() {
         return 0;
     }
 }

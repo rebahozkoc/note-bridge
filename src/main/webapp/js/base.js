@@ -3,6 +3,7 @@ const welcomeMessage = document.getElementById("welcome-message");
 const logInBtn = document.getElementById("login-btn");
 const messengerBtn = document.getElementById("messenger-btn");
 const profileBtn = document.getElementById("profile-btn");
+const myPostsBtn = document.getElementById("myposts-btn");
 
 function pressPianoBtn1() {
     music.innerHTML = addSoundTag("assets/sounds/sound-1.mp3");
@@ -117,11 +118,16 @@ function updateNavbar(loggedIn) {
         profileBtn.innerHTML = `
         <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
         `;
+
+        myPostsBtn.innerHTML = `
+        <a href="cards.html" class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
+        `;
     } else {
         logInBtn.innerHTML = `
         <a href="login.html" id="log-in-btn" class="button-cover ms-2" role="button"><span class="text px-2">Log in</span><span>Log in</span></a>
         `
         messengerBtn.innerHTML = ``;
         profileBtn.innerHTML = ``;
+        myPostsBtn.innerHTML = ``;
     }
 }

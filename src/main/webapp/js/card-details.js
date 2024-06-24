@@ -17,9 +17,13 @@ const heartIcon = document.getElementById("heart-icon");
 const deleteIcon = document.getElementById("delete-icon");
 const editIcon = document.getElementById("edit-icon");
 const interestButton = document.getElementById("interested-button");
+const sponsorButton = document.getElementById("sponsor-button");
 const postCreateDateSpan = document.getElementById("post-create-date");
 const postLastUpdateDateSpan = document.getElementById("post-lastupdate-date");
 const listOfUsernames = document.getElementById("list-of-usernames");
+const confirmDeleteBtn = document.getElementById("confirmDelete");
+const editPostModal = document.getElementById("editPostModal");
+const editPostModalSaveBtn = document.getElementById("saveChangesPost");
 
 const authorImage=document.getElementById("author-img");
 const authorName=document.getElementById("author-name");
@@ -32,7 +36,7 @@ const commentsSection = document.getElementById("comments-section");
 const userImage=document.getElementById("comment-img");
 
 heartIcon.addEventListener("click", toggleLike);
-
+confirmDeleteBtn.addEventListener("click", deletePost);
 
 loadPostDetailsAndLikes(cardId);
 
@@ -43,6 +47,26 @@ window.onload = function() {
     getPostImages();
 }
 
+function deletePost() {
+    fetch(`/notebridge/api/posts/${cardId}`, {
+        method: "DELETE"
+    })
+        .then(res => {
+            if (res.status === 200) {
+                alert("Post deleted successfully!");
+                window.location.href = "cards.html";
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+        })
+        .catch(err => {
+            alert("Error deleting post!");
+            console.error("Error deleting post:", err);
+        });
+
+}
 
 function viewInterested(element){
 
@@ -179,8 +203,16 @@ function getAuthor(userId,role) {
             if(role==="person"){
                 displayInterestedButton(userId, data.id ,data.personId);
 
+            } else if (role === "sponsor"){
+                displaySponsorButton();
             }
         })
+}
+
+function displaySponsorButton() {
+    sponsorButton.innerHTML = `
+       <a class="btn btn-primary" href="#" role="button">Sponsor Post</a>
+    `
 }
 
 function checkPostBelongsToUser(userId, author) {
@@ -189,7 +221,7 @@ function checkPostBelongsToUser(userId, author) {
 
     if(author === userId) {
         deleteIcon.innerHTML = `
-        <button type="button" class="button" style="background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </button>
+        <span class="button"  data-bs-toggle="modal" data-bs-target="#deleteModal" style="cursor: pointer; background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </span>
         `
         editIcon.innerHTML = `
         <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal" style="visibility: visible" id="edit-button">&#9998;</span>
@@ -233,6 +265,7 @@ function displayInterestedButton(userId, postId,author) {
 
     }
 }
+
 function toggleInterest(element){
     const postId=element.dataset.postId;
 
@@ -291,6 +324,10 @@ async function loadPostDetailsAndLikes(cardId) {
         const post= await fetch('/notebridge/api/posts/' + cardId);
 
         const postData= await post.json();
+
+        editPostModal.querySelector("#titleInput").value=postData.title;
+        editPostModal.querySelector("#descriptionInput").value=postData.description;
+        editPostModal.querySelector("#locationInput").value=postData.location;
 
 
         cardTitle.innerHTML = `<h3>${postData.title}</h3>`;

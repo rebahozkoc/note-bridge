@@ -7,119 +7,170 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/MessengerCSS.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/home.css">
     <title>Note-Bridge</title>
 </head>
-<body id="top-background" class="page-settings">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <div id="particles-js"> </div>
+<body id="top-background" class="page-settings" style="background-color: lightblue">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="home.html">
-                <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
-            </a>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <button type="button" class="card-btn mt-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"><img src="assets/images/piano-icon.jpg" width="35px" height="35px"></button>
-                    </li>
-                    <li class="nav-item">
-                        <a href="cards.html" class="button-cover ms-2 me-3" role="button"><span class="text px-5">Browse Posts</span><span>Browse Posts</span></a>
-                    </li>
-                    <li id="messenger-btn" class="nav-item">
-                        <a href="Messenger.html" class="button-cover me-3" role="button"><span class="text px-5">Messenger</span><span>Messenger</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#feedback-form-container" class="button-cover" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li id="profile-btn">
-                        <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
-                    </li>
-                    <li id="login-btn"></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="offcanvas offcanvas-bottom rounded-4" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-        <div class="offcanvas-body d-flex bg-dark rounded-3">
-            <button class="btn btn-light white-block rounded-start-2" onclick="pressPianoBtn1()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn2()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn3()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn4()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn5()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn6()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn7()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn8()"></button>
-            <button class="btn btn-light white-block rounded-end-2"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 5.5vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 14vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 29.5vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 45vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 53vh"></button>
+<nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="home.html">
+            <img src="assets/images/NoteBridge.png" alt="Note-Bridge" id="logo">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <button type="button" class="card-btn mt-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"><img src="assets/images/piano-icon.jpg" width="35px" height="35px"></button>
+                </li>
+                <li class="nav-item">
+                    <a href="cards.html" class="button-cover ms-2 me-3" role="button"><span class="text px-5">Browse Posts</span><span>Browse Posts</span></a>
+                </li>
+                <li id="myposts-btn" class="nav-item"></li>
+                <li id="messenger-btn" class="nav-item">
+                    <a href="Messenger.html" class="button-cover me-3" role="button"><span class="text px-5">Messenger</span><span>Messenger</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="#feedback-form-container" class="button-cover me-3" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li id="profile-btn">
+                    <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
+                </li>
+                <li id="login-btn"></li>
+            </ul>
         </div>
     </div>
+</nav>
+
+<div class="offcanvas offcanvas-bottom rounded-4" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-body d-flex bg-dark rounded-3">
+        <button class="btn btn-light white-block rounded-start-2" onclick="pressPianoBtn1()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn2()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn3()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn4()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn5()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn6()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn7()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn8()"></button>
+        <button class="btn btn-light white-block rounded-end-2"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 5.5vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 14vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 29.5vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 45vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 53vh"></button>
+    </div>
+</div>
+
 <div class="contactAndChat">
     <div id="contactsHolder" class="contacts ib">
-        <ul id='contacts' class="list-group"></ul>
-    </div>
-    <div class="chat ib">
-        <div class="row g-0">
-            <div class="header grid-container ">
-                <span id="contactName" style="font: 35px 'Arial Black';color: #201d1d;"></span>
-                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; height: 100%;">
-                    Invite +
+        <div style="display: flex;flex-direction: column;">
+            <div class="contact">
+                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#contactModal" style="float: right; height: 100%; width: 100%;">
+                    New Contact
                 </button>
             </div>
-            <div id="messageBox" class="chat-box g-0">
+            <ul id='contacts' class="list-group"></ul>
+        </div>
+    </div>
+    <div class="chat ib">
+        <div class="header container " style="background-color: rgb(17, 24, 39); width: 100%; height: 75px">
+            <div class="row" >
+                <div class="col-1">
+                    <img src="assets/images/user-icon.png" id="contact-img" class="img-fluid mb-2 grid-item" alt="contact" style="margin: 15px; height: 35px; width: 35px; background-color: transparent">
+
+                </div>
+                <div class="col-9">
+                    <h6 class="mb-2 gird-item" id="contactName" style="color: white; margin-top: 20px">Username</h6>
+
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-outline-light grid-item" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; height: 100%; margin-top: 15px" onclick="loadPosts()">
+                        Invite +
+                    </button>
+
+                </div>
 
             </div>
-            <div class="g-0">
-                <form id='newMessage' class="d-flex">
-                    <input id="message" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: #34A1FD">
-                    <button class="btn btn-outline-info" type="submit" id="but" >Send</button>
-                </form>
-            </div>
+        </div>
+        <div id="messageBox" class="chat-box g-0">
+        </div>
+        <div class="g-0">
+            <form id='newMessage' class="d-flex">
+                <div class="input-wrapper" style="width: 100%; margin-left: 10px; margin-right: 10px; ">
+                    <input id="message" autocomplete="off" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: white;" >
+                    <button class="btn" type="submit" id="but" style="color: white"><img src="assets/images/send.png" alt="send"> </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sponsor this person</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Invite this person to one of your Events</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <label for="input-event">Choose event</label>
+                <div class="input-group mb-3" id="input-event">
+                    <select class="form-select" id="inputGroupSelect">
+                        <option selected>No events to invite to</option>
+
+                    </select>
+                </div>
                 <form>
-                    <label for="sponsor_description">Describe your Proposition for sponsorship</label>
-                    <textarea class="form-control" id="sponsor_description" rows="3" placeholder="Proposition"></textarea>
-                </form>
-                <form>
-                    <label for="amount_of_money">Proposed amount in euro</label>
-                    <textarea class="form-control" id="amount_of_money" rows="1"></textarea>
+                    <label for="sponsor_description">Send a message</label>
+                    <textarea class="form-control" id="sponsor_description" rows="1" placeholder="Message"></textarea>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send Sponsor Message</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="newInvite()">Send Invite</button>
             </div>
         </div>
     </div>
 </div>
-    <script src="js/particles.js"></script>
-    <script src="js/app.js"></script>
-    <audio controls id="music"></audio>
-    <script src="js/base.js"></script>
+
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Add a new contact</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label for="usernameContact">Username</label>
+                    <textarea class="form-control" id="usernameContact" rows="1" placeholder="Message"></textarea>
+                </form>
+                <form>
+                    <label for="newContactMessage">Want to send a first message?</label>
+                    <textarea class="form-control" id="newContactMessage" rows="1" placeholder="Message"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="newContact()">Add Contact</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/app.js"></script>
+<audio controls id="music"></audio>
+<script src="js/base.js"></script>
 <script>
     let contacts = {};
     let messages = {};
+    let posts = {};
+    let userID=null;
     let selectedContact=null;
     const contactElement=document.getElementById("contacts");
     const messageElement=document.getElementById("messageBox");
@@ -140,6 +191,124 @@
 
     setInterval(fetchContacts, 2000);
 
+    function countUnreadMessages(id){
+        let count=0;
+        for(let message in messages){
+            if (message.user_id!==userID && message.isread===false){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    function updateSeenMessages(){
+        let unreadmessages=[];
+        for (let i = 0; i < messages['data'].length; i++) {
+            if (messages['data'][i].user_id!==userID && messages['data'][i].isread===false){
+                unreadmessages.push(messages['data'][i].id);
+            }
+        }
+        console.log(unreadmessages);
+        if (!(!Array.isArray(unreadmessages) || !unreadmessages.length)) {
+            let unreadmessagesString = unreadmessages.toString();
+            console.log(unreadmessagesString);
+            let encodedReadMessages = encodeURIComponent(unreadmessagesString);
+            fetch(`/notebridge/api/message/readmessages/${encodedReadMessages}`, {method: "PUT"})
+                .then(r => {
+
+                })
+                .catch(err => {
+                    console.error(`Unable to read messages: ${err.status}`);
+                    console.error(err);
+                })
+        }
+    }
+
+    function loadPosts(){
+        fetch(`/notebridge/api/posts/person/${userID}`, {method: "GET"})
+            .then(res => res.json())
+            .then(data => {
+                posts=data;
+                fillPosts();
+            })
+    }
+
+    function fillPosts(){
+        let inputElement=document.getElementById("inputGroupSelect");
+        console.log(posts);
+        inputElement.innerHTML = `
+                ${posts.map(post => `${inputPosts(post)}`).join("\n")}`
+    }
+
+    function inputPosts(post){
+        let p=post.title+"-"+post.eventType+"-"+post.id;
+        return`
+        <option value="${p}">${post.title} (Type: ${post.eventType}) </option>
+        `
+    }
+
+    function newInvite(){
+        let content=document.getElementById("sponsor_description").value;
+        let post=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-1];
+        let tag=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-2];
+        let title=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-3];
+        let postLink= 'card-details.html?id=' + post;
+        getStatus()
+            .then(data => {
+                let dataObject = {};
+                let message = content+"-"+title+"-"+tag+"-"+postLink;
+                dataObject.user_id = data.userId;
+                dataObject.content = message;
+                let encodedMessage = encodeURIComponent(message);
+                fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${encodedMessage}`, {
+                    method: "POST",
+                    body: JSON.stringify(dataObject),
+                    headers: {
+                        "Content-type": "application/json"
+                    }
+                }).then(r => {
+                    document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
+                    loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
+                })
+            })
+
+    }
+
+    function newContact() {
+        const username = document.getElementById("usernameContact").value;
+        const message = document.getElementById("newContactMessage").value;
+        let dataObject = {};
+        getStatus()
+            .then(data => {
+                fetch(`/notebridge/api/persons/getid/${username}`, {method: "GET"})
+                    .then(res => res.json()
+                        .then(res2=>{
+                            fetch(`/notebridge/api/message/newhistory/${res2}/${data.userId}`, {method: "POST"})
+                                .then(res4 => {
+                                    fetchContacts();
+                                    selectedContact = res2;
+                                }).then(res5 => {
+                                if (message !== undefined) {
+                                    dataObject.user_id = data.userId;
+                                    dataObject.content = message;
+                                    let encodedMessage = encodeURIComponent(message);
+                                    fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${encodedMessage}`, {
+                                        method: "POST",
+                                        body: JSON.stringify(dataObject),
+                                        headers: {
+                                            "Content-type": "application/json"
+                                        }
+                                    }).then(r => {
+                                        document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
+                                        loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
+                                    })
+                                }
+                            })
+                        })
+                    )
+            })
+
+    }
 
     function loadMessages(id, username) {
         if (selectedContact === null) {
@@ -198,28 +367,38 @@
                 fetch(`/notebridge/api/message/contact/${data.userId}`, {method: "GET"})
                     .then(res => res.json())
                     .then(data2 => {
-                        let id=data.userId;
-                        contacts = data2;
-                        showContacts();
-                        loadMessages(id,data.username);
+                        userID=data.userId;
+                        noChangeInContacts(data2);
+                        loadMessages(userID,data.username);
                     })
                     .catch(err => {
                         console.error(`Unable to fetch contacts: ${err.status}`);
                         console.error(err);
+                        contactElement.innerHTML=`
+                        <p>No contacts found</p>
+                        `
                     });
-        })
+            })
     }
 
     function fetchMessages(x, id, username){
-                fetch(`/notebridge/api/message/messages/${x}/${id}`, {method: "GET"})
-                    .then(res => res.json())
-                    .then(data => {
-                        noChangeInMessages(data,id,username);
-                    })
-                    .catch(err => {
-                        console.error(`Unable to fetch messages: ${err.status}`);
-                        console.error(err);
-                    })
+        fetch(`/notebridge/api/message/messages/${x}/${id}`, {method: "GET"})
+            .then(res => res.json())
+            .then(data => {
+                noChangeInMessages(data,id,username);
+            }).then(r=>{
+            updateSeenMessages();
+        }).catch(err => {
+            console.error(`Unable to fetch messages: ${err.status}`);
+            console.error(err);
+        })
+    }
+
+    function noChangeInContacts(newContacts){
+        if (JSON.stringify(newContacts)!==JSON.stringify(contacts)){
+            contacts = newContacts;
+            showContacts();
+        }
     }
 
     function noChangeInMessages(newMessages, id ,username){
@@ -243,48 +422,106 @@
         }
     }
 
+
+    function takeToCard(postLink){
+        window.location.href=postLink;
+    }
+
     function showMessageLeft(message){
         let time=message.createddate;
         const date = new Date(time);
         const formatter = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit'});
         const formattedTime = formatter.format(date);
         let username=getUsername(message.user_id);
-        return`
+        if (message.content.includes("-card-details.html?id=")){
+            let post_id=message.content.split("-card-details.html?id=")[message.content.split("-card-details.html?id=").length-1];
+            let tag=message.content.split("-")[message.content.split("-").length-3];
+            let title=message.content.split("-")[message.content.split("-").length-4];
+            let postLink="card-details.html?id="+post_id;
+            let content=message.content.replace("-"+title+"-"+tag+"-"+postLink,"");
+
+            return `
+            <div class="left">
+            <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
+            <div class="dropup-center dropup message" style="justify-self: right">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%" value="${message.content}">
+                    ${username} has invited you to their event:
+                    <h1>${title}</h1>
+                    <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
+                    ${content}
+                </button>
+                <input type="hidden" value=${message.createddate}>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" onclick="takeToCard('${postLink}')">Open Link</a></li>
+                </ul>
+            </div>
+                <p style="color: white;text-align: right;">${formattedTime}</p>
+            </div>
+            `
+        }else {
+            return `
          <div class="left">
          <p style="color: white;text-align: left; margin: 0;padding: 0;">${username}</p>
-         <div class="dropup-center dropup message">
-            <button class="btn data-toggle disabled" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left">
+         <div class="dropup-center dropup message" style="justify-self: left">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%">
                 ${message.content}
             </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="deleteMessage(this)">Delete</a></li>
-            </ul>
          </div>
          <p style="color: white">${formattedTime}</p>
          </div>
         `
+        }
     }
-    function showMessageRight(message, username){
-        let time=message.createddate;
+    function showMessageRight(message, username) {
+        let time = message.createddate;
         const date = new Date(time);
-        const formatter = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit'});
+        const formatter = new Intl.DateTimeFormat('en-US', {hour: '2-digit', minute: '2-digit'});
         const formattedTime = formatter.format(date);
-        return`
+        if (message.content.includes("-card-details.html?id=")) {
+            let post_id = message.content.split("-card-details.html?id=")[message.content.split("-card-details.html?id=").length - 1];
+            let tag = message.content.split("-")[message.content.split("-").length - 3];
+            let title = message.content.split("-")[message.content.split("-").length - 4];
+            let postLink = "card-details.html?id=" + post_id;
+            let content=message.content.replace("-"+title+"-"+tag+"-"+postLink,"");
+
+            return `
+            <div class="right">
+            <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
+            <div class="dropup-center dropup message" style="justify-self: right">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%" value="${message.content}">
+                    ${username} has invited you to their event:
+                    <h1>${title}</h1>
+                    <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
+                    ${content}
+                </button>
+                <input type="hidden" value=${message.createddate}>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" onclick="deleteMessage(this.parentNode.parentNode.parentNode.parentNode)">Delete</a></li>
+                    <li><a class="dropdown-item" onclick="takeToCard('${postLink}')">Open Link</a></li>
+                </ul>
+            </div>
+                <p style="color: white;text-align: right;">${formattedTime}</p>
+            </div>
+            `
+        } else {
+            return `
          <div class="right">
          <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-         <div class="dropup-center dropup message">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left">
+         <div class="dropup-center dropup message" style="justify-self: right">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%" value="${message.content}">
                 ${message.content}
             </button>
-            <input type="hidden" value=${message.id}>
+            <input type="hidden" value=${message.createddate}>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" onclick="deleteMessage(this.parentNode.parentNode.parentNode.parentNode)">Delete</a></li>
             </ul>
          </div>
-         <p style="color: white">${formattedTime}</p>
+         <p style="color: white;text-align: right;">${formattedTime}</p>
          </div>
         `
+        }
     }
+
 
     function showContact(contact) {
         return `
@@ -328,10 +565,36 @@
 
     })
 
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        let milliseconds = date.getMilliseconds().toString();
+        while (milliseconds.endsWith('0')) {
+            milliseconds = milliseconds.substring(0, milliseconds.length - 1);
+        }
+        const offset = -date.getTimezoneOffset();
+        const timezone = (offset >= 0 ? '+' : '-') +
+            Math.abs(Math.floor(offset / 60)).toString();
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}${timezone}`;
+    }
+
     function deleteMessage(x){
         let idElement=x.querySelector("input[type='hidden']");
-        let id=idElement.value;
-        fetch(`/notebridge/api/message/deletemessage/${id}`, { method: "DELETE" })
+        let timestamp=idElement.value;
+        const date = new Date(parseInt(timestamp));
+        console.log(parseInt(timestamp));
+        let time=formatDate(date);
+        let user_id=userID;
+        let contentElement=x.querySelector("button");
+        let content=contentElement.value;
+        let encodedMessage = encodeURIComponent(content);
+        console.log(content);
+        fetch(`/notebridge/api/message/deletemessage/${user_id}/${time}/${encodedMessage}`, { method: "DELETE" })
             .then(() => {
                 getStatus()
                     .then(data => {

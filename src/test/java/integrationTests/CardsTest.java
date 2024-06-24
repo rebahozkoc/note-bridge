@@ -124,7 +124,6 @@ public class CardsTest {
 
         wait.until(ExpectedConditions.urlContains("http://localhost:8080/notebridge/login.html"));
 
-
         WebElement email = driver.findElement(By.id("email"));
         WebElement pass = driver.findElement(By.id("password"));
         WebElement login = driver.findElement(By.id("login-button"));
@@ -151,9 +150,7 @@ public class CardsTest {
         TimeUnit.SECONDS.sleep(1);
         boolean after = likeBtn.getAttribute("class").contains("bi-heart-fill");
 
-
         assertTrue(initial != after);
-
 
     }
 

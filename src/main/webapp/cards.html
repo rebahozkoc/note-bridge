@@ -31,6 +31,7 @@
           <li class="nav-item">
             <a href="cards.html" class="button-cover ms-2 me-3" role="button"><span class="text px-5">Browse Posts</span><span>Browse Posts</span></a>
           </li>
+          <li id="myposts-btn" class="nav-item"></li>
           <li id="messenger-btn" class="nav-item"></li>
           <li class="nav-item">
             <a href="home.html#feedback-form-container" class="button-cover" role="button"><span class="text px-5">Contact Us</span><span>Contact Us</span></a>
@@ -83,47 +84,37 @@
                     <a href="#" id="search-btn" class="search-icon">
                       <i class="fa fa-search"></i>
                     </a>
-                  </div>
-                </div>
 
-              <!-- Filter buttons -->
-                <div class="row mt-4 g-1 px-4 mb-5">
-                <div class="col-md-2 ms-5">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Jam sessions</span>
-                    </div>
                   </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Music events</span>
-                    </div>
+                  <div class="dropdown" data-bs-theme="dark" style="margin-top: 20px">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                      <img src="assets/images/filter.png" alt="filter" style="width: 20px; height: 20px">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                      <li><span class="mg-text">Filter By</span><li>
+                      <li><a class="dropdown-item" data-filter-by="jam-session" onclick="filterBy(this)">Jam Sessions</a></li>
+                      <li><a class="dropdown-item" data-filter-by="live-event" onclick="filterBy(this)">Live Events</a></li>
+                      <li><a class="dropdown-item" data-filter-by="find-band-member" onclick="filterBy(this)">Find Band Members</a></li>
+                      <li><a class="dropdown-item" data-filter-by="find-instrument" onclick="filterBy(this)">Find Instruments</a></li>
+                      <li><a class="dropdown-item" data-filter-by="music-discussion" onclick="filterBy(this)">Music Discussions</a></li>
+                    </ul>
                   </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Band members</span>
-                    </div>
+
+                  <div class="dropdown" data-bs-theme="dark" style="margin-top: 19px">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                      <img src="assets/images/sort.png" alt="filter" style="width: 25px; height: 25px">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" >
+                      <li><span class="mg-text">Sort By</span><li>
+                      <li><a class="dropdown-item" data-sort-by="latest" onclick="sortBy(this)">Latest</a></li>
+                      <li><a class="dropdown-item" data-sort-by="oldest" onclick="sortBy(this)">Oldest</a></li>
+                      <li><a class="dropdown-item" data-sort-by="mostlikes" onclick="sortBy(this)">Most Likes</a></li>
+                      <li><a class="dropdown-item" data-sort-by="mostinterested" onclick="sortBy(this)">Most Interested</a></li>
+
+                    </ul>
                   </div>
+                  <button type="button" class="button-1 mt-3 ms-3" onclick="window.location.href = 'create-card.html'">Create Post</button>
                 </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Find instruments</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="card-inner p-3 d-flex flex-column align-items-center">
-                    <div class="text-center mg-text">
-                      <span class="mg-text fs-6">Discover more</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -131,7 +122,7 @@
         <!-- Cards -->
         <div id="cards" class="row"></div>
 
-        <button id="load-more-btn" class="button-1 mb-4" style="margin-left: 45%">Load More</button>
+        <button id="load-more-btn" class="button-1 mb-4 mt-3" style="margin-left: 45%">Load More</button>
 
       </div>
       <div class="col-3">

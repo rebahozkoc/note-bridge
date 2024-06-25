@@ -44,9 +44,10 @@ body {
     left: 0
 }
 .header{
-    background: white;
-    height: 7vh;
+    height: 8vh;
     width: 100%;
+    background-color: rgb(17, 24, 39);
+    overflow: auto;
 }
 
 

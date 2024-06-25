@@ -191,15 +191,6 @@
 
     setInterval(fetchContacts, 2000);
 
-    function countUnreadMessages(id){
-        let count=0;
-        for(let message in messages){
-            if (message.user_id!==userID && message.isread===false){
-                count++;
-            }
-        }
-        return count;
-    }
 
     function updateSeenMessages(){
         let unreadmessages=[];
@@ -208,19 +199,17 @@
                 unreadmessages.push(messages['data'][i].id);
             }
         }
-        console.log(unreadmessages);
         if (!(!Array.isArray(unreadmessages) || !unreadmessages.length)) {
-            let unreadmessagesString = unreadmessages.toString();
-            console.log(unreadmessagesString);
-            let encodedReadMessages = encodeURIComponent(unreadmessagesString);
-            fetch(`/notebridge/api/message/readmessages/${encodedReadMessages}`, {method: "PUT"})
-                .then(r => {
-
-                })
-                .catch(err => {
-                    console.error(`Unable to read messages: ${err.status}`);
-                    console.error(err);
-                })
+            for (let i = 0; i < unreadmessages.length; i++) {
+                fetch(`/notebridge/api/message/readmessages/${unreadmessages[i]}`, {method: "PUT"})
+                    .then(r=>{
+                        getUnreadMessagesCount();
+                    })
+                    .catch(err => {
+                        console.error(`Unable to read messages: ${err.status}`);
+                        console.error(err);
+                    })
+            }
         }
     }
 
@@ -374,9 +363,7 @@
                     .catch(err => {
                         console.error(`Unable to fetch contacts: ${err.status}`);
                         console.error(err);
-                        contactElement.innerHTML=`
-                        <p>No contacts found</p>
-                        `
+                        contactElement.innerHTML+=`<p>No contacts found</p>`;
                     });
             })
     }
@@ -522,22 +509,50 @@
         }
     }
 
-
     function showContact(contact) {
-        return `
-<div class="contact">
-<li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)" onclick="loadMessagesForThisUser(this)">
-    ${contact.username}
-    <span class="badge rounded-pill bg-primary">14</span>
-</li>
-</div>
+        let contactElement = `
+        <div class="contact">
+            <li id="${contact.username}" class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)" onclick="loadMessagesForThisUser(this)">
+                ${contact.username}
+            </li>
         `
+        contactElement += `</div>`;
+        return contactElement;
     }
+    setInterval(function () {
+        getUnreadMessagesCount();
+    }, 1000);
 
     function showContacts() {
         contactElement.innerHTML = `
         ${contacts.data.map(contact => `${showContact(contact)}`).join("\n")}
     `;
+    }
+
+    function getUnreadMessagesCount(){
+        for (let i = 0; i < contacts["data"].length; i++) {
+            let contactElement=document.getElementById(contacts["data"][i].username);
+            fetch(`/notebridge/api/message/count/${userID}/${contacts["data"][i].id}`,{method:"GET"})
+                .then(res=>res.json()
+                    .then(data=>{
+                        inputCount(data,contactElement);
+                    })
+                )
+        }
+    }
+
+    function inputCount(data, contactElement){
+        let currentCount = contactElement.querySelector("span");
+        if (data!==0) {
+            if (currentCount === undefined || currentCount===null) {
+                contactElement.innerHTML += `
+                <span class="badge rounded-pill bg-primary">${data}</span>`;
+            }
+        }else{
+            if (currentCount!==null) {
+                contactElement.removeChild(currentCount);
+            }
+        }
     }
 
     const form = document.getElementById("newMessage");

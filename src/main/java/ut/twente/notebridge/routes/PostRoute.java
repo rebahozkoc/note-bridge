@@ -37,9 +37,26 @@ public class PostRoute {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post getPost(@PathParam("id") int id) {
-		return PostDao.INSTANCE.getPost(id);
+	public Response getPost(@PathParam("id") int id) {
+		try{
+			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.getPost(id)).build();
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
+
+
+	@GET
+	@Path("/sponsored")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSponsoredPosts(){
+		try{
+			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.getSponsoredPosts()).build();
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

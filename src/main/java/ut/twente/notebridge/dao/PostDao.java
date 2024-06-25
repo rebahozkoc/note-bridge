@@ -169,6 +169,30 @@ public enum PostDao {
 		return list;
 	}
 
+	public List<PostDto> getSponsoredPosts(){
+		String sql= """
+				SELECT json_agg(t) FROM (SELECT *FROM postdetailed WHERE sponsoredBy IS NOT NULL) t;
+				""";
+		try{
+			PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
+			if (rs.next() && rs.getString("json_agg") != null) {
+				List<PostDto> list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), PostDto[].class));
+				for (PostDto post : list) {
+					post.setImage(getFirstImage(post.getId()));
+				}
+				return list;
+			}else{
+				return new ArrayList<>();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException("Could not get sponsored posts.");
+		}
+
+	}
+
 	public Post getPost(int id) {
 		String sql = "SELECT row_to_json(t) post FROM(SELECT * FROM Post WHERE id=?) t";
 

@@ -82,7 +82,7 @@ public enum PostDao {
 			}
 
 			if (filterBy.equals("jam-session")) {
-				sqlBuilder.append("eventType='jam'\n");
+				sqlBuilder.append("eventType='Jam Session'\n");
 			} else if (filterBy.equals("live-event")) {
 				sqlBuilder.append("eventType='Live Event'\n");
 			} else if (filterBy.equals("find-band-member")) {

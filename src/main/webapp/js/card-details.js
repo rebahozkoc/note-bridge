@@ -798,4 +798,19 @@ function getUser(){
 }
 
 
+function shareOnFacebook() {
+    const url = encodeURIComponent(window.location.href);
+    const title = cardTitle.innerText;
+    const summary = description.innerText;
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?s=100&p[url]=${url}&p[title]=${title}&p[summary]=${summary}&amp;src=sdkpreparse`;
+    //href="https://www.facebook.com/sharer/sharer.php?s=100&p[url]=http://www.example.com&p[images][0]=&p[title]=Title%20Goes%20Here&p[summary]=Description%20goes%20here!"
+    window.open(facebookShareUrl, '_blank');
+}
+
+function shareOnX() {
+    const url = encodeURIComponent(window.location.href);
+    const text = "Take a look at this post on Note-Bridge!";
+    const twitterShareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+    window.open(twitterShareUrl, '_blank');
+}
 

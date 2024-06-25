@@ -537,6 +537,7 @@ function loadUserImage() {
                     if (res.status === 200) {
                         return res.blob();
                     } else {
+                        document.getElementById("img").src = "assets/images/profile-picture-placeholder";
                         return res.text().then(errorText => {
                             throw new Error(`${errorText}`);
                         });

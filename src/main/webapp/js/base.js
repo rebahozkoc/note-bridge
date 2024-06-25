@@ -101,14 +101,15 @@ function checkLoggedIn() {
     })
         .then(res => {
             if (res.status === 200) {
-                updateNavbar(true);
+
                 return res.json().then(data => {
+                    updateNavbar(true,data.role);
                     welcomeMessage.innerHTML = `
                     <h1 class="title text-white fst-italic fs-2 mb-5"><strong>Welcome, ${data.username}</strong>!<br><span class="fs-4">We are delighted to see you as a part of our community.<br>Feel free to discover, interact, and collaborate with other musicians!</span></h1>
                     `;
                 });
             } else {
-                updateNavbar(false);
+                updateNavbar(false,"none");
                 welcomeMessage.innerHTML = `
                 <h1 class="title text-white fst-italic fs-1 mb-5">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
                 `;
@@ -116,7 +117,7 @@ function checkLoggedIn() {
         })
 }
 
-function updateNavbar(loggedIn) {
+function updateNavbar(loggedIn,role) {
     if(loggedIn) {
         logInBtn.innerHTML = `
         <a href="home.html" id="log-out-btn" class="button-cover ms-2" role="button" onclick="logOut()"><span class="text px-2">Log out</span><span>Log out</span></a>
@@ -129,10 +130,12 @@ function updateNavbar(loggedIn) {
         profileBtn.innerHTML = `
         <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
         `;
+        if(role==="person"){
+                myPostsBtn.innerHTML = `
+            <a  class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
+            `;
+        }
 
-        myPostsBtn.innerHTML = `
-        <a  class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
-        `;
     } else {
         logInBtn.innerHTML = `
         <a href="login.html" id="log-in-btn" class="button-cover ms-2" role="button"><span class="text px-2">Log in</span><span>Log in</span></a>

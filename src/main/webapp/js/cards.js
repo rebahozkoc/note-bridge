@@ -11,13 +11,13 @@ let totalNumberOfCards=0;
 const loadingScreen = document.getElementById("loading-screen");
 const loadMoreButton = document.getElementById("load-more-btn");
 const searchBar= document.getElementById("search-bar");
-
+const createPostBtn = document.getElementById("createPostBtn");
 
 loadMoreButton.addEventListener("click", loadMore);
 //Getting status data and modifying URL
 
-
-
+//hides create post button if user is a sponsor OR not logged in
+hideCreatePostBtnIfSponsor();
 
 function loadMore(){
     pageNumber++;
@@ -156,4 +156,15 @@ function searchBy(){
             window.location.href+=`&search=${searchInput}`;
         }
     }
+}
+
+function hideCreatePostBtnIfSponsor(){
+    getStatus().then(data => {
+        if(data.role==="sponsor"){
+            createPostBtn.style.display="none";
+        }
+    }).catch(err => {
+        createPostBtn.style.display="none";
+        console.error(`Unable to fetch status: ${err.status}`);
+    })
 }

@@ -76,10 +76,16 @@ public class MessageRoute {
     }
 
     @PUT
-    @Path("/readmessages/{ids}")
-    public void readMessages(@PathParam("ids") String ids){
-        ids=URLDecoder.decode(ids, StandardCharsets.UTF_8);
-        MessageDao.INSTANCE.readMessages(ids);
+    @Path("/readmessages/{id}")
+    public void readMessages(@PathParam("id") int id){
+        MessageDao.INSTANCE.readMessages(id);
+    }
+
+    @GET
+    @Path("/count/{user}/{contact}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response countUnreadMessages(@PathParam("user") int user, @PathParam("contact") int contact) {
+        return Response.status(Response.Status.OK).entity(MessageDao.INSTANCE.countUnreadMessages(user,contact)).build();
     }
 
     @GET

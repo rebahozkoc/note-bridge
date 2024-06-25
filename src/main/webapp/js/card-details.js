@@ -4,6 +4,7 @@ let postImages = document.getElementById("post-images");
 let images = {};
 
 
+
 const likeCountText= document.getElementById("like-countText");
 const likeCount=document.getElementById("like-count");
 
@@ -33,6 +34,7 @@ const authorCreateDate=document.getElementById("author-createDate");
 const loadingScreen=document.getElementById("loading-screen");
 
 const commentsSection = document.getElementById("comments-section");
+const userImage=document.getElementById("comment-img");
 
 heartIcon.addEventListener("click", toggleLike);
 confirmDeleteBtn.addEventListener("click", deletePost);
@@ -183,7 +185,6 @@ function getUserId() {
                 return res.json().then(data => {
                     getAuthor(data.userId,data.role);
                     showCommentsSection();
-                    loadComments();
                 });
             } else {
                 return res.text().then(errorText => {
@@ -552,29 +553,107 @@ document.addEventListener("DOMContentLoaded", function() {
     loadComments();
 });
 
-function loadComments() {
-    fetch(`/notebridge/api/posts/${cardId}/comments`)
+let commentToDelete = null;
+
+async function loadUserImage(personId) {
+    try {
+        console.log(`Fetching image for personId: ${personId}`);
+        const res = await fetch(`/notebridge/api/persons/${personId}/image`);
+        if (res.status === 200) {
+            const blob = await res.blob();
+            const userUrl = URL.createObjectURL(blob);
+            userImage.src = userUrl;
+            console.log(`Fetched image URL for personId: ${personId} - ${userUrl}`);
+            return userUrl;
+        }  else if (res.status === 404) {
+            console.warn(`Image not found for personId: ${personId}, using default image.`);
+            return 'src/main/webapp/assets/images/profile-picture-placeholder.png'; // default placeholder image
+        } else {
+            const errorText = await res.text();
+            console.error(`Error fetching image for personId: ${personId} - ${errorText}`);
+            throw new Error(errorText);
+        }
+    } catch (error) {
+        console.error("Error", error.toString());
+        return 'src/main/webapp/assets/images/profile-picture-placeholder.png'; // default placeholder image
+    }
+}
+
+async function loadComments() {
+    let currentUser;
+
+    try {
+        const res = await fetch("/notebridge/api/auth/status", { method: "GET" });
+        currentUser = await res.json();
+        console.log("Current user:", currentUser);
+
+        console.log("Fetching comments for cardId:", cardId);
+
+        const commentsRes = await fetch(`/notebridge/api/posts/${cardId}/comments`);
+        if (commentsRes.status !== 200) {
+            const errorText = await commentsRes.text();
+            throw new Error(errorText);
+        }
+
+        const data = await commentsRes.json();
+        const comments = data.comments;
+        for (const comment of comments) {
+            console.log(`Fetching image for comment by personId: ${comment.personId} with Url:`);
+            const userUrl = await loadUserImage(comment.personId);
+            console.log(`Fetching image for comment by personId: ${comment.personId} with Url: ${userUrl}` );
+            addCommentToPage(comment, currentUser, userUrl);
+        }
+    } catch (err) {
+        console.error("Error loading comments:", err);
+    }
+}
+
+function reloadComments() {
+    const commentsContainer = document.getElementById("comments-container");
+    commentsContainer.innerHTML = "";
+    loadComments();
+}
+
+function deleteComment(commentId) {
+    fetch(`/notebridge/api/comments/${commentId}`, {
+        method: "DELETE"
+    })
         .then(res => {
             if (res.status === 200) {
-                return res.json();
+                alert("Comment deleted succesfully.");
+                window.location.href = `card-details.html?id=${cardId}`; //we need to have comment element has an id attribute formatted as comment-{commentId},
+                //document.getElementById(`comment-${commentId}`).remove();
             } else {
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);
                 });
             }
         })
-        .then(data => {
-            const comments = data.comments;
-            comments.forEach(comment => {
-                addCommentToPage(comment);
-            });
-        })
         .catch(err => {
-            console.error("Error loading comments:", err);
+            console.error("Error deleting comment:", err);
         });
 }
 
-function addCommentToPage(comment) {
+function showDeleteConfirmation(commentId) {
+    commentToDelete = commentId;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteCommentModal'));
+    deleteModal.show();
+}
+
+
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    console.log("Confirm delete clicked. Comment ID to delete:", commentToDelete);
+    if (commentToDelete !== null) {
+        deleteComment(commentToDelete);
+        commentToDelete = null;
+        const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteCommentModal'));
+        deleteModal.hide();
+    }
+});
+
+function addCommentToPage(comment, user, userUrl, addToTop = false) {
+    console.log(`Adding comment with id: ${comment.id}  to page: ${comment.content} by user: ${comment.username} with image URL: ${userUrl}`);
+
     const commentsContainer = document.getElementById("comments-container");
     const commentElement = document.createElement("div");
     commentElement.classList.add("comment");
@@ -582,20 +661,37 @@ function addCommentToPage(comment) {
     const formattedDate = new Date(comment.createDate).toLocaleDateString();
     const formattedTime = new Date(comment.createDate).toLocaleTimeString();
 
+    let deleteIconHtml = '';
+    if (user && user.userId === comment.personId) {
+        deleteIconHtml = `<i class="bi bi-eraser delete-icon" onclick="showDeleteConfirmation(${comment.id})" style="cursor:pointer;"></i>`;
+    } else {
+        deleteIconHtml = `<small></small>`;
+    }
+
+
     commentElement.innerHTML = `
         <div class="row mb-2">
             <div class="col-md-2 text-left">
-                <img src="${comment.picture || 'https://via.placeholder.com/50'}" class="img-fluid mb-2" alt="Author" style="width: 50px; height: 50px;">
-                <h6 class="mb-2">@${comment.username}</h6> 
+                <img src="${userUrl}" class="img-fluid rounded-circle mb-2" width="50" height="50" alt="User Image">
+                <h6 class="mb-2">
+                    <a href="profile.html?id=${comment.personId}" class="link-primary">@${comment.username}</a>
+                </h6>
                 <small>${formattedDate} ${formattedTime}</small>
             </div>
             <div class="col-md-10">
                 <p>${comment.content}</p>
+                ${deleteIconHtml}
             </div>
         </div>
     `;
-    commentsContainer.appendChild(commentElement);
+    if (addToTop) {
+        commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
+    } else {
+        commentsContainer.appendChild(commentElement);
+    }
+
 }
+
 
 function submitComment() {
     const commentText = document.getElementById("comment-text").value;
@@ -613,7 +709,9 @@ function submitComment() {
             const comment = {
                 content: commentText,
                 postId: cardId,
-                personId: user.userId
+                personId: user.userId,
+                picture: user.picture
+
             };
 
             return fetch("/notebridge/api/comments", {
@@ -634,13 +732,14 @@ function submitComment() {
             }
         })
         .then(data => {
-            addCommentToPage(data);
             document.getElementById("comment-text").value = "";
+            reloadComments();
         })
         .catch(err => {
             console.error("Error submitting comment:", err);
         });
 }
+
 
 function showCommentsSection() {
     commentsSection.style.display = "block";

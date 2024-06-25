@@ -4,6 +4,7 @@ let postImages = document.getElementById("post-images");
 let images = {};
 
 
+
 const likeCountText= document.getElementById("like-countText");
 const likeCount=document.getElementById("like-count");
 
@@ -40,11 +41,51 @@ confirmDeleteBtn.addEventListener("click", deletePost);
 
 loadPostDetailsAndLikes(cardId);
 
+editPostModalSaveBtn.addEventListener("click", updatePost);
 
 window.onload = function() {
     checkLoggedIn();
     getUserId();
     getPostImages();
+}
+
+function updatePost() {
+    if(document.getElementById("titleInput").value.trim()===""){
+        alert("Title cannot be empty!");
+        return;
+    }
+
+    getStatus().then(data => {
+        fetch(`/notebridge/api/posts/${cardId}`,
+            {method:"PUT",
+                body: JSON.stringify({
+                    title: document.getElementById("titleInput").value,
+                    description: document.getElementById("descriptionInput").value,
+                    location: document.getElementById("locationInput").value,
+                    personId: data.userId
+                }),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            .then(res => {
+                if(res.status === 200) {
+                    alert("Post updated successfully!");
+                    window.location.href = "card-details.html?id=" + cardId;
+                } else {
+                    return res.text().then(errorText => {
+                        throw new Error(`${errorText}`);
+                    });
+                }
+            })
+            .catch(err=>{
+                console.error("Error updating post:", err);
+            });
+    }).catch(err => {
+        console.error("Error getting status:", err);
+    })
+
+
 }
 
 function deletePost() {
@@ -597,8 +638,9 @@ async function loadComments() {
         const data = await commentsRes.json();
         const comments = data.comments;
         for (const comment of comments) {
-            console.log(`Fetching image for comment by personId: ${comment.personId}`);
+            console.log(`Fetching image for comment by personId: ${comment.personId} with Url:`);
             const userUrl = await loadUserImage(comment.personId);
+            console.log(`Fetching image for comment by personId: ${comment.personId} with Url: ${userUrl}` );
             addCommentToPage(comment, currentUser, userUrl);
         }
     } catch (err) {
@@ -618,7 +660,9 @@ function deleteComment(commentId) {
     })
         .then(res => {
             if (res.status === 200) {
-                reloadComments();
+                alert("Comment deleted succesfully.");
+                window.location.href = `card-details.html?id=${cardId}`; //we need to have comment element has an id attribute formatted as comment-{commentId},
+                //document.getElementById(`comment-${commentId}`).remove();
             } else {
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);
@@ -648,7 +692,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
 });
 
 function addCommentToPage(comment, user, userUrl, addToTop = false) {
-    console.log(`Adding comment to page: ${comment.content} by user: ${comment.username} with image URL: ${userUrl}`);
+    console.log(`Adding comment with id: ${comment.id}  to page: ${comment.content} by user: ${comment.username} with image URL: ${userUrl}`);
 
     const commentsContainer = document.getElementById("comments-container");
     const commentElement = document.createElement("div");
@@ -677,7 +721,6 @@ function addCommentToPage(comment, user, userUrl, addToTop = false) {
             <div class="col-md-10">
                 <p>${comment.content}</p>
                 ${deleteIconHtml}
-
             </div>
         </div>
     `;
@@ -688,6 +731,7 @@ function addCommentToPage(comment, user, userUrl, addToTop = false) {
     }
 
 }
+
 
 function submitComment() {
     const commentText = document.getElementById("comment-text").value;

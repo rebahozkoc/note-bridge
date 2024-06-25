@@ -109,6 +109,7 @@ public class PersonRoute {
 		try {
 			PersonDao.INSTANCE.delete(id);
 			BaseUserDao.INSTANCE.delete(id);
+			userSession.invalidate();
 			return Response.status(Response.Status.OK).entity("Person with id " + id + " is deleted").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -166,7 +167,7 @@ public class PersonRoute {
 	}
 
 	@GET
-	@Path("getid/{username}")
+	@Path("/getid/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getID(@PathParam("username") String username) {
 		return Response.status(Response.Status.OK).entity(PersonDao.INSTANCE.getID(username)).build();

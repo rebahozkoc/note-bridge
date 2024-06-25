@@ -5,36 +5,19 @@ let pageNumber=1;
 let totalNumberOfCards=0;
 
 
-let searchValue = decodeURIComponent(GetURLParameter("search"));
 
 
 
 const loadingScreen = document.getElementById("loading-screen");
 const loadMoreButton = document.getElementById("load-more-btn");
-const searchBtn=document.getElementById("search-btn");
+const searchBar= document.getElementById("search-bar");
 
-searchBtn.addEventListener("click", setQueryParam);
+
 loadMoreButton.addEventListener("click", loadMore);
+//Getting status data and modifying URL
 
-function GetURLParameter(sParam) {
-    const sPageURL = window.location.search.substring(1);
-    const sURLVariables = sPageURL.split('&');
-    for (let i = 0; i < sURLVariables.length; i++)
-    {
-        let sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam)
-        {
-            return sParameterName[1];
-        }
-    }
-}
 
-function setQueryParam(){
-    const searchBarInput=searchBtn.parentNode.firstElementChild;
-    const searchValue=searchBarInput.value;
-    console.log(searchValue);
-    window.location.href=`cards.html?search=${encodeURIComponent(searchValue)}`;
-}
+
 
 function loadMore(){
     pageNumber++;
@@ -118,9 +101,16 @@ function selectCard(card) {
 }
 
 function sortBy(element) {
-    if(!window.location.href.includes("?") || window.location.href.includes("search")){
+    if(!window.location.href.includes("?") ){
         window.location.href=`?sortBy=${element.dataset.sortBy}`;
-    }else if(window.location.href.includes("sortBy")){
+    }else if(window.location.href.includes("search")){
+        let baseUrl = window.location.href.split("?")[0]; // Get the base URL without query parameters
+        let queryParams = new URLSearchParams(window.location.search);
+        queryParams.delete('search');
+        queryParams.set('sortBy', element.dataset.sortBy);
+        window.location.href = `${baseUrl}?${queryParams.toString()}`;
+
+    } else if(window.location.href.includes("sortBy")){
         let baseUrl = window.location.href.split("?")[0]; // Get the base URL without query parameters
         let queryParams = new URLSearchParams(window.location.search);
         queryParams.set('sortBy', element.dataset.sortBy); // Update sortBy parameter value
@@ -141,5 +131,29 @@ function filterBy(element) {
 
     }else{
         window.location.href+=`&filterBy=${element.dataset.filterBy}`;
+    }
+}
+
+function searchBy(){
+    const searchInput=searchBar.value;
+    console.log(searchInput)
+    if(searchInput || !searchInput){
+        if(!window.location.href.includes("?") ){
+            window.location.href=`?search=${searchInput}`;
+        }else if(window.location.href.includes("sortBy")){
+            let baseUrl = window.location.href.split("?")[0]; // Get the base URL without query parameters
+            let queryParams = new URLSearchParams(window.location.search);
+            queryParams.delete('sortBy');
+            queryParams.set('search', searchInput);
+            window.location.href = `${baseUrl}?${queryParams.toString()}`;
+
+        } else if(window.location.href.includes("search")){
+            let baseUrl = window.location.href.split("?")[0]; // Get the base URL without query parameters
+            let queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('search', searchInput); // Update sortBy parameter value
+            window.location.href = `${baseUrl}?${queryParams.toString()}`;
+        }else{
+            window.location.href+=`&search=${searchInput}`;
+        }
     }
 }

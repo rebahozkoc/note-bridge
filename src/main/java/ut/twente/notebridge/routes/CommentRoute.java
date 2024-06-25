@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -38,7 +39,7 @@ public class CommentRoute {
 
 	@DELETE
 	@Path("/{id}")
-	public Response deletePersonInstrument(@PathParam("id") int id, @Context HttpServletRequest request) {
+	public Response deleteComment(@PathParam("id") int id, @Context HttpServletRequest request) {
 		HttpSession userSession = request.getSession(false);
 		if (!Security.isAuthorized(userSession, "person")) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
@@ -47,6 +48,10 @@ public class CommentRoute {
 			CommentDao.INSTANCE.delete(id);
 			return Response.status(Response.Status.OK).entity("Deleted comment").build();
 		} catch (Exception e) {
+			e.printStackTrace();
+			if (e instanceof NotFoundException) {
+				return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+			}
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}

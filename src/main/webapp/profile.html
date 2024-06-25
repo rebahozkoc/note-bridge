@@ -55,6 +55,7 @@
             <button class="btn p-0 edit-header-icon" data-bs-toggle="modal" data-bs-target="#editHeaderModal">
                 <span class="edit-icon">&#9998;</span>
             </button>
+
         </h2>
         <p id="username">@username</p>
         <p id="create-date">Account Created On: January 15, 2022</p>
@@ -191,7 +192,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="emailInput" value="example@example.com">
+                        <input type="email" class="form-control" id="emailInput" disabled value="example@example.com">
                         <label for="emailInput">Email address</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -257,8 +258,28 @@
             </div>
         </div>
     </div>
-</main>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="color: #201d1d;">
+                    Are you sure you want to delete your account?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete" >Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="button btn btn-danger"  data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete-button" >Delete Account</span>
+
+</main>
 <footer class="text-center py-3">
     <div class="container">
         <p>&copy; 2024 NoteBridge. All rights reserved.</p>
@@ -273,6 +294,7 @@
 
 
 <script src="js/particles.js"></script>
+<script src="js/status.js"></script>
 <script src="js/app.js"></script>
 
 <script src="js/profile.js"></script>

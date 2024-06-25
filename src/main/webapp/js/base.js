@@ -5,6 +5,17 @@ const messengerBtn = document.getElementById("messenger-btn");
 const profileBtn = document.getElementById("profile-btn");
 const myPostsBtn = document.getElementById("myposts-btn");
 
+myPostsBtn.addEventListener("click", () => {
+   getStatus().then(data => {
+
+       window.location.href = 'cards.html?personId=' + data.userId;
+
+   }).catch(err => {
+       console.error("Error while navigating to my posts page: ", err);
+   });
+});
+
+
 function pressPianoBtn1() {
     music.innerHTML = addSoundTag("assets/sounds/sound-1.mp3");
     music.play();
@@ -120,7 +131,7 @@ function updateNavbar(loggedIn) {
         `;
 
         myPostsBtn.innerHTML = `
-        <a href="cards.html" class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
+        <a  class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
         `;
     } else {
         logInBtn.innerHTML = `

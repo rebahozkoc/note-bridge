@@ -62,7 +62,7 @@ body {
 .chat{
     /*float:left; display:inline; width: 75%;*/
     /*position: relative;*/
-    width: 74.3%;
+    width: 76.3%;
 }
 #navbar{
     display: table;
@@ -76,7 +76,7 @@ body {
     flex-direction: column;
     overflow-y: scroll;
     background-color: initial;
-    height: 78.3vh;
+    height: 74.3vh;
 }
 .message{
     border-radius: 25px;

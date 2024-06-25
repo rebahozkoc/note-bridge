@@ -41,11 +41,51 @@ confirmDeleteBtn.addEventListener("click", deletePost);
 
 loadPostDetailsAndLikes(cardId);
 
+editPostModalSaveBtn.addEventListener("click", updatePost);
 
 window.onload = function() {
     checkLoggedIn();
     getUserId();
     getPostImages();
+}
+
+function updatePost() {
+    if(document.getElementById("titleInput").value.trim()===""){
+        alert("Title cannot be empty!");
+        return;
+    }
+
+    getStatus().then(data => {
+        fetch(`/notebridge/api/posts/${cardId}`,
+            {method:"PUT",
+                body: JSON.stringify({
+                    title: document.getElementById("titleInput").value,
+                    description: document.getElementById("descriptionInput").value,
+                    location: document.getElementById("locationInput").value,
+                    personId: data.userId
+                }),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            .then(res => {
+                if(res.status === 200) {
+                    alert("Post updated successfully!");
+                    window.location.href = "card-details.html?id=" + cardId;
+                } else {
+                    return res.text().then(errorText => {
+                        throw new Error(`${errorText}`);
+                    });
+                }
+            })
+            .catch(err=>{
+                console.error("Error updating post:", err);
+            });
+    }).catch(err => {
+        console.error("Error getting status:", err);
+    })
+
+
 }
 
 function deletePost() {

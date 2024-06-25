@@ -9,11 +9,13 @@ const instrumentBox = document.getElementById("instrument-box");
 const instrumentBoxContainer = document.getElementById("instrument-box-container");
 const carouselInterestedPosts = document.getElementById("interestedPostsCarousel");
 const innerCarousel = carouselInterestedPosts.querySelector(".carousel-inner");
-
+const confirmDeleteAccountBtn = document.getElementById("confirmDelete");
 const loadingScreen = document.getElementById("loading-screen");
 
 //In case another user is trying to access the profile page of another user who is Person
 let searchedUserId = GetURLParameter("id");
+
+confirmDeleteAccountBtn.addEventListener("click", deleteAccount);
 
 window.onload = function () {
     if (searchedUserId) {
@@ -90,6 +92,31 @@ function GetURLParameter(sParam) {
             return sParameterName[1];
         }
     }
+}
+
+function deleteAccount(){
+    getStatus().
+    then(data=>{
+        fetch(`/notebridge/api/${data.role}s/${data.userId}`,{method:"DELETE"})
+            .then(res=>{
+                if(res.status===200) {
+                    alert("Account deleted successfully");
+                    window.location.href = "home.html";
+                }else{
+                    return res.text().then(errorText => {
+                        throw new Error(`${errorText}`);
+                    });
+                }
+            }).catch(err=>{
+                console.error("Error", err.toString());
+                alert("Account deletion failed");
+            });
+
+
+    }).
+    catch(err=>{
+        console.error("Error", err.toString());
+    });
 }
 
 
@@ -251,22 +278,14 @@ function saveChangesNameLastname(event) {
 function saveChangesContactInformation(event) {
     event.preventDefault();
 
-    const email = contactInformationModal.querySelector("#emailInput");
-    if (!email.checkValidity()) {
-        email.classList.add('is-invalid');
-        return;
-    } else {
-        email.classList.remove('is-invalid');
-    }
+
     const phoneNumber = contactInformationModal.querySelector("#phoneInput").value;
     const updatedInfo = {
-        email: email.value,
         phoneNumber: phoneNumber
     }
     updateUserInformation(updatedInfo).then(res => {
         if (res) {
             alert("Contact Information updated successfully");
-            emailElement.innerHTML = email.value;
             phoneNumberElement.innerHTML = phoneNumber;
         } else {
             alert("Contact Information update failed")

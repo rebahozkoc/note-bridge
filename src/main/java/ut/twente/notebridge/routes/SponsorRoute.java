@@ -107,6 +107,8 @@ public class SponsorRoute {
 		}
 		try {
 			SponsorDao.INSTANCE.delete(id);
+			BaseUserDao.INSTANCE.delete(id);
+			userSession.invalidate();
 			return Response.status(Response.Status.OK).entity("Sponsor deleted").build();
 
 		} catch (Exception e) {

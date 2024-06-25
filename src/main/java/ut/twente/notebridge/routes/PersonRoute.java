@@ -109,6 +109,7 @@ public class PersonRoute {
 		try {
 			PersonDao.INSTANCE.delete(id);
 			BaseUserDao.INSTANCE.delete(id);
+			userSession.invalidate();
 			return Response.status(Response.Status.OK).entity("Person with id " + id + " is deleted").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

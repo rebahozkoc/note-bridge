@@ -8,7 +8,6 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.dto.PostDto;
 import ut.twente.notebridge.model.Interest;
 import ut.twente.notebridge.model.Like;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public enum PostDao {
 	INSTANCE;
@@ -56,11 +54,11 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, StringBuilder returnQuery){
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, StringBuilder returnQuery) {
 		System.out.println("GET posts called");
 		List<PostDto> list = new ArrayList<>();
 
-		List<String> sortableColumns=Arrays.asList("oldest","latest","mostinterested","mostlikes");
+		List<String> sortableColumns = Arrays.asList("oldest", "latest", "mostinterested", "mostlikes");
 
 		StringBuilder sqlBuilder = new StringBuilder("SELECT json_agg(t) FROM (SELECT *FROM postdetailed\n");
 
@@ -69,29 +67,29 @@ public enum PostDao {
 
 		boolean isSearchGiven = search != null && !search.isEmpty() && !search.equals("undefined");
 		boolean isPersonIdGiven = personId != null && personId > 0;
-		boolean isFilterByGiven=filterBy!=null && !filterBy.isEmpty();
-		boolean isSortByGiven=sortBy != null && !sortBy.isEmpty() && sortableColumns.contains(sortBy);
+		boolean isFilterByGiven = filterBy != null && !filterBy.isEmpty();
+		boolean isSortByGiven = sortBy != null && !sortBy.isEmpty() && sortableColumns.contains(sortBy);
 
 		if (isPersonIdGiven) {
 			sqlBuilder.append("WHERE personId=?\n");
 
 		}
-		if(isFilterByGiven){
-			if(isPersonIdGiven){
+		if (isFilterByGiven) {
+			if (isPersonIdGiven) {
 				sqlBuilder.append("AND\n");
-			}else{
+			} else {
 				sqlBuilder.append("WHERE ");
 			}
 
-			if(filterBy.equals("jam-session")){
+			if (filterBy.equals("jam-session")) {
 				sqlBuilder.append("eventType='jam'\n");
-			}else if(filterBy.equals("live-event")){
+			} else if (filterBy.equals("live-event")) {
 				sqlBuilder.append("eventType='Live Event'\n");
-			}else if(filterBy.equals("find-band-member")){
+			} else if (filterBy.equals("find-band-member")) {
 				sqlBuilder.append("eventType='Find Band Member'\n");
-			}else if(filterBy.equals("find-instrument")){
+			} else if (filterBy.equals("find-instrument")) {
 				sqlBuilder.append("eventType='Find Instrument'\n");
-			}else if(filterBy.equals("music-discussion")){
+			} else if (filterBy.equals("music-discussion")) {
 				sqlBuilder.append("eventType='Music Discussion'\n");
 			}
 
@@ -101,28 +99,26 @@ public enum PostDao {
 
 			if (!isSortByGiven) {
 				sortBy = "ORDER BY createDate DESC\n";
-			} else{
+			} else {
 				//sortBy is given, search cannot exist at the same time(set in frontend)
-				if(sortBy.equals("oldest")) {
+				if (sortBy.equals("oldest")) {
 					sortBy = "ORDER BY createDate ASC\n";
-				}else if(sortBy.equals("latest")) {
+				} else if (sortBy.equals("latest")) {
 					sortBy = "ORDER BY createDate DESC\n";
-				}else if(sortBy.equals("mostinterested")) {
-					sortBy="ORDER BY totalinterested DESC\n";
-				}else if(sortBy.equals("mostlikes")) {
-					sortBy="ORDER BY totallikes DESC\n";
+				} else if (sortBy.equals("mostinterested")) {
+					sortBy = "ORDER BY totalinterested DESC\n";
+				} else if (sortBy.equals("mostlikes")) {
+					sortBy = "ORDER BY totallikes DESC\n";
 				}
 			}
 			sqlBuilder.append(sortBy);
 
 
-
-
 		} else {
 			//Search is given
-			if(isPersonIdGiven || isFilterByGiven){
+			if (isPersonIdGiven || isFilterByGiven) {
 				sqlBuilder.append("AND\n");
-			}else{
+			} else {
 				sqlBuilder.append("WHERE ");
 			}
 			sqlBuilder.append("to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)\n");
@@ -133,7 +129,7 @@ public enum PostDao {
 		sqlBuilder.append("LIMIT ?\nOFFSET ?) t;");
 
 		String query = sqlBuilder.toString();
-		int parameterIndex=1;
+		int parameterIndex = 1;
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(query)) {
 			if (isPersonIdGiven) {
 				//PersonID is provided
@@ -141,7 +137,7 @@ public enum PostDao {
 				parameterIndex++;
 
 			}
-			if(isSearchGiven){
+			if (isSearchGiven) {
 				statement.setString(parameterIndex, tsquery);
 				parameterIndex++;
 				statement.setString(parameterIndex, tsquery);
@@ -153,8 +149,8 @@ public enum PostDao {
 			statement.setInt(parameterIndex, (pageNumber - 1) * pageSize);
 
 			//removing LIMIT AND OFFSET BEFORE RETURNING for COUNT
-			String statementWithoutLimitOffset=statement.toString().substring(0,statement.toString().indexOf("LIMIT"));
-			statementWithoutLimitOffset+=") t;";
+			String statementWithoutLimitOffset = statement.toString().substring(0, statement.toString().indexOf("LIMIT"));
+			statementWithoutLimitOffset += ") t;";
 			returnQuery.append(statementWithoutLimitOffset);
 
 
@@ -194,36 +190,6 @@ public enum PostDao {
 		} catch (SQLException | JsonProcessingException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error while getting post.");
-		}
-	}
-
-	public CommentDtoList getComments(int id) {
-		String sql = """
-				SELECT jsonb_build_object(
-				           'comments', jsonb_agg(
-				                          jsonb_build_object(
-				                              'personId', b.id, 'username', b.username, 'picture', b.picture,
-				                              'content', c.content, 'createDate', c.createdate
-				                          ) ORDER BY c.createdate DESC)
-				       )
-				FROM BaseUser b, Comment c
-				WHERE b.id = c.personid AND c.postid =?
-				GROUP BY c.postid;
-				""";
-
-		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			statement.setInt(1, id);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				String json = rs.getString("jsonb_build_object");
-				ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
-				return mapper.readValue(json, CommentDtoList.class);
-			} else {
-				throw new NotFoundException("No comments found for post with id " + id);
-			}
-		} catch (SQLException | JsonProcessingException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error while getting comments");
 		}
 	}
 

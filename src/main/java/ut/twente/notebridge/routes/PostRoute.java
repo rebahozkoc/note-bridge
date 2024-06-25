@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import ut.twente.notebridge.dao.BaseUserDao;
+import ut.twente.notebridge.dao.CommentDao;
 import ut.twente.notebridge.dao.InterestDao;
 import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PostDao;
@@ -43,7 +44,7 @@ public class PostRoute {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPosts(
-			@QueryParam("pageSize")  Integer pageSize,
+			@QueryParam("pageSize") Integer pageSize,
 			@QueryParam("pageNumber") Integer pageNumber,
 			@QueryParam("sortBy") String sortBy,
 			@QueryParam("personId") Integer personId,
@@ -57,7 +58,7 @@ public class PostRoute {
 			StringBuilder query = new StringBuilder();
 
 
-			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, personId,search,filterBy,query).toArray(new PostDto[0]);
+			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, personId, search, filterBy, query).toArray(new PostDto[0]);
 
 			//Changing json_agg(t) to COUNT in order to get total posts query
 			String s = "json_agg(t)";
@@ -250,7 +251,7 @@ public class PostRoute {
 	@Path("/{id}/comments")
 	@Produces(MediaType.APPLICATION_JSON)
 	public CommentDtoList getComments(@PathParam("id") int id) {
-		return PostDao.INSTANCE.getComments(id);
+		return CommentDao.INSTANCE.getComments(id);
 	}
 
 	@PUT

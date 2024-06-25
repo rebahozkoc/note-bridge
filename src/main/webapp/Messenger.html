@@ -76,7 +76,7 @@
         <div style="display: flex;flex-direction: column;">
             <div class="contact">
                 <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#contactModal" style="float: right; height: 100%; width: 100%;">
-                    New Contact
+                    New Contact <img src="assets/images/newContactImage.png" alt="add Contact" style="width: 3vh;height: 3vh; margin-bottom: 0.5vh">
                 </button>
             </div>
             <ul id='contacts' class="list-group"></ul>
@@ -87,11 +87,9 @@
             <div class="row" >
                 <div class="col-1">
                     <img src="assets/images/user-icon.png" id="contact-img" class="img-fluid mb-2 grid-item" alt="contact" style="margin: 15px; height: 35px; width: 35px; background-color: transparent">
-
                 </div>
                 <div class="col-9">
-                    <h6 class="mb-2 gird-item" id="contactName" style="color: white; margin-top: 20px">Username</h6>
-
+                    <h3 class="mb-2 gird-item" id="contactName" style="color: white; margin-top: 20px"></h3>
                 </div>
                 <div class="col-2">
                     <button type="button" class="btn btn-outline-light grid-item" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; height: 100%; margin-top: 15px" onclick="loadPosts()">

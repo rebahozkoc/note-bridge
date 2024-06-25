@@ -7,10 +7,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/MessengerCSS.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/loadingScreen.css">
     <title>Note-Bridge</title>
 </head>
 <body id="top-background" class="page-settings" style="background-color: lightblue">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
 
 <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
     <div class="container-fluid">
@@ -175,6 +181,7 @@
     const contactElement=document.getElementById("contacts");
     const messageElement=document.getElementById("messageBox");
     const message=document.getElementById("but");
+    const loadingScreen = document.getElementById("loading-screen");
 
     window.onload = function() {
         checkLoggedIn();
@@ -191,15 +198,6 @@
 
     setInterval(fetchContacts, 2000);
 
-    function countUnreadMessages(id){
-        let count=0;
-        for(let message in messages){
-            if (message.user_id!==userID && message.isread===false){
-                count++;
-            }
-        }
-        return count;
-    }
 
     function updateSeenMessages(){
         let unreadmessages=[];
@@ -208,19 +206,17 @@
                 unreadmessages.push(messages['data'][i].id);
             }
         }
-        console.log(unreadmessages);
         if (!(!Array.isArray(unreadmessages) || !unreadmessages.length)) {
-            let unreadmessagesString = unreadmessages.toString();
-            console.log(unreadmessagesString);
-            let encodedReadMessages = encodeURIComponent(unreadmessagesString);
-            fetch(`/notebridge/api/message/readmessages/${encodedReadMessages}`, {method: "PUT"})
-                .then(r => {
-
-                })
-                .catch(err => {
-                    console.error(`Unable to read messages: ${err.status}`);
-                    console.error(err);
-                })
+            for (let i = 0; i < unreadmessages.length; i++) {
+                fetch(`/notebridge/api/message/readmessages/${unreadmessages[i]}`, {method: "PUT"})
+                    .then(r=>{
+                        getUnreadMessagesCount();
+                    })
+                    .catch(err => {
+                        console.error(`Unable to read messages: ${err.status}`);
+                        console.error(err);
+                    })
+            }
         }
     }
 
@@ -253,6 +249,7 @@
         let tag=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-2];
         let title=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-3];
         let postLink= 'card-details.html?id=' + post;
+        const loadingScreen = document.getElementById("loading-screen");
         getStatus()
             .then(data => {
                 let dataObject = {};
@@ -370,13 +367,13 @@
                         userID=data.userId;
                         noChangeInContacts(data2);
                         loadMessages(userID,data.username);
+                        loadingScreen.style.display = "none";
                     })
                     .catch(err => {
                         console.error(`Unable to fetch contacts: ${err.status}`);
                         console.error(err);
-                        contactElement.innerHTML=`
-                        <p>No contacts found</p>
-                        `
+                        contactElement.innerHTML+=`<p>No contacts found</p>`;
+                        loadingScreen.style.display = "none";
                     });
             })
     }
@@ -522,22 +519,50 @@
         }
     }
 
-
     function showContact(contact) {
-        return `
-<div class="contact">
-<li class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)" onclick="loadMessagesForThisUser(this)">
-    ${contact.username}
-    <span class="badge rounded-pill bg-primary">14</span>
-</li>
-</div>
+        let contactElement = `
+        <div class="contact">
+            <li id="${contact.username}" class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)" onclick="loadMessagesForThisUser(this)">
+                ${contact.username}
+            </li>
         `
+        contactElement += `</div>`;
+        return contactElement;
     }
+    setInterval(function () {
+        getUnreadMessagesCount();
+    }, 1000);
 
     function showContacts() {
         contactElement.innerHTML = `
         ${contacts.data.map(contact => `${showContact(contact)}`).join("\n")}
     `;
+    }
+
+    function getUnreadMessagesCount(){
+        for (let i = 0; i < contacts["data"].length; i++) {
+            let contactElement=document.getElementById(contacts["data"][i].username);
+            fetch(`/notebridge/api/message/count/${userID}/${contacts["data"][i].id}`,{method:"GET"})
+                .then(res=>res.json()
+                    .then(data=>{
+                        inputCount(data,contactElement);
+                    })
+                )
+        }
+    }
+
+    function inputCount(data, contactElement){
+        let currentCount = contactElement.querySelector("span");
+        if (data!==0) {
+            if (currentCount === undefined || currentCount===null) {
+                contactElement.innerHTML += `
+                <span class="badge rounded-pill bg-primary">${data}</span>`;
+            }
+        }else{
+            if (currentCount!==null) {
+                contactElement.removeChild(currentCount);
+            }
+        }
     }
 
     const form = document.getElementById("newMessage");

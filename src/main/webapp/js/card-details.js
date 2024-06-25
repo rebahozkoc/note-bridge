@@ -606,19 +606,13 @@ async function loadComments() {
     }
 }
 
-function reloadComments() {
-    const commentsContainer = document.getElementById("comments-container");
-    commentsContainer.innerHTML = "";
-    loadComments();
-}
-
 function deleteComment(commentId) {
     fetch(`/notebridge/api/comments/${commentId}`, {
         method: "DELETE"
     })
         .then(res => {
             if (res.status === 200) {
-                reloadComments();
+
             } else {
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);

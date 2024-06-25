@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.NotFoundException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -187,18 +187,12 @@ public enum MessageDao {
         }
     }
 
-    public void readMessages(String ids) {
-        String[] idarr = ids.split(",");
-        String sql = "UPDATE privatemessage SET isread=true WHERE ";
-        for (int i = 0; i < idarr.length; i++) {
-            if (i < idarr.length - 1) {
-                sql += " id=" + idarr[i] + " AND ";
-            } else {
-                sql += " id=" + idarr[i];
-            }
-        }
+    public void readMessages(int id) {
+
+        String sql = "UPDATE privatemessage SET isread=true WHERE id=?";
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection()
                 .prepareStatement(sql)) {
+            statement.setInt(1,id);
             int affectedRows = statement.executeUpdate();
             System.out.println("Read " + affectedRows + " messages");
         } catch (SQLException e) {
@@ -206,6 +200,27 @@ public enum MessageDao {
         }
     }
 
+    public Integer countUnreadMessages(int user, int contact) {
+        String sql = "SELECT COUNT(id) FROM privatemessage WHERE isread=false AND messagehistory_id=get_history_id(?,?) AND user_id=?";
+        try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection()
+                .prepareStatement(sql)) {
+            statement.setInt(1,user);
+            statement.setInt(2,contact);
+            statement.setInt(3,contact);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+
+            } else {
+                //no rows returned, post with that id does not exist
+                throw new NotFoundException();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
         public int getTotalMessages() {
         return 0;

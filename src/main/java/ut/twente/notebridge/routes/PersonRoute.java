@@ -166,7 +166,7 @@ public class PersonRoute {
 	}
 
 	@GET
-	@Path("getid/{username}")
+	@Path("/getid/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getID(@PathParam("username") String username) {
 		return Response.status(Response.Status.OK).entity(PersonDao.INSTANCE.getID(username)).build();

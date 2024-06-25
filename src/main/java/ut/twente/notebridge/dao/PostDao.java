@@ -8,7 +8,6 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import ut.twente.notebridge.dto.CommentDtoList;
 import ut.twente.notebridge.dto.PostDto;
 import ut.twente.notebridge.model.Interest;
 import ut.twente.notebridge.model.Like;
@@ -55,71 +54,105 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, boolean reverse, Integer personId, String search) {
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, StringBuilder returnQuery) {
 		System.out.println("GET posts called");
 		List<PostDto> list = new ArrayList<>();
-		List<String> allowedSortableColumns = Arrays.asList("id", "lastUpdate", "createDate", "personId", "title", "description", "sponsoredBy", "sponsoredFrom", "sponsoredUntil", "eventType", "location","totalInterested","totalLikes");
 
-		String sql;
+		List<String> sortableColumns = Arrays.asList("oldest", "latest", "mostinterested", "mostlikes");
+
+		StringBuilder sqlBuilder = new StringBuilder("SELECT json_agg(t) FROM (SELECT *FROM postdetailed\n");
+
+
 		String tsquery = "";
+
 		boolean isSearchGiven = search != null && !search.isEmpty() && !search.equals("undefined");
+		boolean isPersonIdGiven = personId != null && personId > 0;
+		boolean isFilterByGiven = filterBy != null && !filterBy.isEmpty();
+		boolean isSortByGiven = sortBy != null && !sortBy.isEmpty() && sortableColumns.contains(sortBy);
 
-		if (!isSearchGiven) {
-			sql = """
-					SELECT json_agg(t) FROM (
-						SELECT * FROM postdetailed
-						ORDER BY %s
-						LIMIT ?
-						OFFSET ?
-						) t;
-					""";
+		if (isPersonIdGiven) {
+			sqlBuilder.append("WHERE personId=?\n");
 
-			if (sortBy == null || sortBy.isEmpty() || !allowedSortableColumns.contains(sortBy)) {
-				sortBy = "createDate DESC";
-			} else if (reverse) {
-				sortBy += " DESC";
+		}
+		if (isFilterByGiven) {
+			if (isPersonIdGiven) {
+				sqlBuilder.append("AND\n");
+			} else {
+				sqlBuilder.append("WHERE ");
 			}
-			if (personId != null && personId > 0) {
-				sql = """
-						SELECT json_agg(t) FROM (
-							SELECT * FROM postdetailed
-							WHERE personId=?
-							ORDER BY %s
-							LIMIT ?
-							OFFSET ?
-							) t;
-						""";
+
+			if (filterBy.equals("jam-session")) {
+				sqlBuilder.append("eventType='jam'\n");
+			} else if (filterBy.equals("live-event")) {
+				sqlBuilder.append("eventType='Live Event'\n");
+			} else if (filterBy.equals("find-band-member")) {
+				sqlBuilder.append("eventType='Find Band Member'\n");
+			} else if (filterBy.equals("find-instrument")) {
+				sqlBuilder.append("eventType='Find Instrument'\n");
+			} else if (filterBy.equals("music-discussion")) {
+				sqlBuilder.append("eventType='Music Discussion'\n");
 			}
-			sql = String.format(sql, sortBy);
-		} else {
-			tsquery = String.join("&", Arrays.asList(Security.sanitizeInput(search).split(" ")));
-			sql = """
-						SELECT json_agg(t) FROM (SELECT *FROM postdetailed
-						WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
-						ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
-					    LIMIT ?
-					    OFFSET ?) t;
-					""";
+
 		}
 
+		if (!isSearchGiven) {
 
-		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			if (personId != null && personId > 0) {
-				//PersonID is provided
-				statement.setInt(1, personId);
-				statement.setInt(2, pageSize);
-				statement.setInt(3, (pageNumber - 1) * pageSize);
-			} else if (isSearchGiven) {
-				//Search is asked for
-				statement.setString(1, tsquery);
-				statement.setString(2, tsquery);
-				statement.setInt(3, pageSize);
-				statement.setInt(4, (pageNumber - 1) * pageSize);
+			if (!isSortByGiven) {
+				sortBy = "ORDER BY createDate DESC\n";
 			} else {
-				//personID is not provided
-				statement.setInt(1, pageSize);
-				statement.setInt(2, (pageNumber - 1) * pageSize);
+				//sortBy is given, search cannot exist at the same time(set in frontend)
+				if (sortBy.equals("oldest")) {
+					sortBy = "ORDER BY createDate ASC\n";
+				} else if (sortBy.equals("latest")) {
+					sortBy = "ORDER BY createDate DESC\n";
+				} else if (sortBy.equals("mostinterested")) {
+					sortBy = "ORDER BY totalinterested DESC\n";
+				} else if (sortBy.equals("mostlikes")) {
+					sortBy = "ORDER BY totallikes DESC\n";
+				}
 			}
+			sqlBuilder.append(sortBy);
+
+
+		} else {
+			//Search is given
+			if (isPersonIdGiven || isFilterByGiven) {
+				sqlBuilder.append("AND\n");
+			} else {
+				sqlBuilder.append("WHERE ");
+			}
+			sqlBuilder.append("to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)\n");
+			sqlBuilder.append("ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC\n");
+			tsquery = String.join("&", Arrays.asList(Security.sanitizeInput(search).split(" ")));
+
+		}
+		sqlBuilder.append("LIMIT ?\nOFFSET ?) t;");
+
+		String query = sqlBuilder.toString();
+		int parameterIndex = 1;
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(query)) {
+			if (isPersonIdGiven) {
+				//PersonID is provided
+				statement.setInt(parameterIndex, personId);
+				parameterIndex++;
+
+			}
+			if (isSearchGiven) {
+				statement.setString(parameterIndex, tsquery);
+				parameterIndex++;
+				statement.setString(parameterIndex, tsquery);
+				parameterIndex++;
+
+			}
+			statement.setInt(parameterIndex, pageSize);
+			parameterIndex++;
+			statement.setInt(parameterIndex, (pageNumber - 1) * pageSize);
+
+			//removing LIMIT AND OFFSET BEFORE RETURNING for COUNT
+			String statementWithoutLimitOffset = statement.toString().substring(0, statement.toString().indexOf("LIMIT"));
+			statementWithoutLimitOffset += ") t;";
+			returnQuery.append(statementWithoutLimitOffset);
+
 
 			ResultSet rs = statement.executeQuery();
 			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
@@ -157,36 +190,6 @@ public enum PostDao {
 		} catch (SQLException | JsonProcessingException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error while getting post.");
-		}
-	}
-
-	public CommentDtoList getComments(int id) {
-		String sql = """
-				SELECT jsonb_build_object(
-				           'comments', jsonb_agg(
-				                          jsonb_build_object(
-				                              'personId', b.id, 'username', b.username, 'picture', b.picture,
-				                              'content', c.content, 'createDate', c.createdate
-				                          ) ORDER BY c.createdate DESC)
-				       )
-				FROM BaseUser b, Comment c
-				WHERE b.id = c.personid AND c.postid =?
-				GROUP BY c.postid;
-				""";
-
-		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			statement.setInt(1, id);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				String json = rs.getString("jsonb_build_object");
-				ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
-				return mapper.readValue(json, CommentDtoList.class);
-			} else {
-				throw new NotFoundException("No comments found for post with id " + id);
-			}
-		} catch (SQLException | JsonProcessingException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error while getting comments");
 		}
 	}
 
@@ -422,30 +425,10 @@ public enum PostDao {
 		}
 	}
 
-	public int getTotalPosts(Integer personId, String search) {
-		String sql = "SELECT COUNT(*) FROM post ";
-
-		boolean searchDefined = search != null && !search.isEmpty() && !search.equals("undefined");
-		if (personId != null && personId > 0) {
-			sql = "SELECT COUNT(*) FROM post WHERE personId=? ";
-		} else if (searchDefined) {
-			sql = """
-					SELECT COUNT(*) FROM (SELECT *FROM post
-						WHERE to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype) @@ to_tsquery(?)
-						ORDER BY ts_rank(to_tsvector(title || ' ' || description || ' ' || location || ' ' || eventtype), to_tsquery(?)) DESC
-					      		) t;
-					""";
-		}
-
+	public int getTotalPosts(String sql) {
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-			if (personId != null && personId > 0) {
-				statement.setInt(1, personId);
-			} else if (searchDefined) {
-				String tsquery = String.join("&", Arrays.asList(search.split(" ")));
-				statement.setString(1, tsquery);
-				statement.setString(2, tsquery);
-			}
+
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				return rs.getInt(1);

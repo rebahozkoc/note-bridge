@@ -107,16 +107,12 @@ function checkLoggedIn() {
             if (res.status === 200) {
 
                 return res.json().then(data => {
-                    updateNavbar(true,data.role);
-                    welcomeMessage.innerHTML = `
-                    <h1 class="title text-white fst-italic fs-2 mb-5"><strong>Welcome, ${data.username}</strong>!<br><span class="fs-4">We are delighted to see you as a part of our community.<br>Feel free to discover, interact, and collaborate with other musicians!</span></h1>
-                    `;
+                    updateNavbar(true, data.role);
+                    updateWelcomeMessage(true, data.username);
                 });
             } else {
                 updateNavbar(false,"none");
-                welcomeMessage.innerHTML = `
-                <h1 class="title text-white fst-italic fs-1 mb-5">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
-                `;
+                updateWelcomeMessage(false);
             }
         })
 }
@@ -152,5 +148,17 @@ function updateNavbar(loggedIn,role) {
         messengerBtn.innerHTML = ``;
         profileBtn.innerHTML = ``;
         myPostsBtn.innerHTML = ``;
+    }
+}
+
+function updateWelcomeMessage(loggedIn, username) {
+    if(loggedIn) {
+        welcomeMessage.innerHTML = `
+        <h1 class="title text-white fst-italic fs-2 mb-5 top-text-style"><strong>Welcome, ${username}</strong>!<br><span class="fs-4">We are delighted to see you as a part of our community.<br>Feel free to discover, interact, and collaborate with other musicians!</span></h1>
+        `;
+    } else {
+        welcomeMessage.innerHTML = `
+        <h1 class="title text-white fst-italic fs-1 mb-5 top-text-style">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
+        `;
     }
 }

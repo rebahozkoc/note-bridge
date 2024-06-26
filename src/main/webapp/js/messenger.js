@@ -15,10 +15,10 @@ window.onload = function() {
 }
 
 function turnGrey(x) {
-    x.className = "list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center"
+    x.className = "list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center rounded-3"
 }
 function turnWhite(x) {
-    x.className = "list-group-item d-flex justify-content-between align-items-center"
+    x.className = "list-group-item d-flex justify-content-between align-items-center rounded-3"
 }
 
 function returnModalToNormal(){
@@ -389,7 +389,7 @@ function showMessageRight(message, username) {
 function showContact(contact) {
     let contactElement = `
         <div class="contact">
-            <li id="${contact.username}" class="list-group-item d-flex justify-content-between align-items-center" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)" onclick="loadMessagesForThisUser(this)">
+            <li id="${contact.username}" class="list-group-item d-flex justify-content-between align-items-center rounded-3" onmouseenter="turnGrey(this)" onmouseleave="turnWhite(this)" onclick="loadMessagesForThisUser(this)">
                 ${contact.username}
             </li>
         `

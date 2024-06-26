@@ -11,11 +11,14 @@ const carouselInterestedPosts = document.getElementById("interestedPostsCarousel
 const innerCarousel = carouselInterestedPosts.querySelector(".carousel-inner");
 const confirmDeleteAccountBtn = document.getElementById("confirmDelete");
 const loadingScreen = document.getElementById("loading-screen");
-
+const addContactBtn=document.getElementById("addContactBtn");
 //In case another user is trying to access the profile page of another user who is Person
 let searchedUserId = GetURLParameter("id");
 
 confirmDeleteAccountBtn.addEventListener("click", deleteAccount);
+
+
+
 
 window.onload = function () {
     if (searchedUserId) {
@@ -24,6 +27,7 @@ window.onload = function () {
             editIcon.style.display = "none";
         }
         document.getElementById("editProfileBtn").style.display = "none";
+
 
         //Since only Person can show interest, we know for sure that the id provided is person's id
 
@@ -44,6 +48,39 @@ window.onload = function () {
                 descriptionElement.innerHTML = data.description;
                 emailElement.innerHTML = data.email;
                 phoneNumberElement.innerHTML = data.phoneNumber;
+                fetch(`/notebridge/api/persons/contact/${searchedUserId}`).
+                    then(res => {
+                        return res.json();
+                    }).then(data=>{
+                        addContactBtn.style.display="block";
+                        if(data.isContact){
+                            //if the person is already in the contact list
+                            addContactBtn.style.display="block";
+                            addContactBtn.setAttribute("disabled",true);
+                            addContactBtn.innerHTML="Already in contact list";
+                        }
+                        addContactBtn.addEventListener("click",()=>{
+                           fetch(`/notebridge/api/persons/contact/${searchedUserId}`,{
+                               method:"POST"
+                           }).then(res=>{
+                               if(res.status===200){
+                                   alert("Contact added successfully");
+                                   window.location.href="Messenger.html"
+                               }else{
+                                      return res.text().then(errorText => {
+                                        throw new Error(`${errorText}`);
+                                      });
+                               }
+                           }).catch(err=>{
+                               alert("Error while adding contact");
+
+                           })
+                        });
+                    })
+                    .catch(err => {
+                        console.error("Failed to fetch contact information", err.toString());
+
+                    })
 
 
             }).catch(error => {
@@ -93,6 +130,9 @@ function GetURLParameter(sParam) {
         }
     }
 }
+
+
+
 
 function deleteAccount(){
     getStatus().

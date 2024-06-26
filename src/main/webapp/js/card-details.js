@@ -224,8 +224,14 @@ function getUserId() {
         .then(res => {
             if (res.status === 200) {
                 return res.json().then(data => {
+                    console.log(data);
                     getAuthor(data.userId, data.role);
-                    showCommentsSection();
+                    if (data.role === "person") {
+                        showCommentsSection();
+                    }
+                    if (data.role === "sponsor") {
+                        hideCommentsSection();
+                    }
                 });
             } else {
                 return res.text().then(errorText => {
@@ -451,7 +457,7 @@ function loadSponsorData(postData) {
 
     fetch(`/notebridge/api/sponsors/${postData.sponsoredBy}`).then(
         res => {
-            if (res.status === 200){
+            if (res.status === 200) {
                 res.json().then(data => {
                     sponsorHeader.innerHTML = `Sponsored by: ${data.companyName}`;
                     sponsorHeader.href = `https://${data.websiteURL}`;
@@ -470,8 +476,8 @@ function loadAuthorImage(personId) {
         .then(res => {
             if (res.status === 200) {
                 return res.blob();
-            }else{
-                authorImage.src="assets/images/profile-picture-placeholder.png";
+            } else {
+                authorImage.src = "assets/images/profile-picture-placeholder.png";
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);
                 });
@@ -664,28 +670,25 @@ async function loadUserImage(personId) {
 
 async function loadComments() {
     let currentUser;
+    getStatus().then(data => {
+        currentUser = data;
+    });
 
     try {
-        const res = await fetch("/notebridge/api/auth/status", {method: "GET"});
-        currentUser = await res.json();
-        console.log("Current user:", currentUser);
+        fetch(`/notebridge/api/posts/${cardId}/comments`).then(res => {
+            if (res.status === 200) {
+                return res.json().then(data => {
+                    const comments = data.comments;
+                    for (const comment of comments) {
+                        console.log(`Loading comment`);
+                        console.log(comment);
+                        addCommentToPage(comment, currentUser);
+                    }
+                });
+            }
+        });
 
-        console.log("Fetching comments for cardId:", cardId);
 
-        const commentsRes = await fetch(`/notebridge/api/posts/${cardId}/comments`);
-        if (commentsRes.status !== 200) {
-            const errorText = await commentsRes.text();
-            throw new Error(errorText);
-        }
-
-        const data = await commentsRes.json();
-        const comments = data.comments;
-        for (const comment of comments) {
-            console.log(`Fetching image for comment by personId: ${comment.personId} with Url:`);
-            const userUrl = await loadUserImage(comment.personId);
-            console.log(`Fetching image for comment by personId: ${comment.personId} with Url: ${userUrl}`);
-            addCommentToPage(comment, currentUser, userUrl);
-        }
     } catch (err) {
         console.error("Error loading comments:", err);
     }
@@ -734,8 +737,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
     }
 });
 
-function addCommentToPage(comment, user, userUrl, addToTop = false) {
-    console.log(`Adding comment with id: ${comment.id}  to page: ${comment.content} by user: ${comment.username} with image URL: ${userUrl}`);
+function addCommentToPage(comment, user, addToTop = false) {
 
     const commentsContainer = document.getElementById("comments-container");
     const commentElement = document.createElement("div");
@@ -755,7 +757,7 @@ function addCommentToPage(comment, user, userUrl, addToTop = false) {
     commentElement.innerHTML = `
         <div class="row mb-2">
             <div class="card-body-2 text-left comment-header" style="text-align: left ;">
-                <img src="${userUrl}" class="img-fluid rounded-circle mb-2" width="50" height="50" alt="User Image">
+                <img src="data:image/png;base64,${comment.picture}" class="img-fluid rounded-circle mb-2" width="100" height="100" alt="User Image">
                     <div>
                         <h6 class="mb-0">
                             <a href="profile.html?id=${comment.personId}" class="link-primary">@${comment.username}</a>
@@ -767,7 +769,6 @@ function addCommentToPage(comment, user, userUrl, addToTop = false) {
                         ${deleteIconHtml}
                     </div>
             </div>
-
         </div>
     `;
 
@@ -844,7 +845,6 @@ function getUser() {
     });
     return user;
 }
-
 
 
 function shareOnFacebook() {

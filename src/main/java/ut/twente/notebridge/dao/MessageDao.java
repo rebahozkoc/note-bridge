@@ -108,15 +108,15 @@ public enum MessageDao {
         }
     }
 
-    public void deleteMessage(int id, String timestamp, String content) {
+    public void deleteMessage(Message m,String timestamp) {
         String sql = """
 				DELETE FROM privatemessage WHERE user_id=? AND createddate=?::timestamp AND content=?
 				
 		"""; // Assuming delete_post takes one parameter
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-            statement.setInt(1, id);
+            statement.setInt(1, m.getId());
             statement.setString(2, timestamp);
-            statement.setString(3, content);
+            statement.setString(3, m.getContent());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -143,6 +143,7 @@ public enum MessageDao {
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     message.setId(generatedKeys.getInt(1));
+                    message.setCreateddate(generatedKeys.getTimestamp(3));
                     message.setMessagehistory_id(generatedKeys.getInt(5));
                 } else {
                     throw new SQLException("Creating post failed, no ID obtained.");
@@ -218,7 +219,7 @@ public enum MessageDao {
         }
     }
 
-    public Integer countUnreadMessages(int user, int contact) {
+    public int countUnreadMessages(int user, int contact) {
         String sql = "SELECT COUNT(id) FROM privatemessage WHERE isread=false AND messagehistory_id=get_history_id(?,?) AND user_id=?";
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection()
                 .prepareStatement(sql)) {

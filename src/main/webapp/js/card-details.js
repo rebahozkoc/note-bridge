@@ -730,19 +730,24 @@ function addCommentToPage(comment, user, userUrl, addToTop = false) {
 
     commentElement.innerHTML = `
         <div class="row mb-2">
-            <div class="col-md-2 text-left">
+            <div class="card-body-2 text-left comment-header" style="text-align: left ;">
                 <img src="${userUrl}" class="img-fluid rounded-circle mb-2" width="50" height="50" alt="User Image">
-                <h6 class="mb-2">
-                    <a href="profile.html?id=${comment.personId}" class="link-primary">@${comment.username}</a>
-                </h6>
-                <small>${formattedDate} ${formattedTime}</small>
+                    <div>
+                        <h6 class="mb-0">
+                            <a href="profile.html?id=${comment.personId}" class="link-primary">@${comment.username}</a>
+                        </h6>
+                        <small>${formattedDate} ${formattedTime}</small>
+                    </div>
+                    <div class="col-md-10 comment-body">
+                        <p class="mb-0">${comment.content}</p>
+                        ${deleteIconHtml}
+                    </div>
             </div>
-            <div class="col-md-10">
-                <p>${comment.content}</p>
-                ${deleteIconHtml}
-            </div>
+
         </div>
     `;
+
+
     if (addToTop) {
         commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
     } else {
@@ -815,6 +820,7 @@ function getUser() {
     });
     return user;
 }
+
 
 
 function shareOnFacebook() {

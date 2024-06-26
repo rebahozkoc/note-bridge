@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="white">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="stylesheet" href="css/MessengerCSS.css">
@@ -13,10 +13,10 @@
     <body class="page-settings">
         <div id="particles-js"></div>
 
-    <div id="loading-screen">
-        <div class="spinner"></div>
-        <p>Loading...</p>
-    </div>
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
 
         <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
             <div class="container-fluid">
@@ -48,66 +48,66 @@
             </div>
         </nav>
 
-    <div class="offcanvas offcanvas-bottom rounded-4" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-        <div class="offcanvas-body d-flex bg-dark rounded-3">
-            <button class="btn btn-light white-block rounded-start-2" onclick="pressPianoBtn1()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn2()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn3()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn4()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn5()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn6()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn7()"></button>
-            <button class="btn btn-light white-block" onclick="pressPianoBtn8()"></button>
-            <button class="btn btn-light white-block rounded-end-2"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 5.5vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 14vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 29.5vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 45vh"></button>
-            <button class="btn btn-dark black-block" style="margin-left: 53vh"></button>
+<div class="offcanvas offcanvas-bottom rounded-4" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-body d-flex bg-dark rounded-3">
+        <button class="btn btn-light white-block rounded-start-2" onclick="pressPianoBtn1()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn2()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn3()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn4()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn5()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn6()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn7()"></button>
+        <button class="btn btn-light white-block" onclick="pressPianoBtn8()"></button>
+        <button class="btn btn-light white-block rounded-end-2"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 5.5vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 14vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 29.5vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 45vh"></button>
+        <button class="btn btn-dark black-block" style="margin-left: 53vh"></button>
+    </div>
+</div>
+
+<div class="contactAndChat">
+    <div id="contactsHolder" class="contacts ib">
+        <div style="display: flex;flex-direction: column;">
+            <div class="contact">
+                <button type="button" class="button-1 w-100 fs-6" data-bs-toggle="modal" data-bs-target="#contactModal" style="height: 5vh">
+                    New Contact <img src="assets/images/newContactImage.png" alt="add Contact" style="width: 3vh;height: 3vh; margin-bottom: 0.5vh">
+                </button>
+            </div>
+            <ul id='contacts' class="list-group"></ul>
         </div>
     </div>
-
-    <div class="contactAndChat">
-        <div id="contactsHolder" class="contacts ib">
-            <div style="display: flex;flex-direction: column;">
-                <div class="contact">
-                    <button type="button" class="button-1 w-100 fs-6" data-bs-toggle="modal" data-bs-target="#contactModal" style="height: 5vh">
-                        New Contact
+    <div class="chat ib">
+        <div class="header container">
+            <div class="row" >
+                <div class="col-1">
+                    <img src="assets/images/user-icon.png" id="contact-img" class="ms-1 mb-2 grid-item" alt="contact" style="margin: 15px; height: 35px; width: 35px; background-color: transparent">
+                </div>
+                <div class="col-9">
+                    <h3 class="ms-3 mb-2 mt-4 grid-item text-white" id="contactName"></h3>
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-outline-light grid-item" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; height: 100%; margin-top: 15px" onclick="loadPosts()">
+                        Invite +
                     </button>
+
                 </div>
-                <ul id='contacts' class="list-group"></ul>
+
             </div>
         </div>
-
-        <div class="chat ib">
-            <div class="header container">
-                <div class="row">
-                    <div class="col-1">
-                        <img src="assets/images/user-icon.png" id="contact-img" class="ms-1 mb-2 grid-item" alt="contact" style="margin: 15px; height: 35px; width: 35px; background-color: transparent">
-                    </div>
-                    <div class="col-9">
-                        <h6 class="ms-3 mb-2 mt-4 grid-item text-white" id="contactName">Username</h6>
-                    </div>
-                    <div class="col-2">
-                        <button type="button" class="button-1 me-1 fs-6 grid-item" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; height: 60%; margin-top: 15px" onclick="loadPosts()">
-                            Share
-                        </button>
-                    </div>
+        <div id="messageBox" class="chat-box g-0">
+        </div>
+        <div class="g-0">
+            <form id='newMessage' class="d-flex justify-content-center">
+                <div class="input-wrapper">
+                    <input id="message" autocomplete="off" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: white;" >
+                    <button class="btn" type="submit" id="but" style="color: white"><img src="assets/images/send.png" alt="send"> </button>
                 </div>
-            </div>
-
-            <div id="messageBox" class="chat-box g-0"></div>
-
-            <div class="g-0">
-                <form id='newMessage' class="d-flex justify-content-center">
-                    <div class="input-wrapper">
-                        <input id="message" autocomplete="off" class="form-control me-20" type="text" placeholder="Message" aria-label="Message" style="background-color: white;" >
-                        <button class="btn" type="submit" id="but" style="color: white"><img src="assets/images/send.png" alt="send"> </button>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -136,30 +136,30 @@
         </div>
     </div>
 
-    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contactModalLabel">Add a new contact</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <label for="usernameContact">Username</label>
-                        <textarea class="form-control" id="usernameContact" rows="1" placeholder="Message"></textarea>
-                    </form>
-                    <form>
-                        <label for="newContactMessage">Want to send a first message?</label>
-                        <textarea class="form-control" id="newContactMessage" rows="1" placeholder="Message"></textarea>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="newContact()">Add Contact</button>
-                </div>
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Add a new contact</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="returnModalToNormal()"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label for="usernameContact">Username</label>
+                    <textarea class="form-control" id="usernameContact" rows="1" placeholder="Message"></textarea>
+                </form>
+                <form>
+                    <label for="newContactMessage">Want to send a first message?</label>
+                    <textarea class="form-control" id="newContactMessage" rows="1" placeholder="Message"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="returnModalToNormal()">Close</button>
+                <button type="button" class="btn btn-primary" onclick="newContact()">Add Contact</button>
             </div>
         </div>
     </div>
+</div>
 
     <audio controls id="music"></audio>
 
@@ -629,5 +629,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="js/particles.js"></script>
         <script src="js/app.js"></script>
+<script src="js/status.js"></script>
+<script src="js/base.js"></script>
+<script src="js/messenger.js"></script>
 </body>
 </html>

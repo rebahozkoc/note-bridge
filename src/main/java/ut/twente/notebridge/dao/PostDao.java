@@ -54,7 +54,7 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, StringBuilder returnQuery) {
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, Integer sponsorId,StringBuilder returnQuery) {
 		System.out.println("GET posts called");
 		List<PostDto> list = new ArrayList<>();
 
@@ -67,6 +67,7 @@ public enum PostDao {
 
 		boolean isSearchGiven = search != null && !search.isEmpty() && !search.equals("undefined");
 		boolean isPersonIdGiven = personId != null && personId > 0;
+		boolean isSponsorIdGiven = sponsorId != null && sponsorId > 0;
 		boolean isFilterByGiven = filterBy != null && !filterBy.isEmpty();
 		boolean isSortByGiven = sortBy != null && !sortBy.isEmpty() && sortableColumns.contains(sortBy);
 
@@ -82,7 +83,7 @@ public enum PostDao {
 			}
 
 			if (filterBy.equals("jam-session")) {
-				sqlBuilder.append("eventType='jam'\n");
+				sqlBuilder.append("eventType='Jam Session'\n");
 			} else if (filterBy.equals("live-event")) {
 				sqlBuilder.append("eventType='Live Event'\n");
 			} else if (filterBy.equals("find-band-member")) {
@@ -93,6 +94,14 @@ public enum PostDao {
 				sqlBuilder.append("eventType='Music Discussion'\n");
 			}
 
+		}
+		if (isSponsorIdGiven) {
+			if (isPersonIdGiven || isFilterByGiven) {
+				sqlBuilder.append("AND\n");
+			} else {
+				sqlBuilder.append("WHERE ");
+			}
+			sqlBuilder.append("sponsoredBy=?\n");
 		}
 
 		if (!isSearchGiven) {
@@ -116,7 +125,7 @@ public enum PostDao {
 
 		} else {
 			//Search is given
-			if (isPersonIdGiven || isFilterByGiven) {
+			if (isPersonIdGiven || isFilterByGiven || isSponsorIdGiven) {
 				sqlBuilder.append("AND\n");
 			} else {
 				sqlBuilder.append("WHERE ");
@@ -136,6 +145,10 @@ public enum PostDao {
 				statement.setInt(parameterIndex, personId);
 				parameterIndex++;
 
+			}
+			if (isSponsorIdGiven) {
+				statement.setInt(parameterIndex, sponsorId);
+				parameterIndex++;
 			}
 			if (isSearchGiven) {
 				statement.setString(parameterIndex, tsquery);
@@ -171,7 +184,10 @@ public enum PostDao {
 
 	public List<PostDto> getSponsoredPosts(){
 		String sql= """
-				SELECT json_agg(t) FROM (SELECT *FROM postdetailed WHERE sponsoredBy IS NOT NULL) t;
+				SELECT json_agg(t) FROM 
+                       (SELECT *FROM postdetailed 
+                            WHERE sponsoredBy IS NOT NULL
+                        AND sponsoredUntil >= NOW()) t;
 				""";
 		try{
 			PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql);

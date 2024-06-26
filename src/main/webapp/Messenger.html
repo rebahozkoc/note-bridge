@@ -146,7 +146,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="contactModalLabel">Add a new contact</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="returnModalToNormal()"></button>
             </div>
             <div class="modal-body">
                 <form>
@@ -159,15 +159,14 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="newContact()">Add Contact</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="returnModalToNormal()">Close</button>
+                <button type="button" class="btn btn-primary" onclick="newContact()">Add Contact</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="js/status.js"></script>
-<script src="js/app.js"></script>
 <audio controls id="music"></audio>
 <script src="js/base.js"></script>
 <script>
@@ -180,6 +179,7 @@
     const messageElement=document.getElementById("messageBox");
     const message=document.getElementById("but");
     const loadingScreen = document.getElementById("loading-screen");
+    const modalBody=document.getElementById("contactModal").childNodes[1].childNodes[1].childNodes[3];
 
     window.onload = function() {
         checkLoggedIn();
@@ -191,6 +191,17 @@
     }
     function turnWhite(x) {
         x.className = "list-group-item d-flex justify-content-between align-items-center"
+    }
+
+    function returnModalToNormal(){
+        modalBody.innerHTML=`<form>
+                    <label for="usernameContact">Username</label>
+                    <textarea class="form-control" id="usernameContact" rows="1" placeholder="Message"></textarea>
+                </form>
+                <form>
+                    <label for="newContactMessage">Want to send a first message?</label>
+                    <textarea class="form-control" id="newContactMessage" rows="1" placeholder="Message"></textarea>
+                </form>`
     }
 
 
@@ -247,7 +258,6 @@
         let tag=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-2];
         let title=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-3];
         let postLink= 'card-details.html?id=' + post;
-        const loadingScreen = document.getElementById("loading-screen");
         getStatus()
             .then(data => {
                 let dataObject = {};
@@ -272,37 +282,68 @@
     function newContact() {
         const username = document.getElementById("usernameContact").value;
         const message = document.getElementById("newContactMessage").value;
+        let modalElement=document.getElementById("contactModal");
+        console.log(modalBody);
         let dataObject = {};
         getStatus()
             .then(data => {
                 fetch(`/notebridge/api/persons/getid/${username}`, {method: "GET"})
-                    .then(res => res.json()
-                        .then(res2=>{
-                            fetch(`/notebridge/api/message/newhistory/${res2}/${data.userId}`, {method: "POST"})
-                                .then(res4 => {
-                                    fetchContacts();
-                                    selectedContact = res2;
-                                }).then(res5 => {
-                                if (message !== undefined) {
-                                    dataObject.user_id = data.userId;
-                                    dataObject.content = message;
-                                    let encodedMessage = encodeURIComponent(message);
-                                    fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${encodedMessage}`, {
-                                        method: "POST",
-                                        body: JSON.stringify(dataObject),
-                                        headers: {
-                                            "Content-type": "application/json"
-                                        }
-                                    }).then(r => {
-                                        document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
-                                        loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
-                                    })
-                                }
-                            })
-                        })
-                    )
-            })
+                    .then(res => {
+                        if (res.status === 404) {
+                            if (modalBody.querySelector(".alert") === null) {
+                            modalBody.innerHTML += `<div class="alert alert-danger" role="alert">
+                                                    User was not found.
+                                                </div>`
+                            message.value = '';
+                            }else{
+                                modalBody.innerHTML=modalBody.innerHTML;
+                            }
+                        } else {
+                            res.json()
+                                .then(res2 => {
+                                    fetch(`/notebridge/api/message/newhistory/${res2}/${data.userId}`, {method: "POST"})
+                                        .then(res4 => {
+                                            if (res4.status === 500) {
+                                                if (modalBody.querySelector(".alert") === null) {
+                                                    modalBody.innerHTML += `<div class="alert alert-danger" role="alert">
+                                                                                User is already a contact.
+                                                                            </div>`
+                                                    message.value = '';
+                                                } else {
+                                                    console.log(modalBody.querySelector(".alert").innerHTML);
+                                                    modalBody.querySelector(".alert").innerHTML = `User is already a contact.`;
+                                                    modalBody.innerHTML=modalBody.innerHTML;
+                                                }
+                                            } else {
+                                                fetchContacts();
+                                                selectedContact = res2;
+                                                if (message !== undefined) {
+                                                    dataObject.user_id = data.userId;
+                                                    dataObject.content = message;
+                                                    let encodedMessage = encodeURIComponent(message);
+                                                    message.value = '';
+                                                    fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${encodedMessage}`, {
+                                                        method: "POST",
+                                                        body: JSON.stringify(dataObject),
+                                                        headers: {
+                                                            "Content-type": "application/json"
+                                                        }
+                                                    }).then(r => {
+                                                        document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
+                                                        loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
+                                                    })
+                                                }
+                                                modalBody.innerHTML = `<div class="alert alert-success" role="alert">
+                                                    User added to contacts.
+                                                </div>`;
+                                            }
+                                        })
+                                })
 
+                        }
+                    })
+            })
+        message.value='';
     }
 
     function loadMessages(id, username) {

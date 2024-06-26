@@ -30,8 +30,8 @@ CREATE TABLE Instrument (
 );
 
 CREATE TABLE PersonInstrument (
-    personId INT REFERENCES Person(id),
-    instrumentName VARCHAR(255) REFERENCES Instrument(name),
+    personId INT REFERENCES Person(id) ON DELETE CASCADE,
+    instrumentName VARCHAR(255) REFERENCES Instrument(name) ON DELETE CASCADE,
     yearsOfExperience FLOAT,
     PRIMARY KEY (personId, instrumentName)
 );

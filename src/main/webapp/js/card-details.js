@@ -8,6 +8,7 @@ const likeCountText = document.getElementById("like-countText");
 const likeCount = document.getElementById("like-count");
 
 
+const sponsorHeader = document.getElementById("sponsor-header");
 const cardTitle = document.getElementById("title");
 const description = document.getElementById("description");
 const eventType = document.getElementById("event-type");
@@ -399,6 +400,16 @@ async function loadPostDetailsAndLikes(cardId) {
         eventLocation.innerHTML = `${postData.location}`;
         postCreateDateSpan.innerHTML = `${new Date(parseInt(postData.createDate)).toLocaleDateString()} ${new Date(parseInt(postData.createDate)).toLocaleTimeString()}`;
         postLastUpdateDateSpan.innerHTML = `${new Date(parseInt(postData.lastUpdate)).toLocaleDateString()} ${new Date(parseInt(postData.lastUpdate)).toLocaleTimeString()}`;
+
+        currentDate = new Date();
+        console.log(currentDate);
+        console.log(new Date(parseInt(postData.lastUpdate)));
+        console.log(postData);
+        if (postData.sponsoredBy != null && currentDate > new Date(parseInt(postData.sponsoredFrom)) && currentDate < new Date(parseInt(postData.sponsoredUntil))) {
+            console.log("Post is sponsored");
+            loadSponsorData(postData);
+        }
+
         try {
             await updateTotalLikes(cardId);
             await loadAuthorImage(postData.personId);
@@ -433,8 +444,21 @@ async function loadPostDetailsAndLikes(cardId) {
         loadingScreen.style.display = "none";
 
     }
+}
 
+function loadSponsorData(postData) {
+    sponsorHeader.style.display = "block";
 
+    fetch(`/notebridge/api/sponsors/${postData.sponsoredBy}`).then(
+        res => {
+            if (res.status === 200){
+                res.json().then(data => {
+                    sponsorHeader.innerHTML = `Sponsored by: ${data.companyName}`;
+                    sponsorHeader.href = `https://${data.websiteURL}`;
+                });
+            }
+        }
+    )
 }
 
 

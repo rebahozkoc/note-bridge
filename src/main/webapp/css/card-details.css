@@ -145,3 +145,16 @@
 .sponsor-button {
     display: none;
 }
+
+.sponsor-header {
+    display: none;
+    background-color: #76ab17;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+
+}

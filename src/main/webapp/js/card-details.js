@@ -446,7 +446,8 @@ function loadAuthorImage(personId) {
         .then(res => {
             if (res.status === 200) {
                 return res.blob();
-            } else {
+            }else{
+                authorImage.src="assets/images/profile-picture-placeholder.png";
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);
                 });

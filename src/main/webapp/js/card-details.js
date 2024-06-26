@@ -1,15 +1,14 @@
 let cardId = GetURLParameter('id');
-let isPerson=false;
+let isPerson = false;
 let postImages = document.getElementById("post-images");
 let images = {};
 
 
-
-const likeCountText= document.getElementById("like-countText");
-const likeCount=document.getElementById("like-count");
-
+const likeCountText = document.getElementById("like-countText");
+const likeCount = document.getElementById("like-count");
 
 
+const sponsorHeader = document.getElementById("sponsor-header");
 const cardTitle = document.getElementById("title");
 const description = document.getElementById("description");
 const eventType = document.getElementById("event-type");
@@ -26,15 +25,15 @@ const confirmDeleteBtn = document.getElementById("confirmDelete");
 const editPostModal = document.getElementById("editPostModal");
 const editPostModalSaveBtn = document.getElementById("saveChangesPost");
 
-const authorImage=document.getElementById("author-img");
-const authorName=document.getElementById("author-name");
-const authorUsername=document.getElementById("author-username");
-const authorCreateDate=document.getElementById("author-createDate");
+const authorImage = document.getElementById("author-img");
+const authorName = document.getElementById("author-name");
+const authorUsername = document.getElementById("author-username");
+const authorCreateDate = document.getElementById("author-createDate");
 
-const loadingScreen=document.getElementById("loading-screen");
+const loadingScreen = document.getElementById("loading-screen");
 
 const commentsSection = document.getElementById("comments-section");
-const userImage=document.getElementById("comment-img");
+const userImage = document.getElementById("comment-img");
 
 heartIcon.addEventListener("click", toggleLike);
 confirmDeleteBtn.addEventListener("click", deletePost);
@@ -43,21 +42,22 @@ loadPostDetailsAndLikes(cardId);
 
 editPostModalSaveBtn.addEventListener("click", updatePost);
 
-window.onload = function() {
+window.onload = function () {
     checkLoggedIn();
     getUserId();
     getPostImages();
 }
 
 function updatePost() {
-    if(document.getElementById("titleInput").value.trim()===""){
+    if (document.getElementById("titleInput").value.trim() === "") {
         alert("Title cannot be empty!");
         return;
     }
 
     getStatus().then(data => {
         fetch(`/notebridge/api/posts/${cardId}`,
-            {method:"PUT",
+            {
+                method: "PUT",
                 body: JSON.stringify({
                     title: document.getElementById("titleInput").value,
                     description: document.getElementById("descriptionInput").value,
@@ -69,7 +69,7 @@ function updatePost() {
                 }
             })
             .then(res => {
-                if(res.status === 200) {
+                if (res.status === 200) {
                     alert("Post updated successfully!");
                     window.location.href = "card-details.html?id=" + cardId;
                 } else {
@@ -78,7 +78,7 @@ function updatePost() {
                     });
                 }
             })
-            .catch(err=>{
+            .catch(err => {
                 console.error("Error updating post:", err);
             });
     }).catch(err => {
@@ -109,19 +109,19 @@ function deletePost() {
 
 }
 
-function viewInterested(element){
+function viewInterested(element) {
 
-    if(element.classList.contains("btn-primary")){
+    if (element.classList.contains("btn-primary")) {
 
         element.classList.remove("btn-primary");
         element.classList.add("btn-secondary");
-        element.innerHTML="Hide Interested Users";
-        if(listOfUsernames.hasChildNodes()){
+        element.innerHTML = "Hide Interested Users";
+        if (listOfUsernames.hasChildNodes()) {
             fetch("/notebridge/api/posts/" + cardId + "/interestedusers")
                 .then(res => {
-                    if(res.status === 200) {
+                    if (res.status === 200) {
                         return res.json();
-                    }else{
+                    } else {
                         return res.text().then(errorText => {
                             throw new Error(`${errorText}`);
                         });
@@ -129,36 +129,37 @@ function viewInterested(element){
 
                 }).then(data => {
 
-                    data.forEach(user => {
-                        const listElement =document.createElement("li");
-                        const anchorElement=document.createElement("a");
-                        anchorElement.onclick = () => { window.location.href = "profile.html?id=" + user.id; };
-                        anchorElement.innerHTML = user.username;
-                        anchorElement.classList.add("link-primary");
-                        listElement.append(anchorElement);
-                        listOfUsernames.appendChild(listElement);
-                    })
+                data.forEach(user => {
+                    const listElement = document.createElement("li");
+                    const anchorElement = document.createElement("a");
+                    anchorElement.onclick = () => {
+                        window.location.href = "profile.html?id=" + user.id;
+                    };
+                    anchorElement.innerHTML = user.username;
+                    anchorElement.classList.add("link-primary");
+                    listElement.append(anchorElement);
+                    listOfUsernames.appendChild(listElement);
+                })
 
             }).catch(
                 err => {
                     console.error(err);
                 }
             )
-        }else{
+        } else {
             for (let liElement of listOfUsernames.children) {
-                liElement.style.display="block";
+                liElement.style.display = "block";
             }
         }
 
-    }else{
+    } else {
         element.classList.add("btn-primary");
         element.classList.remove("btn-secondary");
-        element.innerHTML="View Interested Users";
+        element.innerHTML = "View Interested Users";
         for (let liElement of listOfUsernames.children) {
-            liElement.style.display="none";
+            liElement.style.display = "none";
         }
     }
-
 
 
 }
@@ -175,11 +176,11 @@ function getPostImages() {
 }
 
 function displayPostImages() {
-    if(images.length === 0) {
+    if (images.length === 0) {
         postImages.innerHTML = `
         <img src="assets/images/image-placeholder.jpg" class="img-fluid border border-dark border-2 rounded-2" width="30%" height="30%" alt="post image placeholder">
         `;
-    } else if(images.length === 1) {
+    } else if (images.length === 1) {
         postImages.innerHTML = `
         <img src="data:image/png;base64,${images[0]}" width="40%" height="40%" alt="post image" class="img-fluid border border-dark border-2 rounded-2">
         `;
@@ -223,7 +224,7 @@ function getUserId() {
         .then(res => {
             if (res.status === 200) {
                 return res.json().then(data => {
-                    getAuthor(data.userId,data.role);
+                    getAuthor(data.userId, data.role);
                     showCommentsSection();
                 });
             } else {
@@ -236,31 +237,55 @@ function getUserId() {
         })
 }
 
-function getAuthor(userId,role) {
+function getAuthor(userId, role) {
     fetch("/notebridge/api/posts/" + cardId)
         .then(res => res.json())
         .then(data => {
             checkPostBelongsToUser(userId, data.personId);
-            if(role==="person"){
-                displayInterestedButton(userId, data.id ,data.personId);
+            if (role === "person") {
+                displayInterestedButton(userId, data.id, data.personId);
 
-            } else if (role === "sponsor"){
-                displaySponsorButton();
+            } else if (role === "sponsor") {
+                sponsorButton.style.display = "block";
+                sponsorButton.style.width = "-webkit-fill-available";
             }
         })
 }
 
-function displaySponsorButton() {
-    sponsorButton.innerHTML = `
-       <a class="btn btn-primary" href="#" role="button">Sponsor Post</a>
-    `
+
+function saveSponsorshipDates() {
+    const fromDate = document.getElementById('sponsored-from').value;
+    const untilDate = document.getElementById('sponsored-until').value;
+    console.log('Sponsored from:', fromDate, 'until:', untilDate);
+
+    fetch(`/notebridge/api/sponsors/${cardId}/post`,
+        {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                sponsoredFrom: fromDate,
+                sponsoredUntil: untilDate,
+            }),
+        }).then(res => {
+            if (res.status === 200) {
+                alert("Post sponsored successfully!");
+                window.location.href = "card-details.html?id=" + cardId;
+            } else {
+                alert("Failed to sponsor post!");
+                return res.text().then(errorText => {
+                    console.error(`${errorText}`);
+                });
+            }
+        }
+    )
+
 }
 
 function checkPostBelongsToUser(userId, author) {
     console.log(userId);
     console.log(author);
 
-    if(author === userId) {
+    if (author === userId) {
         deleteIcon.innerHTML = `
         <span class="button"  data-bs-toggle="modal" data-bs-target="#deleteModal" style="cursor: pointer; background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </span>
         `
@@ -271,60 +296,60 @@ function checkPostBelongsToUser(userId, author) {
 }
 
 
-function displayInterestedButton(userId, postId,author) {
+function displayInterestedButton(userId, postId, author) {
 
-    if(author !== userId) {
+    if (author !== userId) {
 
         //Check if user is already interested in the post before loading
         fetch("/notebridge/api/posts/" + postId + "/interested")
             .then(res => {
-                if(res.status === 200) {
+                if (res.status === 200) {
                     return res.json();
-                }else{
+                } else {
                     return res.text().then(errorText => {
                         throw new Error(`${errorText}`);
                     });
                 }
             }).then(data => {
-                if(data.isInterested) {
+                if (data.isInterested) {
                     interestButton.innerHTML = `
                     <a class="btn btn-secondary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">You are already interested in this post!</a>
                     `;
-                }else{
+                } else {
                     interestButton.innerHTML = `
                         <a class="btn btn-primary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">I'm Interested!</a>
 
                         `
                 }
             }
-            ).catch(err => {
-                interestButton.innerHTML = `
+        ).catch(err => {
+            interestButton.innerHTML = `
                         <a class="btn btn-danger" data-post-id="${postId}" href="#" role="button">Failed to fetch interest information!</a>
 
                         `
-            });
+        });
 
     }
 }
 
-function toggleInterest(element){
-    const postId=element.dataset.postId;
+function toggleInterest(element) {
+    const postId = element.dataset.postId;
 
     fetch("/notebridge/api/posts/" + postId + "/interested", {
         method: "POST"
     }).then(res => {
         if (res.status === 200) {
-            if(element.classList.contains("btn-primary")){
+            if (element.classList.contains("btn-primary")) {
                 //User will show interest
                 element.classList.add("btn-secondary");
                 element.classList.remove("btn-primary");
-                element.innerHTML="You are already interested in this post!";
+                element.innerHTML = "You are already interested in this post!";
 
-            }else{
+            } else {
                 //User will remove interest
                 element.classList.add("btn-primary");
                 element.classList.remove("btn-secondary");
-                element.innerHTML="I'm Interested!";
+                element.innerHTML = "I'm Interested!";
 
             }
 
@@ -349,11 +374,9 @@ function rerouteInterestedButton() {
 function GetURLParameter(sParam) {
     const sPageURL = window.location.search.substring(1);
     const sURLVariables = sPageURL.split('&');
-    for (let i = 0; i < sURLVariables.length; i++)
-    {
+    for (let i = 0; i < sURLVariables.length; i++) {
         let sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam)
-        {
+        if (sParameterName[0] == sParam) {
             return sParameterName[1];
         }
     }
@@ -361,58 +384,81 @@ function GetURLParameter(sParam) {
 
 async function loadPostDetailsAndLikes(cardId) {
 
-    try{
-        const post= await fetch('/notebridge/api/posts/' + cardId);
+    try {
+        const post = await fetch('/notebridge/api/posts/' + cardId);
 
-        const postData= await post.json();
+        const postData = await post.json();
 
-        editPostModal.querySelector("#titleInput").value=postData.title;
-        editPostModal.querySelector("#descriptionInput").value=postData.description;
-        editPostModal.querySelector("#locationInput").value=postData.location;
+        editPostModal.querySelector("#titleInput").value = postData.title;
+        editPostModal.querySelector("#descriptionInput").value = postData.description;
+        editPostModal.querySelector("#locationInput").value = postData.location;
 
 
         cardTitle.innerHTML = `<h3>${postData.title}</h3>`;
         description.innerHTML = `<h5>${postData.description}</h5>`;
         eventType.innerHTML = `${postData.eventType}`;
         eventLocation.innerHTML = `${postData.location}`;
-        postCreateDateSpan.innerHTML=`${new Date(parseInt(postData.createDate)).toLocaleDateString()} ${new Date(parseInt(postData.createDate)).toLocaleTimeString()}`;
-        postLastUpdateDateSpan.innerHTML=`${new Date(parseInt(postData.lastUpdate)).toLocaleDateString()} ${new Date(parseInt(postData.lastUpdate)).toLocaleTimeString()}`;
-        try{
+        postCreateDateSpan.innerHTML = `${new Date(parseInt(postData.createDate)).toLocaleDateString()} ${new Date(parseInt(postData.createDate)).toLocaleTimeString()}`;
+        postLastUpdateDateSpan.innerHTML = `${new Date(parseInt(postData.lastUpdate)).toLocaleDateString()} ${new Date(parseInt(postData.lastUpdate)).toLocaleTimeString()}`;
+
+        currentDate = new Date();
+        console.log(currentDate);
+        console.log(new Date(parseInt(postData.lastUpdate)));
+        console.log(postData);
+        if (postData.sponsoredBy != null && currentDate > new Date(parseInt(postData.sponsoredFrom)) && currentDate < new Date(parseInt(postData.sponsoredUntil))) {
+            console.log("Post is sponsored");
+            loadSponsorData(postData);
+        }
+
+        try {
             await updateTotalLikes(cardId);
             await loadAuthorImage(postData.personId);
             await loadAuthorDetails(postData.personId);
-        } catch(err){
+        } catch (err) {
             console.error(err);
         }
 
-        try{
-            const statusData= await getStatus();
-            let role=statusData.role;
+        try {
+            const statusData = await getStatus();
+            let role = statusData.role;
             //Sponsors should not be able to like posts
-            if(role==="sponsor"){
-                heartIcon.style.display="none";
-            }else{
-                isPerson=true;
+            if (role === "sponsor") {
+                heartIcon.style.display = "none";
+            } else {
+                isPerson = true;
             }
 
             await checkIfLiked(cardId);
 
-            loadingScreen.style.display="none";
+            loadingScreen.style.display = "none";
 
-        }catch(err){
+        } catch (err) {
             console.error(err);
-            heartIcon.style.display="none";
-            loadingScreen.style.display="none";
+            heartIcon.style.display = "none";
+            loadingScreen.style.display = "none";
 
         }
 
-    }catch(err){
+    } catch (err) {
         console.error(err);
-        loadingScreen.style.display="none";
+        loadingScreen.style.display = "none";
 
     }
+}
 
+function loadSponsorData(postData) {
+    sponsorHeader.style.display = "block";
 
+    fetch(`/notebridge/api/sponsors/${postData.sponsoredBy}`).then(
+        res => {
+            if (res.status === 200){
+                res.json().then(data => {
+                    sponsorHeader.innerHTML = `Sponsored by: ${data.companyName}`;
+                    sponsorHeader.href = `https://${data.websiteURL}`;
+                });
+            }
+        }
+    )
 }
 
 
@@ -422,7 +468,7 @@ function loadAuthorImage(personId) {
 
     fetch(`/notebridge/api/persons/${personId}/image`)
         .then(res => {
-            if(res.status===200) {
+            if (res.status === 200) {
                 return res.blob();
             }else{
                 authorImage.src="assets/images/profile-picture-placeholder.png";
@@ -439,15 +485,15 @@ function loadAuthorImage(personId) {
             authorImage.src = imageUrl;
 
         })
-        .catch(error=>{
+        .catch(error => {
             console.error("Error", error.toString());
         });
 
 
 }
 
-function loadAuthorDetails(personId){
-    fetch(`/notebridge/api/persons/${personId}`).then(res=> {
+function loadAuthorDetails(personId) {
+    fetch(`/notebridge/api/persons/${personId}`).then(res => {
 
 
             if (res.status === 200) {
@@ -466,7 +512,7 @@ function loadAuthorDetails(personId){
         const formattedTime = createDate.toLocaleTimeString();
         authorCreateDate.innerHTML = `Account Created on: ${formattedDate} ${formattedTime}`;
 
-    }).catch(err=>{
+    }).catch(err => {
         console.error(err);
     })
 }
@@ -474,41 +520,40 @@ function loadAuthorDetails(personId){
 function checkIfLiked(cardId) {
 
 
-
     fetch("/notebridge/api/posts/" + cardId + "/like")
         .then(res => {
-            if(res.status === 200) {
+            if (res.status === 200) {
                 return res.json();
-            }else{
+            } else {
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);
                 });
             }
 
-        }).then(data=>{
+        }).then(data => {
 
 
-            if(data.isLiked){
+        if (data.isLiked) {
 
-                heartIcon.classList.remove("bi-heart");
-                heartIcon.classList.add("bi-heart-fill");
-            }
+            heartIcon.classList.remove("bi-heart");
+            heartIcon.classList.add("bi-heart-fill");
+        }
 
-            loadingScreen.style.display="none";
+        loadingScreen.style.display = "none";
 
 
     }).catch(err => {
         console.error(err);
-        loadingScreen.style.display="none";
+        loadingScreen.style.display = "none";
 
     })
 }
 
 
-function updateTotalLikes(cardId){
+function updateTotalLikes(cardId) {
     fetch("/notebridge/api/posts/" + cardId + "/likes").then(
-        res=>{
-            if(res.status === 200){
+        res => {
+            if (res.status === 200) {
                 return res.json();
             } else {
                 return res.text().then(errorText => {
@@ -518,15 +563,15 @@ function updateTotalLikes(cardId){
         }
     ).then(data => {
 
-        if(data.totalLikes===0){
-            likeCount.innerHTML="";
-            likeCountText.innerHTML="No one likes this posts yet!";
-            if(isPerson){
-                likeCountText.innerHTML+=", Click on the heart icon to be the first one to like it!";
+        if (data.totalLikes === 0) {
+            likeCount.innerHTML = "";
+            likeCountText.innerHTML = "No one likes this posts yet!";
+            if (isPerson) {
+                likeCountText.innerHTML += ", Click on the heart icon to be the first one to like it!";
             }
-        }else{
-            likeCount.innerHTML=data.totalLikes;
-            likeCountText.innerHTML=` people liked this post!`;
+        } else {
+            likeCount.innerHTML = data.totalLikes;
+            likeCountText.innerHTML = ` people liked this post!`;
         }
 
     }).catch(err => {
@@ -536,7 +581,7 @@ function updateTotalLikes(cardId){
 }
 
 
-function toggleLike(){
+function toggleLike() {
 
 
     fetch("/notebridge/api/posts/" + cardId + "/likes", {
@@ -558,19 +603,17 @@ function toggleLike(){
 }
 
 
-
 function toggleHeart() {
     if (heartIcon.classList.contains("bi-heart-fill")) {
-
 
 
         heartIcon.classList.remove("bi-heart-fill");
         heartIcon.classList.add("bi-heart");
 
-        if(parseInt(likeCount.innerHTML)==1){
+        if (parseInt(likeCount.innerHTML) == 1) {
             likeCount.innerHTML = "";
-            likeCountText.innerHTML="No one likes this posts yet, Click on to be the first one to like it!";
-        }else{
+            likeCountText.innerHTML = "No one likes this posts yet, Click on to be the first one to like it!";
+        } else {
             likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1;
         }
     } else {
@@ -578,19 +621,18 @@ function toggleHeart() {
 
         heartIcon.classList.remove("bi-heart");
         heartIcon.classList.add("bi-heart-fill");
-        if(likeCount.innerHTML==""){
+        if (likeCount.innerHTML == "") {
             likeCount.innerHTML = 1;
-            likeCountText.innerHTML=" person liked this post!";
-        }else{
+            likeCountText.innerHTML = " person liked this post!";
+        } else {
             likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1;
         }
-
 
 
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     loadComments();
 });
 
@@ -606,7 +648,7 @@ async function loadUserImage(personId) {
             userImage.src = userUrl;
             console.log(`Fetched image URL for personId: ${personId} - ${userUrl}`);
             return userUrl;
-        }  else if (res.status === 404) {
+        } else if (res.status === 404) {
             console.warn(`Image not found for personId: ${personId}, using default image.`);
             return 'src/main/webapp/assets/images/profile-picture-placeholder.png'; // default placeholder image
         } else {
@@ -624,7 +666,7 @@ async function loadComments() {
     let currentUser;
 
     try {
-        const res = await fetch("/notebridge/api/auth/status", { method: "GET" });
+        const res = await fetch("/notebridge/api/auth/status", {method: "GET"});
         currentUser = await res.json();
         console.log("Current user:", currentUser);
 
@@ -641,7 +683,7 @@ async function loadComments() {
         for (const comment of comments) {
             console.log(`Fetching image for comment by personId: ${comment.personId} with Url:`);
             const userUrl = await loadUserImage(comment.personId);
-            console.log(`Fetching image for comment by personId: ${comment.personId} with Url: ${userUrl}` );
+            console.log(`Fetching image for comment by personId: ${comment.personId} with Url: ${userUrl}`);
             addCommentToPage(comment, currentUser, userUrl);
         }
     } catch (err) {
@@ -682,7 +724,7 @@ function showDeleteConfirmation(commentId) {
 }
 
 
-document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+document.getElementById('confirmDeleteButton').addEventListener('click', function () {
     console.log("Confirm delete clicked. Comment ID to delete:", commentToDelete);
     if (commentToDelete !== null) {
         deleteComment(commentToDelete);
@@ -795,7 +837,7 @@ function hideCommentsSection() {
     commentsSection.style.display = "none";
 }
 
-function getUser(){
+function getUser() {
     let user;
     getStatus().then(data => {
         user = data.user;

@@ -54,7 +54,7 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, Integer sponsorId,StringBuilder returnQuery) {
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, Integer sponsorId, StringBuilder returnQuery) {
 		System.out.println("GET posts called");
 		List<PostDto> list = new ArrayList<>();
 
@@ -182,14 +182,14 @@ public enum PostDao {
 		return list;
 	}
 
-	public List<PostDto> getSponsoredPosts(){
-		String sql= """
+	public List<PostDto> getSponsoredPosts() {
+		String sql = """
 				SELECT json_agg(t) FROM 
-                       (SELECT *FROM postdetailed 
-                            WHERE sponsoredBy IS NOT NULL
-                        AND sponsoredUntil >= NOW()) t;
+				                   (SELECT *FROM postdetailed 
+				                        WHERE sponsoredBy IS NOT NULL
+				                    AND sponsoredUntil >= NOW()) t;
 				""";
-		try{
+		try {
 			PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
 			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
@@ -199,10 +199,10 @@ public enum PostDao {
 					post.setImage(getFirstImage(post.getId()));
 				}
 				return list;
-			}else{
+			} else {
 				return new ArrayList<>();
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Could not get sponsored posts.");
 		}
@@ -429,6 +429,48 @@ public enum PostDao {
 				statement.setNull(4, java.sql.Types.VARCHAR);
 			} else {
 				statement.setString(4, Security.sanitizeInput(updatedPost.getLocation()));
+			}
+			statement.setInt(5, updatedPost.getId());
+
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Updating post failed, no rows affected.");
+			}
+			return updatedPost;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while updating post");
+		}
+	}
+
+	public Post updateSponsorship(Post updatedPost) {
+		String sql = """
+						UPDATE Post
+						SET lastUpdate = ?,
+				  			sponsoredBy = ?,
+							sponsoredFrom = ?,
+							sponsoredUntil = ?
+						WHERE id = ?;
+				""";
+
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			Timestamp currentTime = Timestamp.from(Instant.now());
+			statement.setTimestamp(1, currentTime);
+			if (updatedPost.getSponsoredBy() == null) {
+				statement.setNull(2, java.sql.Types.INTEGER);
+			} else {
+				statement.setInt(2, updatedPost.getSponsoredBy());
+			}
+			if (updatedPost.getSponsoredFrom() == null) {
+				statement.setNull(3, java.sql.Types.TIMESTAMP);
+			} else {
+				statement.setTimestamp(3, updatedPost.getSponsoredFrom());
+			}
+			if (updatedPost.getSponsoredUntil() == null) {
+				statement.setNull(4, java.sql.Types.TIMESTAMP);
+			} else {
+				statement.setTimestamp(4, updatedPost.getSponsoredUntil());
 			}
 			statement.setInt(5, updatedPost.getId());
 

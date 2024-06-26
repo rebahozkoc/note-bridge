@@ -147,6 +147,6 @@ public enum SponsorDao {
 		currentPost.setSponsoredFrom(post.getSponsoredFrom());
 		currentPost.setSponsoredUntil(post.getSponsoredUntil());
 
-		return PostDao.INSTANCE.update(currentPost);
+		return PostDao.INSTANCE.updateSponsorship(currentPost);
 	}
 }

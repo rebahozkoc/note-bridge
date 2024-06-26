@@ -163,15 +163,16 @@ public class SponsorRoute {
 	@Path("{id}/post")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sponsorPost(@PathParam("id") Integer id,  Post post, @Context HttpServletRequest request) {
+	public Response sponsorPost(@PathParam("id") Integer id, Post post, @Context HttpServletRequest request) {
 		System.out.println("SponsorRoute.sponsorPost is called");
 		HttpSession userSession = request.getSession(false);
-		if (!Security.isAuthorized(userSession, "sponsor") || (int) userSession.getAttribute("userId") != post.getSponsoredBy()) {
+		if (!Security.isAuthorized(userSession, "sponsor")) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User is not authorized").build();
 		}
 
 		try {
 			post.setId(id);
+			post.setSponsoredBy((int) userSession.getAttribute("userId"));
 			return Response.status(Response.Status.OK).entity(SponsorDao.INSTANCE.sponsorPost(post)).build();
 		} catch (Exception e) {
 			e.printStackTrace();

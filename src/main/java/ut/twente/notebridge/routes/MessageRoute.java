@@ -39,22 +39,30 @@ public class MessageRoute {
     @Path("/newhistory/{user1}/{user2}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public MessageHistory newMessageHistory(@PathParam("user1") String user1, @PathParam("user2") String user2) {
-        MessageHistory mh=new MessageHistory();
-        mh.setUser1(user1);
-        mh.setUser2(user2);
-        return MessageDao.INSTANCE.create(mh);
+    public Response newMessageHistory(@PathParam("user1") String user1, @PathParam("user2") String user2) {
+        try{
+            MessageHistory mh=new MessageHistory();
+            mh.setUser1(user1);
+            mh.setUser2(user2);
+            return Response.ok().entity(MessageDao.INSTANCE.create(mh)).build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @POST
     @Path("/newmessage/{user}/{contact}/{message}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Message addMessage(@PathParam("user") String user, @PathParam("contact") String contact, @PathParam("message") String message) {
-        Message m=new Message();
-        m.setUser_id(Integer.valueOf(user));
-        m.setContent(URLDecoder.decode(message, StandardCharsets.UTF_8));
-        return MessageDao.INSTANCE.createNewMessage(contact,m);
+    public Response addMessage(@PathParam("user") String user, @PathParam("contact") String contact, @PathParam("message") String message) {
+        try{
+            Message m=new Message();
+            m.setUser_id(Integer.valueOf(user));
+            m.setContent(URLDecoder.decode(message, StandardCharsets.UTF_8));
+            return Response.ok().entity(MessageDao.INSTANCE.createNewMessage(contact,m)).build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @DELETE

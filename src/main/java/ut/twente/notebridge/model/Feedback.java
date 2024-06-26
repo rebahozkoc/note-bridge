@@ -1,28 +1,58 @@
 package ut.twente.notebridge.model;
 
+/**
+ * This class represents a feedback in the application.
+ * Since email, message are common fields in all feedbacks, they are defined here
+ * It is used in "Contact Us" section of the application
+ */
 public class Feedback extends BaseEntity {
-	private String email;
-	private String message;
+    /**
+     * The user's email.
+     */
+    private String email;
+    /**
+     * The user's message.
+     */
+    private String message;
 
-	public Feedback() {
-		super();
-		this.email = null;
-		this.message = null;
-	}
+    /**
+     * Default constructor for Feedback.
+     */
+    public Feedback() {
+        super();
+        this.email = null;
+        this.message = null;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * getEmail method returns the email of the sender.
+     */
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    /**
+     * setEmail method sets the email of the sender.
+     *
+     * @param email The email of the sender
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    /**
+     * getMessage method returns the message of the sender.
+     */
+    public String getMessage() {
+        return message;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    /**
+     * setMessage method sets the message of the sender.
+     *
+     * @param message The message of the sender
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

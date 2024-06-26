@@ -1,28 +1,57 @@
 package ut.twente.notebridge.model;
 
+/**
+ * This class represents a sponsor in the application.
+ * This class is used to store the information of a sponsor
+ */
 public class Sponsor extends BaseUser {
-	private String companyName;
-	private String websiteURL;
+    /**
+     * The name of the company.
+     */
+    private String companyName;
+    /**
+     * The website URL of the company.
+     */
+    private String websiteURL;
 
-	public Sponsor() {
-		super();
-		this.companyName = null;
-		this.websiteURL = null;
-	}
+    /**
+     * Default constructor for Sponsor.
+     */
+    public Sponsor() {
+        super();
+        this.companyName = null;
+        this.websiteURL = null;
+    }
 
-	public String getCompanyName() {
-		return companyName;
-	}
+    /**
+     * getCompanyName method returns the name of the company.
+     */
+    public String getCompanyName() {
+        return companyName;
+    }
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
+    /**
+     * setCompanyName method sets the name of the company.
+     *
+     * @param companyName The name of the company
+     */
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
-	public String getWebsiteURL() {
-		return websiteURL;
-	}
+    /**
+     * getWebsiteURL method returns the website URL of the company.
+     */
+    public String getWebsiteURL() {
+        return websiteURL;
+    }
 
-	public void setWebsiteURL(String websiteURL) {
-		this.websiteURL = websiteURL;
-	}
+    /**
+     * setWebsiteURL method sets the website URL of the company.
+     *
+     * @param websiteURL The website URL of the company
+     */
+    public void setWebsiteURL(String websiteURL) {
+        this.websiteURL = websiteURL;
+    }
 }

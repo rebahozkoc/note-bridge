@@ -268,8 +268,13 @@ public class PostRoute {
 	@GET
 	@Path("/{id}/comments")
 	@Produces(MediaType.APPLICATION_JSON)
-	public CommentDtoList getComments(@PathParam("id") int id) {
-		return CommentDao.INSTANCE.getComments(id);
+	public Response getComments(@PathParam("id") int id) {
+		try{
+			return Response.status(Response.Status.OK).entity(CommentDao.INSTANCE.getComments(id)).build();
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+
+		}
 	}
 
 	@PUT

@@ -29,7 +29,6 @@ function loadMore(){
 
 
 window.onload = function() {
-
     fetchPosts(pageSize,pageNumber);
     fetchSponsoredPosts();
     checkLoggedIn();
@@ -89,24 +88,22 @@ function displayCard(card, sponsoredCard) {
     if(sponsoredCard) {
         return `
         <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 33rem; margin: 35px 15px 15px;" id="displayed-card">
-            <img src="${imageSource}" height="15vh" class="card-img-top"  alt="card image">
-            <div class="card-body">
-                <h5 class="card-title">${card.title}</h5>
-                <p class="card-text">${card.description}</p>
-                <p class="card-text">Event type: ${card.eventType}</p>
-                <p class="card-text">Location: ${card.location}</p>
+            <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 19vw">
+            <div class="card-body" style="height: 16vw">
+                <h5 class="sponsored-card-title fs-5">${card.title}</h5>
+                <p class="sponsored-card-text">${card.description}</p>
+                <p class="card-text">${card.eventType}</p>
             </div>
         </div>
         `;
     } else {
         return `
         <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 25rem; margin: 35px 15px 15px;" id="displayed-card">
-            <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
+            <img src="${imageSource}" class="card-img-top" style="margin-top: 1.5vh" alt="card image">
             <div class="card-body">
                 <h5 class="card-title">${card.title}</h5>
                 <p class="card-text">${card.description}</p>
-                <p class="card-text">Event type: ${card.eventType}</p>
-                <p class="card-text">Location: ${card.location}</p>
+                <p class="card-text">${card.eventType}</p>
             </div>
         </div>
         `;
@@ -192,7 +189,7 @@ function displaySponsoredPosts() {
         sidenavContent.innerHTML = `${displayCard(sponsoredCardsList[0], true)}`;
     } else {
         sidenavContent.innerHTML = `
-        <div id="carouselExample" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
             <div id="sponsored-cards" class="carousel-inner">
                 <div class="carousel-item active">
                     ${displayCard(sponsoredCardsList.shift(), true)}

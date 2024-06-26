@@ -16,7 +16,8 @@
 
 .card,
 .card-background {
-    background-color:rgb(17, 24, 39);
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 24%, rgba(3,0,149,0.8) 100%);
     color: rgb(225, 225, 225);
 }
 
@@ -29,18 +30,31 @@
     width: 30ch;
 }
 
+.sponsored-card-text {
+    width: 39vh;
+    height: 23vh;
+}
+
+.sponsored-card-title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 27ch;
+}
 
 .card,
 .card-title {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    width: 15ch;
-
+    width: 24ch;
 }
 
 .card:hover {
-    background-color:rgb(17, 24, 39);
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 0%, rgba(3,0,149,0.8) 87%);
     color: rgb(225, 225, 225);
     box-shadow: rgba(138,62,183,3) 1px -5px 40px;
     cursor: pointer;
@@ -193,6 +207,7 @@ a:link {
     color: white;
     font-size: 4vh;
     text-align: center;
+    margin-bottom: 1vh;
 }
 
 #sidenav-content {
@@ -201,11 +216,25 @@ a:link {
 }
 
 .sponsored-card {
-    background-color: rgba(138,62,183, 0.7);
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 24%, rgba(231,255,0,0.8) 100%);
     color: rgb(225, 225, 225);
     cursor: pointer;
 }
 
 .sponsored-card:hover {
-    background-color: rgb(138,62,183);
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 0%, rgba(231,255,0,0.8) 100%);
+}
+
+.text-style {
+    color: yellowgreen;
+    font-family: Georgia, sans-serif;
+    text-shadow: midnightblue 0.4vh 0.4vh;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

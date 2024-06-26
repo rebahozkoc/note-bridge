@@ -101,22 +101,16 @@ function checkLoggedIn() {
     })
         .then(res => {
             if (res.status === 200) {
-                updateNavbar(true);
                 return res.json().then(data => {
-                    welcomeMessage.innerHTML = `
-                    <h1 class="title text-white fst-italic fs-2 mb-5"><strong>Welcome, ${data.username}</strong>!<br><span class="fs-4">We are delighted to see you as a part of our community.<br>Feel free to discover, interact, and collaborate with other musicians!</span></h1>
-                    `;
+                    updateNavbar(true, data.username);
                 });
             } else {
                 updateNavbar(false);
-                welcomeMessage.innerHTML = `
-                <h1 class="title text-white fst-italic fs-1 mb-5">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
-                `;
             }
         })
 }
 
-function updateNavbar(loggedIn) {
+function updateNavbar(loggedIn, username) {
     if(loggedIn) {
         logInBtn.innerHTML = `
         <a href="home.html" id="log-out-btn" class="button-1 mt-1 ms-1" role="button" onclick="logOut()">Log out</a>
@@ -133,6 +127,10 @@ function updateNavbar(loggedIn) {
         myPostsBtn.innerHTML = `
         <a class="navbar-btn" role="button">🎙️ My Posts</a>
         `;
+
+        welcomeMessage.innerHTML = `
+        <h1 class="title text-white fst-italic fs-2 mb-5 top-text-style"><strong>Welcome, ${username}</strong>!<br><span class="fs-4">We are delighted to see you as a part of our community.<br>Feel free to discover, interact, and collaborate with other musicians!</span></h1>
+        `;
     } else {
         logInBtn.innerHTML = `
         <a href="login.html" id="log-in-btn" class="button-1" role="button">Log in</a>
@@ -140,5 +138,9 @@ function updateNavbar(loggedIn) {
         messengerBtn.innerHTML = ``;
         profileBtn.innerHTML = ``;
         myPostsBtn.innerHTML = ``;
+
+        welcomeMessage.innerHTML = `
+        <h1 class="title text-white fst-italic fs-1 mb-5 top-text-style">Welcome to <strong>Note-Bridge</strong>!<br> Capture the feeling of a vibrant music community.</h1>
+        `;
     }
 }

@@ -36,7 +36,7 @@
 
 .page-settings {
     background: #0b032e;
-    font-family: Georgia, serif;
+    font-family: Tahoma, serif;
     background-size: cover;
 }
 
@@ -184,7 +184,7 @@ html {
     cursor: pointer;
     display: inline-flex;
     font-family: "JetBrains Mono",monospace;
-    height: 48px;
+    height: 43px;
     justify-content: center;
     line-height: 1;
     list-style: none;
@@ -200,7 +200,7 @@ html {
     touch-action: manipulation;
     white-space: nowrap;
     will-change: box-shadow,transform;
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .button-1:focus {

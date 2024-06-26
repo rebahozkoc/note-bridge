@@ -67,33 +67,47 @@ public class MessageRoute {
 
     @DELETE
     @Path("/deletehistory{id}/{user}")
-    public void deleteMessageHistory(@PathParam("id") Integer id, @PathParam("user") Integer user) {
-        MessageDao.INSTANCE.delete(id, user);
+    public Response deleteMessageHistory(@PathParam("id") Integer id, @PathParam("user") Integer user) {
+        try{
+            MessageDao.INSTANCE.delete(id,user);
+            return Response.ok(Response.Status.OK).entity("MessageHistory with id " + id + " is deleted").build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @DELETE
     @Path("/deletemessage/{user_id}/{timestamp}/{content}")
-    public void deleteMessage(@PathParam("user_id") int id, @PathParam("timestamp") String timestamp,@PathParam("content") String content) {
+    public Response deleteMessage(@PathParam("user_id") int id, @PathParam("timestamp") String timestamp,@PathParam("content") String content) {
         try{
             content=URLDecoder.decode(content, StandardCharsets.UTF_8);
             MessageDao.INSTANCE.deleteMessage(id,timestamp,content);
-
-        } catch (Exception e) {
-            throw new NotFoundException("Message '" + id + "' not found!");
+            return Response.ok(Response.Status.OK).entity("Message with id " + id + " was deleted").build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
     @PUT
     @Path("/readmessages/{id}")
-    public void readMessages(@PathParam("id") int id){
-        MessageDao.INSTANCE.readMessages(id);
+    public Response readMessages(@PathParam("id") int id){
+        try{
+            MessageDao.INSTANCE.readMessages(id);
+            return Response.ok(Response.Status.OK).entity("Read message with id " + id).build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @GET
     @Path("/count/{user}/{contact}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response countUnreadMessages(@PathParam("user") int user, @PathParam("contact") int contact) {
-        return Response.status(Response.Status.OK).entity(MessageDao.INSTANCE.countUnreadMessages(user,contact)).build();
+        try{
+            return Response.status(Response.Status.OK).entity(MessageDao.INSTANCE.countUnreadMessages(user,contact)).build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @GET

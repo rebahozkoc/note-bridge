@@ -16,7 +16,8 @@
 
 .card,
 .card-background {
-    background-color:rgb(17, 24, 39);
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 24%, rgba(3,0,149,0.8) 100%);
     color: rgb(225, 225, 225);
 }
 
@@ -29,18 +30,31 @@
     width: 30ch;
 }
 
+.sponsored-card-text {
+    width: 39vh;
+    height: 23vh;
+}
+
+.sponsored-card-title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 27ch;
+}
 
 .card,
 .card-title {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    width: 15ch;
-
+    width: 24ch;
 }
 
 .card:hover {
-    background-color:rgb(17, 24, 39);
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 0%, rgba(3,0,149,0.8) 87%);
     color: rgb(225, 225, 225);
     box-shadow: rgba(138,62,183,3) 1px -5px 40px;
     cursor: pointer;
@@ -90,7 +104,7 @@ html {
     z-index: 0; /* Stay on top */
     bottom: 0; /* Stay at the bottom */
     right: 0;
-    background-color:rgb(17, 24, 39);
+    background-color: rgba(17, 24, 39, 0.8);
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
     border-top-left-radius: 20px;
@@ -187,4 +201,40 @@ a:link {
 
 .mg-text{
     line-height: 14px;
+}
+
+#sidenav-title {
+    color: white;
+    font-size: 4vh;
+    text-align: center;
+    margin-bottom: 1vh;
+}
+
+#sidenav-content {
+    padding-top: 0.5vh;
+    margin-left: 1.2vh;
+}
+
+.sponsored-card {
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 24%, rgba(231,255,0,0.8) 100%);
+    color: rgb(225, 225, 225);
+    cursor: pointer;
+}
+
+.sponsored-card:hover {
+    background: rgb(0,0,0);
+    background: linear-gradient(319deg, rgba(0,0,0,0.8) 0%, rgba(231,255,0,0.8) 100%);
+}
+
+.text-style {
+    color: yellowgreen;
+    font-family: Georgia, sans-serif;
+    text-shadow: midnightblue 0.4vh 0.4vh;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

@@ -1,8 +1,10 @@
 let cards = document.querySelector("#cards");
+let sidenavContent = document.querySelector("#sidenav-content");
 let cardsList = {};
 const pageSize=12;
 let pageNumber=1;
 let totalNumberOfCards=0;
+let sponsoredCardsList = {};
 
 
 
@@ -27,8 +29,8 @@ function loadMore(){
 
 
 window.onload = function() {
-
     fetchPosts(pageSize,pageNumber);
+    fetchSponsoredPosts();
     checkLoggedIn();
 }
 
@@ -62,7 +64,7 @@ function fetchPosts(pageSize,pageNumber) {
 function displayAllCards() {
     cardsList.data;
     cards.innerHTML += `
-        ${cardsList.data.map(card => `${displayCard(card)}`).join("\n")}
+        ${cardsList.data.map(card => `${displayCard(card, false)}`).join("\n")}
     `;
     if(totalNumberOfCards<=pageSize*pageNumber){
         loadMoreButton.style.display="none";
@@ -73,7 +75,7 @@ function displayAllCards() {
     }
 }
 
-function displayCard(card) {
+function displayCard(card, sponsoredCard) {
     let imageSource;
     if(card.hasImage){
         console.log(card)
@@ -82,17 +84,30 @@ function displayCard(card) {
     }else{
         imageSource = "assets/images/placeholder.jpg";
     }
-    return `
-    <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 25rem; margin: 35px 15px 15px;" id="displayed-card">
-        <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
-        <div class="card-body">
-            <h5 class="card-title">${card.title}</h5>
-            <p class="card-text">${card.description}</p>
-            <p class="card-text">Event type: ${card.eventType}</p>
-            <p class="card-text">Location: ${card.location}</p>
+
+    if(sponsoredCard) {
+        return `
+        <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 33rem; margin: 35px 15px 15px;" id="displayed-card">
+            <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 19vw">
+            <div class="card-body" style="height: 16vw">
+                <h5 class="sponsored-card-title fs-5">${card.title}</h5>
+                <p class="sponsored-card-text">${card.description}</p>
+                <p class="card-text">${card.eventType}</p>
+            </div>
         </div>
-    </div>
-    `;
+        `;
+    } else {
+        return `
+        <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 25rem; margin: 35px 15px 15px;" id="displayed-card">
+            <img src="${imageSource}" class="card-img-top" style="margin-top: 1.5vh" alt="card image">
+            <div class="card-body">
+                <h5 class="card-title">${card.title}</h5>
+                <p class="card-text">${card.description}</p>
+                <p class="card-text">${card.eventType}</p>
+            </div>
+        </div>
+        `;
+    }
 }
 
 function selectCard(card) {
@@ -167,4 +182,35 @@ function hideCreatePostBtnIfSponsor(){
         createPostBtn.style.display="none";
         console.error(`Unable to fetch status: ${err.status}`);
     })
+}
+function fetchSponsoredPosts() {
+    fetch("/notebridge/api/posts/sponsored")
+        .then(res => res.json())
+        .then(data => {
+            sponsoredCardsList = data;
+            displaySponsoredPosts();
+        })
+}
+
+function displaySponsoredPosts() {
+    if(sponsoredCardsList.length === 0) {
+        sidenavContent.innerHTML = `There are no sponsored posts at this moment.`;
+    } else if (sponsoredCardsList.length === 1) {
+        sidenavContent.innerHTML = `${displayCard(sponsoredCardsList[0], true)}`;
+    } else {
+        sidenavContent.innerHTML = `
+        <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div id="sponsored-cards" class="carousel-inner">
+                <div class="carousel-item active">
+                    ${displayCard(sponsoredCardsList.shift(), true)}
+                </div>
+            </div>
+        </div>
+        `;
+
+        let sponsoredCards = document.querySelector("#sponsored-cards");
+        sponsoredCards.innerHTML += `
+        ${sponsoredCardsList.map(sponsoredCard => `<div class="carousel-item">${displayCard(sponsoredCard, true)}</div>`).join("\n")}
+        `;
+    }
 }

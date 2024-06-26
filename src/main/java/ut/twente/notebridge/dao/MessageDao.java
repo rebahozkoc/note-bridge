@@ -74,40 +74,49 @@ public enum MessageDao {
     }
 
     public void delete(Integer id, Integer user) {
-        try {
-            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-					UPDATE privatemessagehistory
+        String sql = """
+                    UPDATE privatemessagehistory
 					SET user1 = CASE WHEN user1 = ? THEN NULL ELSE user1 END,
 					user2 = CASE WHEN user2 = ? THEN NULL ELSE user2 END
 					WHERE id = ? AND (user1 = ? OR user2 = ?);
-					""");
-            ps.setInt(1, user);
-            ps.setInt(2, user);
-            ps.setInt(3, user);
-            ps.setInt(4, id);
-            ps.setInt(5, user);
-            ps.executeQuery();
-            ps.close();
-            PreparedStatement ps1 = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-     
-					DELETE FROM notebridge.privatemessagehistory
+					""";
+        try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+            statement.setInt(1, user);
+            statement.setInt(2, user);
+            statement.setInt(3, user);
+            statement.setInt(4, id);
+            statement.setInt(5, user);
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Deleting user failed, no rows affected.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while deleting person with id " + id);
+        }
+        String sql2 = """
+                   DELETE FROM notebridge.privatemessagehistory
 					WHERE user1 IS NULL AND user2 IS NULL;
-					""");
-            ps1.executeQuery();
+					""";
+        try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql2)) {
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Deleting user failed, no rows affected.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteMessage(int id, String timestamp, String content) {
+    public void deleteMessage(Message m,String timestamp) {
         String sql = """
 				DELETE FROM privatemessage WHERE user_id=? AND createddate=?::timestamp AND content=?
 				
 		"""; // Assuming delete_post takes one parameter
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
-            statement.setInt(1, id);
+            statement.setInt(1, m.getId());
             statement.setString(2, timestamp);
-            statement.setString(3, content);
+            statement.setString(3, m.getContent());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -134,6 +143,7 @@ public enum MessageDao {
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     message.setId(generatedKeys.getInt(1));
+                    message.setCreateddate(generatedKeys.getTimestamp(3));
                     message.setMessagehistory_id(generatedKeys.getInt(5));
                 } else {
                     throw new SQLException("Creating post failed, no ID obtained.");
@@ -209,7 +219,7 @@ public enum MessageDao {
         }
     }
 
-    public Integer countUnreadMessages(int user, int contact) {
+    public int countUnreadMessages(int user, int contact) {
         String sql = "SELECT COUNT(id) FROM privatemessage WHERE isread=false AND messagehistory_id=get_history_id(?,?) AND user_id=?";
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection()
                 .prepareStatement(sql)) {

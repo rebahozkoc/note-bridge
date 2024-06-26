@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.ws.rs.NotFoundException;
 import ut.twente.notebridge.dto.PostDto;
+import ut.twente.notebridge.model.MessageHistory;
 import ut.twente.notebridge.model.Post;
 import ut.twente.notebridge.utils.DatabaseConnection;
 import ut.twente.notebridge.utils.Security;
@@ -192,6 +193,47 @@ public enum PersonDao {
 			throw new RuntimeException("Error while getting interested posts");
 		}
 
+	}
+
+	public Boolean isContact(int user1,int user2){
+		String sql = """
+				SELECT EXISTS(SELECT* FROM privatemessagehistory WHERE (user1=? AND user2=?) OR (user1=? AND user2=?));
+                                                                                                                 
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, user1);
+			statement.setInt(2, user2);
+			statement.setInt(3, user2);
+			statement.setInt(4, user1);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return rs.getBoolean(1);
+			}else{
+				throw new SQLException();
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while checking if users are contacts");
+		}
+	}
+
+	public void createContact(MessageHistory contactTuple){
+		String sql = """
+				INSERT INTO privatemessagehistory (user1,user2)
+				VALUES (?,?);
+				""";
+		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+			statement.setInt(1, Integer.parseInt(contactTuple.getUser1()));
+			statement.setInt(2, Integer.parseInt(contactTuple.getUser2()));
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while creating contact");
+		}
 	}
 
 }

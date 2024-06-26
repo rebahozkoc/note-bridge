@@ -177,7 +177,7 @@ function getPostImages() {
 function displayPostImages() {
     if(images.length === 0) {
         postImages.innerHTML = `
-        <img src="assets/images/placeholder.jpg" class="img-fluid border border-dark border-2 rounded-2" width="30%" height="30%" alt="post image placeholder">
+        <img src="assets/images/image-placeholder.jpg" class="img-fluid border border-dark border-2 rounded-2" width="30%" height="30%" alt="post image placeholder">
         `;
     } else if(images.length === 1) {
         postImages.innerHTML = `

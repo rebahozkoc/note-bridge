@@ -82,14 +82,14 @@ function displayCard(card, sponsoredCard) {
         imageSource="data:image/png;base64,";
         imageSource += card.image;
     }else{
-        imageSource = "assets/images/placeholder.jpg";
+        imageSource = "assets/images/image-placeholder.jpg";
     }
 
     if(sponsoredCard) {
         return `
-        <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 33rem; margin: 35px 15px 15px;" id="displayed-card">
-            <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 19vw">
-            <div class="card-body" style="height: 16vw">
+        <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 30%; margin: 35px 15px 15px;" id="displayed-card">
+            <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 20%">
+            <div class="card-body" style="height: 10%">
                 <h5 class="sponsored-card-title fs-5">${card.title}</h5>
                 <p class="sponsored-card-text">${card.description}</p>
                 <p class="card-text">${card.eventType}</p>

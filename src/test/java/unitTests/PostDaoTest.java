@@ -146,7 +146,7 @@ class PostDaoTest {
 		post3.setEventType("jam");
 		post3.setPersonId(person.getId());
 		PostDao.INSTANCE.create(post3);
-		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5, 1, null, 0, null,null,null);
+		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5, 1, null, 0, null,null,null,null);
 		assertEquals(returnedPosts.size(), 3, "There should be 3 posts");
 
 		PostDao.INSTANCE.delete(post2.getId());
@@ -181,7 +181,7 @@ class PostDaoTest {
 		post3.setPersonId(person2.getId());
 		PostDao.INSTANCE.create(post3);
 
-		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5, 1, null, person.getId(), null,null,null);
+		List<PostDto> returnedPosts = PostDao.INSTANCE.getPosts(5, 1, null, person.getId(), null,null,null,null);
 		assertEquals(returnedPosts.size(), 2, "There should be 2 posts of this user");
 
 		PostDao.INSTANCE.delete(post2.getId());

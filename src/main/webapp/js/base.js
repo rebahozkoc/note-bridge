@@ -7,8 +7,12 @@ const myPostsBtn = document.getElementById("myposts-btn");
 
 myPostsBtn.addEventListener("click", () => {
    getStatus().then(data => {
+       if(data.role === "person"){
+           window.location.href = 'cards.html?personId=' + data.userId;
 
-       window.location.href = 'cards.html?personId=' + data.userId;
+       }else{
+              window.location.href = 'cards.html?sponsoredBy=' + data.userId;
+       }
 
    }).catch(err => {
        console.error("Error while navigating to my posts page: ", err);
@@ -133,6 +137,10 @@ function updateNavbar(loggedIn,role) {
         if(role==="person"){
                 myPostsBtn.innerHTML = `
             <a  class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
+            `;
+        }else{
+            myPostsBtn.innerHTML = `
+            <a  class="button-cover me-3" role="button"><span class="text px-5">Your Sponsored Posts</span><span>Your Sponsored Posts</span></a>
             `;
         }
 

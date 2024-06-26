@@ -1,46 +1,47 @@
-.card-body-2, .card-body{
+.card-body-2, .card-body {
     padding: 25px 0;
     text-align: center;
     border-radius: 25px;
     background-color: rgba(17, 24, 39, 0.8);
     color: rgb(225, 225, 225);
-    box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
+    box-shadow: rgba(138, 62, 183, 0.3) 5px 5px 15px;
 }
-.card-body-2{
+
+.card-body-2 {
     margin: 20px auto;
 }
 
-.mb-2{
-    color:white;
-    margin:-3px;
+.mb-2 {
+    color: white;
+    margin: -3px;
 }
 
-.small-opacity{
+.small-opacity {
     opacity: 0.5;
 }
 
-.heart{
+.heart {
     cursor: pointer;
     transition: color 0.25s;
-    color:red;
+    color: red;
 }
 
-.btn-primary{
+.btn-primary {
     margin: 10px;
     border: none;
     background: #6332c5;
     color: #fff;
 }
 
-.btn-primary:hover{
-    background-color: rgba(138,62,183,0.3);
+.btn-primary:hover {
+    background-color: rgba(138, 62, 183, 0.3);
 }
 
 .edit-icon {
     color: #fff;
     cursor: pointer;
     margin-left: 10px;
-    font-size:1.2em;
+    font-size: 1.2em;
 }
 
 .title-container {
@@ -49,42 +50,81 @@
     justify-content: center;
 }
 
-.mt-5{
-    color:white;
+.mt-5 {
+    color: white;
 }
 
-.comments-section{
+.comments-section {
     padding: 25px 0;
+    margin: 25px;
     text-align: center;
     border-radius: 25px;
     background-color: rgba(17, 24, 39, 0.8);
     color: rgb(225, 225, 225);
-    box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
+    box-shadow: rgba(138, 62, 183, 0.3) 5px 5px 15px;
 }
 
-.form-control{
+.form-control {
     text-align: left;
+}
+.comment-block {
+    background-color: #2a2a2a; /* Slightly different color for contrast */
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px; /* Increased margin to add more space between comments */
+    color: #fff; /* Text color for better visibility */
+    display: flex;
+    align-items: flex-start;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.comment-header img {
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.comment-body {
+    flex: 1;
+    text-align: right; /* Align text to the right */
+}
+
+.comment-body p {
+    margin-bottom: 10px;
+}
+
+.delete-icon {
+    cursor: pointer;
+    margin-left: 10px;
 }
 
 .btn-facebook {
     background-color: #3b5998;
     color: white;
 }
+
 .btn-facebook:hover {
     background-color: #2d4373;
     color: white;
 }
+
 .btn-x {
     background-color: #1da1f2;
     color: white;
 }
+
 .btn-x:hover {
     background-color: #0d8ddc;
     color: white;
 }
 
 .x-icon {
-    font: normal normal normal 12px/18px 'Helvetica Neue',Arial,sans-serif;
+    font: normal normal normal 12px/18px 'Helvetica Neue', Arial, sans-serif;
     user-select: none;
     --rem: 16;
     font-size: 13px;
@@ -100,4 +140,21 @@
     top: 4px;
     height: 18px;
     width: 18px;
+}
+
+.sponsor-button {
+    display: none;
+}
+
+.sponsor-header {
+    display: none;
+    background-color: #76ab17;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+
 }

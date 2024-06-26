@@ -42,9 +42,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    width: 27ch;
+    width: 26ch;
 }
 
 .card,

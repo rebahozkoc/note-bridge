@@ -91,8 +91,8 @@ function displayCard(card, sponsoredCard) {
             <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 16rem">
             <div class="card-body" style="height: 14rem">
                 <h5 class="sponsored-card-title fs-5">${card.title}</h5>
-                <p class="sponsored-card-text">${card.description}</p>
-                <p class="card-text">${card.eventType}</p>
+                <p class="sponsored-card-text ms-3">${card.description}</p>
+                <p class="card-text ms-3">${card.eventType}</p>
             </div>
         </div>
         `;

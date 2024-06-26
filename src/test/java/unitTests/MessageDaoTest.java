@@ -1,5 +1,6 @@
 package unitTests;
 
+import jakarta.ws.rs.NotFoundException;
 import java.sql.Timestamp;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
@@ -12,13 +13,14 @@ import org.junit.jupiter.api.TestMethodOrder;
 import ut.twente.notebridge.dao.BaseUserDao;
 import ut.twente.notebridge.dao.MessageDao;
 import ut.twente.notebridge.dao.PersonDao;
+import ut.twente.notebridge.dao.PostDao;
 import ut.twente.notebridge.model.BaseUser;
 import ut.twente.notebridge.model.Message;
 import ut.twente.notebridge.model.MessageHistory;
 import ut.twente.notebridge.utils.DatabaseConnection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MessageDaoTest {
@@ -169,5 +171,20 @@ public class MessageDaoTest {
         assertEquals(createdMessage2, m2, "Message is created");
         List<Message> messages=MessageDao.INSTANCE.getMessages(5,1,null,String.valueOf(user1.getId()),String.valueOf(user2.getId()));
         assertEquals(messages.size(), 3, "There should be 3 messages of this user");
+    }
+
+    @Test
+    @Order(6)
+    public void stage6_testReadMessage(){
+        int firstCount=MessageDao.INSTANCE.countUnreadMessages(user2.getId(),user1.getId());
+        MessageDao.INSTANCE.readMessages(m.getId());
+        assertNotEquals(firstCount,MessageDao.INSTANCE.countUnreadMessages(user2.getId(),user1.getId()));
+    }
+
+    @Test
+    @Order(7)
+    public void stage7_testDeleteMessage(){
+        MessageDao.INSTANCE.deleteMessage(m, String.valueOf(m.getCreateddate()));
+        assertFalse(MessageDao.INSTANCE.getMessages(5,1,null,Integer.toString(m.getUser_id()),Integer.toString(user2.getId())).contains(m));
     }
 }

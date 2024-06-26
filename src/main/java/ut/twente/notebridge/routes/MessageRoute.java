@@ -81,7 +81,10 @@ public class MessageRoute {
     public Response deleteMessage(@PathParam("user_id") int id, @PathParam("timestamp") String timestamp,@PathParam("content") String content) {
         try{
             content=URLDecoder.decode(content, StandardCharsets.UTF_8);
-            MessageDao.INSTANCE.deleteMessage(id,timestamp,content);
+            Message m=new Message();
+            m.setId(id);
+            m.setContent(content);
+            MessageDao.INSTANCE.deleteMessage(m,timestamp);
             return Response.ok(Response.Status.OK).entity("Message with id " + id + " was deleted").build();
         }catch (Exception e){
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

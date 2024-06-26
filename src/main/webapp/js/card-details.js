@@ -41,11 +41,51 @@ confirmDeleteBtn.addEventListener("click", deletePost);
 
 loadPostDetailsAndLikes(cardId);
 
+editPostModalSaveBtn.addEventListener("click", updatePost);
 
 window.onload = function() {
     checkLoggedIn();
     getUserId();
     getPostImages();
+}
+
+function updatePost() {
+    if(document.getElementById("titleInput").value.trim()===""){
+        alert("Title cannot be empty!");
+        return;
+    }
+
+    getStatus().then(data => {
+        fetch(`/notebridge/api/posts/${cardId}`,
+            {method:"PUT",
+                body: JSON.stringify({
+                    title: document.getElementById("titleInput").value,
+                    description: document.getElementById("descriptionInput").value,
+                    location: document.getElementById("locationInput").value,
+                    personId: data.userId
+                }),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            .then(res => {
+                if(res.status === 200) {
+                    alert("Post updated successfully!");
+                    window.location.href = "card-details.html?id=" + cardId;
+                } else {
+                    return res.text().then(errorText => {
+                        throw new Error(`${errorText}`);
+                    });
+                }
+            })
+            .catch(err=>{
+                console.error("Error updating post:", err);
+            });
+    }).catch(err => {
+        console.error("Error getting status:", err);
+    })
+
+
 }
 
 function deletePost() {
@@ -385,6 +425,7 @@ function loadAuthorImage(personId) {
             if(res.status===200) {
                 return res.blob();
             }else{
+                authorImage.src="assets/images/profile-picture-placeholder.png";
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);
                 });
@@ -758,4 +799,19 @@ function getUser(){
 }
 
 
+function shareOnFacebook() {
+    const url = encodeURIComponent(window.location.href);
+    const title = cardTitle.innerText;
+    const summary = description.innerText;
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?s=100&p[url]=${url}&p[title]=${title}&p[summary]=${summary}&amp;src=sdkpreparse`;
+    //href="https://www.facebook.com/sharer/sharer.php?s=100&p[url]=http://www.example.com&p[images][0]=&p[title]=Title%20Goes%20Here&p[summary]=Description%20goes%20here!"
+    window.open(facebookShareUrl, '_blank');
+}
+
+function shareOnX() {
+    const url = encodeURIComponent(window.location.href);
+    const text = "Take a look at this post on Note-Bridge!";
+    const twitterShareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+    window.open(twitterShareUrl, '_blank');
+}
 

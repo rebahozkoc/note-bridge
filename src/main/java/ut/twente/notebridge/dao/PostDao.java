@@ -54,7 +54,7 @@ public enum PostDao {
 		}
 	}
 
-	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, StringBuilder returnQuery) {
+	public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, Integer sponsorId,StringBuilder returnQuery) {
 		System.out.println("GET posts called");
 		List<PostDto> list = new ArrayList<>();
 
@@ -67,6 +67,7 @@ public enum PostDao {
 
 		boolean isSearchGiven = search != null && !search.isEmpty() && !search.equals("undefined");
 		boolean isPersonIdGiven = personId != null && personId > 0;
+		boolean isSponsorIdGiven = sponsorId != null && sponsorId > 0;
 		boolean isFilterByGiven = filterBy != null && !filterBy.isEmpty();
 		boolean isSortByGiven = sortBy != null && !sortBy.isEmpty() && sortableColumns.contains(sortBy);
 
@@ -82,7 +83,7 @@ public enum PostDao {
 			}
 
 			if (filterBy.equals("jam-session")) {
-				sqlBuilder.append("eventType='jam'\n");
+				sqlBuilder.append("eventType='Jam Session'\n");
 			} else if (filterBy.equals("live-event")) {
 				sqlBuilder.append("eventType='Live Event'\n");
 			} else if (filterBy.equals("find-band-member")) {
@@ -93,6 +94,14 @@ public enum PostDao {
 				sqlBuilder.append("eventType='Music Discussion'\n");
 			}
 
+		}
+		if (isSponsorIdGiven) {
+			if (isPersonIdGiven || isFilterByGiven) {
+				sqlBuilder.append("AND\n");
+			} else {
+				sqlBuilder.append("WHERE ");
+			}
+			sqlBuilder.append("sponsoredBy=?\n");
 		}
 
 		if (!isSearchGiven) {
@@ -116,7 +125,7 @@ public enum PostDao {
 
 		} else {
 			//Search is given
-			if (isPersonIdGiven || isFilterByGiven) {
+			if (isPersonIdGiven || isFilterByGiven || isSponsorIdGiven) {
 				sqlBuilder.append("AND\n");
 			} else {
 				sqlBuilder.append("WHERE ");
@@ -136,6 +145,10 @@ public enum PostDao {
 				statement.setInt(parameterIndex, personId);
 				parameterIndex++;
 
+			}
+			if (isSponsorIdGiven) {
+				statement.setInt(parameterIndex, sponsorId);
+				parameterIndex++;
 			}
 			if (isSearchGiven) {
 				statement.setString(parameterIndex, tsquery);
@@ -167,6 +180,33 @@ public enum PostDao {
 			throw new RuntimeException("Could not get posts.");
 		}
 		return list;
+	}
+
+	public List<PostDto> getSponsoredPosts(){
+		String sql= """
+				SELECT json_agg(t) FROM 
+                       (SELECT *FROM postdetailed 
+                            WHERE sponsoredBy IS NOT NULL
+                        AND sponsoredUntil >= NOW()) t;
+				""";
+		try{
+			PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
+			if (rs.next() && rs.getString("json_agg") != null) {
+				List<PostDto> list = Arrays.asList(mapper.readValue(rs.getString("json_agg"), PostDto[].class));
+				for (PostDto post : list) {
+					post.setImage(getFirstImage(post.getId()));
+				}
+				return list;
+			}else{
+				return new ArrayList<>();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException("Could not get sponsored posts.");
+		}
+
 	}
 
 	public Post getPost(int id) {
@@ -367,10 +407,6 @@ public enum PostDao {
 						SET lastUpdate = ?,
 						title = ?,
 						description = ?,
-						sponsoredBy = ?,
-						sponsoredFrom = ?,
-						sponsoredUntil = ?,
-						eventType = ?,
 						location = ?
 						WHERE id = ?;
 				""";
@@ -378,40 +414,23 @@ public enum PostDao {
 
 		try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
 			Timestamp currentTime = Timestamp.from(Instant.now());
-			updatedPost.setLastUpdate(currentTime);
 			statement.setTimestamp(1, currentTime);
 			if (updatedPost.getTitle() == null || updatedPost.getTitle().isEmpty()) {
 				throw new BadRequestException("Title cannot be empty");
 			} else {
 				statement.setString(2, Security.sanitizeInput(updatedPost.getTitle()));
 			}
-			if (updatedPost.getTitle() == null) {
+			if (updatedPost.getDescription() == null) {
 				statement.setNull(3, java.sql.Types.VARCHAR);
 			} else {
 				statement.setString(3, Security.sanitizeInput(updatedPost.getDescription()));
 			}
-			if (updatedPost.getSponsoredBy() == null) {
-				statement.setNull(4, Types.INTEGER);
-			} else {
-				statement.setInt(4, updatedPost.getSponsoredBy());
-			}
-			if (updatedPost.getSponsoredFrom() == null) {
-				statement.setNull(5, java.sql.Types.TIMESTAMP);
-			} else {
-				statement.setTimestamp(5, updatedPost.getSponsoredFrom());
-			}
-			if (updatedPost.getSponsoredUntil() == null) {
-				statement.setNull(6, java.sql.Types.TIMESTAMP);
-			} else {
-				statement.setTimestamp(6, updatedPost.getSponsoredUntil());
-			}
-			statement.setString(7, Security.sanitizeInput(updatedPost.getEventType()));
 			if (updatedPost.getLocation() == null) {
-				statement.setNull(8, java.sql.Types.VARCHAR);
+				statement.setNull(4, java.sql.Types.VARCHAR);
 			} else {
-				statement.setString(8, Security.sanitizeInput(updatedPost.getLocation()));
+				statement.setString(4, Security.sanitizeInput(updatedPost.getLocation()));
 			}
-			statement.setInt(9, updatedPost.getId());
+			statement.setInt(5, updatedPost.getId());
 
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {

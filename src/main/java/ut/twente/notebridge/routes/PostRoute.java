@@ -37,9 +37,26 @@ public class PostRoute {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post getPost(@PathParam("id") int id) {
-		return PostDao.INSTANCE.getPost(id);
+	public Response getPost(@PathParam("id") int id) {
+		try{
+			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.getPost(id)).build();
+		}catch (Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
+
+
+	@GET
+	@Path("/sponsored")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSponsoredPosts(){
+		try{
+			return Response.status(Response.Status.OK).entity(PostDao.INSTANCE.getSponsoredPosts()).build();
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -49,7 +66,8 @@ public class PostRoute {
 			@QueryParam("sortBy") String sortBy,
 			@QueryParam("personId") Integer personId,
 			@QueryParam("search") String search,
-			@QueryParam("filterBy") String filterBy
+			@QueryParam("filterBy") String filterBy,
+			@QueryParam("sponsoredBy") Integer sponsorId
 	) {
 		try {
 			int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
@@ -58,7 +76,7 @@ public class PostRoute {
 			StringBuilder query = new StringBuilder();
 
 
-			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, personId, search, filterBy, query).toArray(new PostDto[0]);
+			PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, personId, search, filterBy,sponsorId, query).toArray(new PostDto[0]);
 
 			//Changing json_agg(t) to COUNT in order to get total posts query
 			String s = "json_agg(t)";

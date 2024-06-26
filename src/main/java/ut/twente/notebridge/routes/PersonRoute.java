@@ -1,6 +1,7 @@
 package ut.twente.notebridge.routes;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
@@ -10,8 +11,10 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import ut.twente.notebridge.dao.BaseUserDao;
+import ut.twente.notebridge.dao.LikeDao;
 import ut.twente.notebridge.dao.PersonDao;
 import ut.twente.notebridge.model.BaseUser;
+import ut.twente.notebridge.model.MessageHistory;
 import ut.twente.notebridge.model.Person;
 import ut.twente.notebridge.utils.Security;
 import ut.twente.notebridge.utils.Utils;
@@ -21,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Path("/persons")
@@ -109,6 +114,7 @@ public class PersonRoute {
 		try {
 			PersonDao.INSTANCE.delete(id);
 			BaseUserDao.INSTANCE.delete(id);
+			userSession.invalidate();
 			return Response.status(Response.Status.OK).entity("Person with id " + id + " is deleted").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -184,4 +190,46 @@ public class PersonRoute {
 		}
 	}
 
+	@GET
+	@Path("/contact/{requestedUserId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response isContact(@PathParam("requestedUserId") int requestedUserId,@Context HttpServletRequest request) {
+		Map<String, Boolean> responseObj = new HashMap<>();
+		// In case user is not authenticated, return unauthorized
+		if (request.getSession(false) == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
+		}
+
+		int userId = (int) request.getSession().getAttribute("userId");
+		try{
+			Boolean isContact = PersonDao.INSTANCE.isContact(userId, requestedUserId);
+			// Create the return Object & return as JSON
+			responseObj.put("isContact", isContact);
+			ObjectMapper mapper = new ObjectMapper();
+			return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(responseObj)).build();
+
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
+	@POST
+	@Path("/contact/{requestedUserId}")
+	public Response addContact(@PathParam("requestedUserId") int requestedUserId,@Context HttpServletRequest request) {
+		// In case user is not authenticated, return unauthorized
+		if (request.getSession(false) == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User not logged in").build();
+		}
+
+		int userId = (int) request.getSession().getAttribute("userId");
+		try{
+			MessageHistory mh = new MessageHistory();
+			mh.setUser1(String.valueOf(userId));
+			mh.setUser2(String.valueOf(requestedUserId));
+			PersonDao.INSTANCE.createContact(mh);
+			return Response.status(Response.Status.OK).build();
+		}catch(Exception e){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
 }

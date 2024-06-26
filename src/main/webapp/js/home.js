@@ -28,7 +28,7 @@ btn3.addEventListener("click", function() {
 })
 
 function addParagraphTag(text) {
-    return `<p class="fade-in-text">` + text + `</p>`
+    return `<p class="fade-in-text middle-text-style">` + text + `</p>`
 }
 
 function addImgTag(img) {

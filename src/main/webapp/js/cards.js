@@ -82,17 +82,17 @@ function displayCard(card, sponsoredCard) {
         imageSource="data:image/png;base64,";
         imageSource += card.image;
     }else{
-        imageSource = "assets/images/placeholder.jpg";
+        imageSource = "assets/images/image-placeholder.jpg";
     }
 
     if(sponsoredCard) {
         return `
-        <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 33rem; margin: 35px 15px 15px;" id="displayed-card">
-            <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 19vw">
-            <div class="card-body" style="height: 16vw">
+        <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 30rem; margin: 35px 15px 15px;" id="displayed-card">
+            <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 16rem">
+            <div class="card-body" style="height: 14rem">
                 <h5 class="sponsored-card-title fs-5">${card.title}</h5>
-                <p class="sponsored-card-text">${card.description}</p>
-                <p class="card-text">${card.eventType}</p>
+                <p class="sponsored-card-text ms-3">${card.description}</p>
+                <p class="card-text ms-3">${card.eventType}</p>
             </div>
         </div>
         `;
@@ -100,7 +100,7 @@ function displayCard(card, sponsoredCard) {
         return `
         <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 25rem; margin: 35px 15px 15px;" id="displayed-card">
             <img src="${imageSource}" class="card-img-top" style="margin-top: 1.5vh" alt="card image">
-            <div class="card-body">
+            <div class="card-body" style="height: 12rem">
                 <h5 class="card-title">${card.title}</h5>
                 <p class="card-text">${card.description}</p>
                 <p class="card-text">${card.eventType}</p>
@@ -198,17 +198,14 @@ function displaySponsoredPosts() {
     } else if (sponsoredCardsList.length === 1) {
         sidenavContent.innerHTML = `${displayCard(sponsoredCardsList[0], true)}`;
     } else {
-        sidenavContent.innerHTML = `
-        <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div id="sponsored-cards" class="carousel-inner">
-                <div class="carousel-item active">
-                    ${displayCard(sponsoredCardsList.shift(), true)}
-                </div>
-            </div>
+        let sponsoredCards = document.querySelector("#sponsored-cards");
+
+        sponsoredCards.innerHTML = `
+        <div class="carousel-item active">
+            ${displayCard(sponsoredCardsList.shift(), true)}
         </div>
         `;
 
-        let sponsoredCards = document.querySelector("#sponsored-cards");
         sponsoredCards.innerHTML += `
         ${sponsoredCardsList.map(sponsoredCard => `<div class="carousel-item">${displayCard(sponsoredCard, true)}</div>`).join("\n")}
         `;

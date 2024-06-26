@@ -178,7 +178,7 @@ function getPostImages() {
 function displayPostImages() {
     if (images.length === 0) {
         postImages.innerHTML = `
-        <img src="assets/images/placeholder.jpg" class="img-fluid border border-dark border-2 rounded-2" width="30%" height="30%" alt="post image placeholder">
+        <img src="assets/images/image-placeholder.jpg" class="img-fluid border border-dark border-2 rounded-2" width="30%" height="30%" alt="post image placeholder">
         `;
     } else if (images.length === 1) {
         postImages.innerHTML = `
@@ -225,7 +225,12 @@ function getUserId() {
             if (res.status === 200) {
                 return res.json().then(data => {
                     getAuthor(data.userId, data.role);
-                    showCommentsSection();
+                    if (data.role === "person") {
+                        showCommentsSection();
+                    }
+                    if (data.role === "sponsor") {
+                        hideCommentsSection();
+                    }
                 });
             } else {
                 return res.text().then(errorText => {
@@ -256,7 +261,6 @@ function getAuthor(userId, role) {
 function saveSponsorshipDates() {
     const fromDate = document.getElementById('sponsored-from').value;
     const untilDate = document.getElementById('sponsored-until').value;
-    console.log('Sponsored from:', fromDate, 'until:', untilDate);
 
     fetch(`/notebridge/api/sponsors/${cardId}/post`,
         {
@@ -282,9 +286,6 @@ function saveSponsorshipDates() {
 }
 
 function checkPostBelongsToUser(userId, author) {
-    console.log(userId);
-    console.log(author);
-
     if (author === userId) {
         deleteIcon.innerHTML = `
         <span class="button"  data-bs-toggle="modal" data-bs-target="#deleteModal" style="cursor: pointer; background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </span>
@@ -401,12 +402,9 @@ async function loadPostDetailsAndLikes(cardId) {
         postCreateDateSpan.innerHTML = `${new Date(parseInt(postData.createDate)).toLocaleDateString()} ${new Date(parseInt(postData.createDate)).toLocaleTimeString()}`;
         postLastUpdateDateSpan.innerHTML = `${new Date(parseInt(postData.lastUpdate)).toLocaleDateString()} ${new Date(parseInt(postData.lastUpdate)).toLocaleTimeString()}`;
 
-        currentDate = new Date();
-        console.log(currentDate);
-        console.log(new Date(parseInt(postData.lastUpdate)));
-        console.log(postData);
+        const currentDate = new Date();
         if (postData.sponsoredBy != null && currentDate > new Date(parseInt(postData.sponsoredFrom)) && currentDate < new Date(parseInt(postData.sponsoredUntil))) {
-            console.log("Post is sponsored");
+            //console.log("Post is sponsored");
             loadSponsorData(postData);
         }
 
@@ -451,7 +449,7 @@ function loadSponsorData(postData) {
 
     fetch(`/notebridge/api/sponsors/${postData.sponsoredBy}`).then(
         res => {
-            if (res.status === 200){
+            if (res.status === 200) {
                 res.json().then(data => {
                     sponsorHeader.innerHTML = `Sponsored by: ${data.companyName}`;
                     sponsorHeader.href = `https://${data.websiteURL}`;
@@ -463,15 +461,12 @@ function loadSponsorData(postData) {
 
 
 function loadAuthorImage(personId) {
-
-    console.log(personId)
-
     fetch(`/notebridge/api/persons/${personId}/image`)
         .then(res => {
             if (res.status === 200) {
                 return res.blob();
-            }else{
-                authorImage.src="assets/images/profile-picture-placeholder.png";
+            } else {
+                authorImage.src = "assets/images/profile-picture-placeholder.png";
                 return res.text().then(errorText => {
                     throw new Error(`${errorText}`);
                 });
@@ -488,8 +483,6 @@ function loadAuthorImage(personId) {
         .catch(error => {
             console.error("Error", error.toString());
         });
-
-
 }
 
 function loadAuthorDetails(personId) {
@@ -638,54 +631,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
 let commentToDelete = null;
 
-async function loadUserImage(personId) {
-    try {
-        console.log(`Fetching image for personId: ${personId}`);
-        const res = await fetch(`/notebridge/api/persons/${personId}/image`);
-        if (res.status === 200) {
-            const blob = await res.blob();
-            const userUrl = URL.createObjectURL(blob);
-            userImage.src = userUrl;
-            console.log(`Fetched image URL for personId: ${personId} - ${userUrl}`);
-            return userUrl;
-        } else if (res.status === 404) {
-            console.warn(`Image not found for personId: ${personId}, using default image.`);
-            return 'src/main/webapp/assets/images/profile-picture-placeholder.png'; // default placeholder image
-        } else {
-            const errorText = await res.text();
-            console.error(`Error fetching image for personId: ${personId} - ${errorText}`);
-            throw new Error(errorText);
-        }
-    } catch (error) {
-        console.error("Error", error.toString());
-        return 'src/main/webapp/assets/images/profile-picture-placeholder.png'; // default placeholder image
-    }
-}
-
 async function loadComments() {
     let currentUser;
+    getStatus().then(data => {
+        currentUser = data;
+    });
 
     try {
-        const res = await fetch("/notebridge/api/auth/status", {method: "GET"});
-        currentUser = await res.json();
-        console.log("Current user:", currentUser);
+        fetch(`/notebridge/api/posts/${cardId}/comments`).then(res => {
+            if (res.status === 200) {
+                return res.json().then(data => {
+                    const comments = data.comments;
+                    for (const comment of comments) {
+                        //console.log(`Loading comment`);
+                        console.log(comment);
+                        addCommentToPage(comment, currentUser);
+                    }
+                });
+            }
+        });
 
-        console.log("Fetching comments for cardId:", cardId);
 
-        const commentsRes = await fetch(`/notebridge/api/posts/${cardId}/comments`);
-        if (commentsRes.status !== 200) {
-            const errorText = await commentsRes.text();
-            throw new Error(errorText);
-        }
-
-        const data = await commentsRes.json();
-        const comments = data.comments;
-        for (const comment of comments) {
-            console.log(`Fetching image for comment by personId: ${comment.personId} with Url:`);
-            const userUrl = await loadUserImage(comment.personId);
-            console.log(`Fetching image for comment by personId: ${comment.personId} with Url: ${userUrl}`);
-            addCommentToPage(comment, currentUser, userUrl);
-        }
     } catch (err) {
         console.error("Error loading comments:", err);
     }
@@ -725,7 +691,7 @@ function showDeleteConfirmation(commentId) {
 
 
 document.getElementById('confirmDeleteButton').addEventListener('click', function () {
-    console.log("Confirm delete clicked. Comment ID to delete:", commentToDelete);
+    //console.log("Confirm delete clicked. Comment ID to delete:", commentToDelete);
     if (commentToDelete !== null) {
         deleteComment(commentToDelete);
         commentToDelete = null;
@@ -734,8 +700,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
     }
 });
 
-function addCommentToPage(comment, user, userUrl, addToTop = false) {
-    console.log(`Adding comment with id: ${comment.id}  to page: ${comment.content} by user: ${comment.username} with image URL: ${userUrl}`);
+function addCommentToPage(comment, user, addToTop = false) {
 
     const commentsContainer = document.getElementById("comments-container");
     const commentElement = document.createElement("div");
@@ -751,32 +716,37 @@ function addCommentToPage(comment, user, userUrl, addToTop = false) {
         deleteIconHtml = `<small></small>`;
     }
 
+    if (comment.picture === null || comment.picture === "") {
+        comment.picture = "assets/images/profile-picture-placeholder.png"
+    } else {
+        comment.picture = `data:image/png;base64,${comment.picture}`;
+    }
+
 
     commentElement.innerHTML = `
         <div class="row mb-2">
-            <div class="card-body-2 text-left comment-header" style="text-align: left ;">
-                <img src="${userUrl}" class="img-fluid rounded-circle mb-2" width="50" height="50" alt="User Image">
-                    <div>
-                        <h6 class="mb-0">
-                            <a href="profile.html?id=${comment.personId}" class="link-primary">@${comment.username}</a>
-                        </h6>
-                        <small>${formattedDate} ${formattedTime}</small>
-                    </div>
-                    <div class="col-md-10 comment-body">
-                        <p class="mb-0">${comment.content}</p>
-                        ${deleteIconHtml}
-                    </div>
+            <div class="col-md-12 card-body-2 text-left comment-header">
+                <!-- User image -->
+                <div class="comment-image">
+                    <img src="${comment.picture}" class="img-fluid rounded-circle" alt="User Image">
+                    <h6 class="mt-2 mb-0">
+                        <a href="profile.html?id=${comment.personId}" class="link-primary">@${comment.username}</a>
+                    </h6>
+                    <small>${formattedDate} ${formattedTime}</small>
+                </div>
+                
+                <!-- Comment body -->
+                <div class="comment-body">
+                    <p class="mb-0">${comment.content}</p>
+                    ${deleteIconHtml}
+                </div>
             </div>
-
         </div>
     `;
+    //commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
 
+    commentsContainer.appendChild(commentElement);
 
-    if (addToTop) {
-        commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
-    } else {
-        commentsContainer.appendChild(commentElement);
-    }
 
 }
 
@@ -836,16 +806,6 @@ function showCommentsSection() {
 function hideCommentsSection() {
     commentsSection.style.display = "none";
 }
-
-function getUser() {
-    let user;
-    getStatus().then(data => {
-        user = data.user;
-    });
-    return user;
-}
-
-
 
 function shareOnFacebook() {
     const url = encodeURIComponent(window.location.href);

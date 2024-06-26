@@ -31,17 +31,18 @@
 }
 
 .sponsored-card-text {
-    width: 39vh;
-    height: 23vh;
+    align-content: center;
+    width: 18rem;
+    height: 9rem;
+    overflow: hidden;
+
 }
 
 .sponsored-card-title {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    width: 27ch;
+    width: 26ch;
 }
 
 .card,
@@ -62,7 +63,7 @@
 
 .card-img-top {
     width: 100%;
-    height: 15vw;
+    height: 13rem;
     object-fit: cover;
 }
 
@@ -225,12 +226,6 @@ a:link {
 .sponsored-card:hover {
     background: rgb(0,0,0);
     background: linear-gradient(319deg, rgba(0,0,0,0.8) 0%, rgba(231,255,0,0.8) 100%);
-}
-
-.text-style {
-    color: yellowgreen;
-    font-family: Georgia, sans-serif;
-    text-shadow: midnightblue 0.4vh 0.4vh;
 }
 
 .card-body {

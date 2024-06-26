@@ -74,26 +74,35 @@ public enum MessageDao {
     }
 
     public void delete(Integer id, Integer user) {
-        try {
-            PreparedStatement ps = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-					UPDATE privatemessagehistory
+        String sql = """
+                    UPDATE privatemessagehistory
 					SET user1 = CASE WHEN user1 = ? THEN NULL ELSE user1 END,
 					user2 = CASE WHEN user2 = ? THEN NULL ELSE user2 END
 					WHERE id = ? AND (user1 = ? OR user2 = ?);
-					""");
-            ps.setInt(1, user);
-            ps.setInt(2, user);
-            ps.setInt(3, user);
-            ps.setInt(4, id);
-            ps.setInt(5, user);
-            ps.executeQuery();
-            ps.close();
-            PreparedStatement ps1 = DatabaseConnection.INSTANCE.getConnection().prepareStatement("""
-     
-					DELETE FROM notebridge.privatemessagehistory
+					""";
+        try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
+            statement.setInt(1, user);
+            statement.setInt(2, user);
+            statement.setInt(3, user);
+            statement.setInt(4, id);
+            statement.setInt(5, user);
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Deleting user failed, no rows affected.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while deleting person with id " + id);
+        }
+        String sql2 = """
+                   DELETE FROM notebridge.privatemessagehistory
 					WHERE user1 IS NULL AND user2 IS NULL;
-					""");
-            ps1.executeQuery();
+					""";
+        try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql2)) {
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Deleting user failed, no rows affected.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

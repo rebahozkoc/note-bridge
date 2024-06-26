@@ -134,13 +134,14 @@ function updateNavbar(loggedIn,role) {
         profileBtn.innerHTML = `
         <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
         `;
+
         if(role==="person"){
-                myPostsBtn.innerHTML = `
-            <a  class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
+            myPostsBtn.innerHTML = `
+            <a class="navbar-btn" role="button">🎙️ My Posts</a>
             `;
         }else{
             myPostsBtn.innerHTML = `
-            <a  class="button-cover me-3" role="button"><span class="text px-5">Your Sponsored Posts</span><span>Your Sponsored Posts</span></a>
+            <a class="navbar-btn" role="button">🎙️ Your Sponsored Posts</a>
             `;
         }
 

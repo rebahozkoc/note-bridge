@@ -184,7 +184,10 @@ public enum PostDao {
 
 	public List<PostDto> getSponsoredPosts(){
 		String sql= """
-				SELECT json_agg(t) FROM (SELECT *FROM postdetailed WHERE sponsoredBy IS NOT NULL) t;
+				SELECT json_agg(t) FROM 
+                       (SELECT *FROM postdetailed 
+                            WHERE sponsoredBy IS NOT NULL
+                        AND sponsoredUntil >= NOW()) t;
 				""";
 		try{
 			PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql);

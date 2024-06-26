@@ -196,13 +196,8 @@ a:link {
 }
 
 #sidenav-content {
-    margin-top: 2vh;
+    padding-top: 0.5vh;
     margin-left: 1.2vh;
-}
-
-.sidenav-btn {
-    margin-top: 61vh;
-    height: 2vh;
 }
 
 .sponsored-card {

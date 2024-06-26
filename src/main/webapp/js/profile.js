@@ -18,6 +18,8 @@ let searchedUserId = GetURLParameter("id");
 confirmDeleteAccountBtn.addEventListener("click", deleteAccount);
 
 window.onload = function () {
+    checkLoggedIn();
+
     if (searchedUserId) {
         //User tries to access to another users' profile
         for (let editIcon of document.querySelectorAll(".edit-icon")) {

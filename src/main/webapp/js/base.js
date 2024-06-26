@@ -119,11 +119,11 @@ function checkLoggedIn() {
 function updateNavbar(loggedIn) {
     if(loggedIn) {
         logInBtn.innerHTML = `
-        <a href="home.html" id="log-out-btn" class="button-cover ms-2" role="button" onclick="logOut()"><span class="text px-2">Log out</span><span>Log out</span></a>
+        <a href="home.html" id="log-out-btn" class="button-1 mt-1 ms-1" role="button" onclick="logOut()">Log out</a>
         `
 
         messengerBtn.innerHTML = `
-        <a href="Messenger.html" class="button-cover me-3" role="button"><span class="text px-5">Messenger</span><span>Messenger</span></a>
+        <a href="Messenger.html" class="navbar-btn" role="button">💬 Messenger</a>
         `;
 
         profileBtn.innerHTML = `
@@ -131,11 +131,11 @@ function updateNavbar(loggedIn) {
         `;
 
         myPostsBtn.innerHTML = `
-        <a  class="button-cover me-3" role="button"><span class="text px-5">My Posts</span><span>My Posts</span></a>
+        <a class="navbar-btn" role="button">🎙️ My Posts</a>
         `;
     } else {
         logInBtn.innerHTML = `
-        <a href="login.html" id="log-in-btn" class="button-cover ms-2" role="button"><span class="text px-2">Log in</span><span>Log in</span></a>
+        <a href="login.html" id="log-in-btn" class="button-1" role="button">Log in</a>
         `
         messengerBtn.innerHTML = ``;
         profileBtn.innerHTML = ``;

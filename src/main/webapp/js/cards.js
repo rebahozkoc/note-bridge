@@ -88,8 +88,8 @@ function displayCard(card, sponsoredCard) {
 
     if(sponsoredCard) {
         return `
-        <div class="sponsored-card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 35rem; margin: 35px 15px 15px;" id="displayed-card">
-            <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
+        <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 33rem; margin: 35px 15px 15px;" id="displayed-card">
+            <img src="${imageSource}" height="15vh" class="card-img-top"  alt="card image">
             <div class="card-body">
                 <h5 class="card-title">${card.title}</h5>
                 <p class="card-text">${card.description}</p>
@@ -192,20 +192,12 @@ function displaySponsoredPosts() {
         sidenavContent.innerHTML = `${displayCard(sponsoredCardsList[0], true)}`;
     } else {
         sidenavContent.innerHTML = `
-        <div id="carouselExample" class="carousel slide">
+        <div id="carouselExample" class="carousel slide carousel-fade" data-bs-ride="carousel">
             <div id="sponsored-cards" class="carousel-inner">
                 <div class="carousel-item active">
                     ${displayCard(sponsoredCardsList.shift(), true)}
                 </div>
             </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="margin-left: 9vh">
-            <span class="carousel-control-prev-icon sidenav-btn" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next sidenav-btn" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="margin-right: 11vh">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
         </div>
         `;
 

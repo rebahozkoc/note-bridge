@@ -90,7 +90,7 @@ html {
     z-index: 0; /* Stay on top */
     bottom: 0; /* Stay at the bottom */
     right: 0;
-    background-color:rgb(17, 24, 39);
+    background-color: rgba(17, 24, 39, 0.8);
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
     border-top-left-radius: 20px;
@@ -187,4 +187,30 @@ a:link {
 
 .mg-text{
     line-height: 14px;
+}
+
+#sidenav-title {
+    color: white;
+    font-size: 4vh;
+    text-align: center;
+}
+
+#sidenav-content {
+    margin-top: 2vh;
+    margin-left: 1.2vh;
+}
+
+.sidenav-btn {
+    margin-top: 61vh;
+    height: 2vh;
+}
+
+.sponsored-card {
+    background-color: rgba(138,62,183, 0.7);
+    color: rgb(225, 225, 225);
+    cursor: pointer;
+}
+
+.sponsored-card:hover {
+    background-color: rgb(138,62,183);
 }

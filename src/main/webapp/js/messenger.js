@@ -239,7 +239,11 @@ function fetchContacts(){
                 .catch(err => {
                     console.error(`Unable to fetch contacts: ${err.status}`);
                     console.error(err);
-                    contactElement.innerHTML+=`<p>No contacts found</p>`;
+                    if (contactElement.querySelector("p")===null) {
+                        contactElement.innerHTML += `<p>No contacts found</p>`;
+                    }else{
+
+                    }
                     loadingScreen.style.display = "none";
                 });
         })

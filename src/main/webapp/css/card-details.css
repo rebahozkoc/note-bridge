@@ -55,6 +55,7 @@
 
 .comments-section{
     padding: 25px 0;
+    margin: 25px;
     text-align: center;
     border-radius: 25px;
     background-color: rgba(17, 24, 39, 0.8);
@@ -64,6 +65,41 @@
 
 .form-control{
     text-align: left;
+}
+.comment-block {
+    background-color: #2a2a2a; /* Slightly different color for contrast */
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px; /* Increased margin to add more space between comments */
+    color: #fff; /* Text color for better visibility */
+    display: flex;
+    align-items: flex-start;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.comment-header img {
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.comment-body {
+    flex: 1;
+    text-align: right; /* Align text to the right */
+}
+
+.comment-body p {
+    margin-bottom: 10px;
+}
+
+.delete-icon {
+    cursor: pointer;
+    margin-left: 10px;
 }
 
 .btn-facebook {

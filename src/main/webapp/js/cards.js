@@ -194,7 +194,7 @@ function fetchSponsoredPosts() {
 
 function displaySponsoredPosts() {
     if(sponsoredCardsList.length === 0) {
-        sidenavContent.innerHTML = `There are no sponsored posts at this moment.`;
+        sidenavContent.innerHTML = `<h6 class="text-white ms-3">There are no sponsored posts at this moment.</h6>`;
     } else if (sponsoredCardsList.length === 1) {
         sidenavContent.innerHTML = `${displayCard(sponsoredCardsList[0], true)}`;
     } else {

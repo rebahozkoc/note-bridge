@@ -111,9 +111,9 @@ function deletePost() {
 
 function viewInterested(element) {
 
-    if (element.classList.contains("btn-primary")) {
+    if (element.classList.contains("button-1")) {
 
-        element.classList.remove("btn-primary");
+        element.classList.remove("button-1");
         element.classList.add("btn-secondary");
         element.innerHTML = "Hide Interested Users";
         if (listOfUsernames.hasChildNodes()) {
@@ -136,7 +136,7 @@ function viewInterested(element) {
                         window.location.href = "profile.html?id=" + user.id;
                     };
                     anchorElement.innerHTML = user.username;
-                    anchorElement.classList.add("link-primary");
+                    anchorElement.classList.add("interestedUser");
                     listElement.append(anchorElement);
                     listOfUsernames.appendChild(listElement);
                 })
@@ -153,7 +153,7 @@ function viewInterested(element) {
         }
 
     } else {
-        element.classList.add("btn-primary");
+        element.classList.add("button-1");
         element.classList.remove("btn-secondary");
         element.innerHTML = "View Interested Users";
         for (let liElement of listOfUsernames.children) {
@@ -315,7 +315,7 @@ function displayInterestedButton(userId, postId, author) {
                     `;
                 } else {
                     interestButton.innerHTML = `
-                        <a class="btn btn-primary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">I'm Interested!</a>
+                        <a class="button-1" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">I'm Interested!</a>
 
                         `
                 }
@@ -337,15 +337,15 @@ function toggleInterest(element) {
         method: "POST"
     }).then(res => {
         if (res.status === 200) {
-            if (element.classList.contains("btn-primary")) {
+            if (element.classList.contains("button-1")) {
                 //User will show interest
                 element.classList.add("btn-secondary");
-                element.classList.remove("btn-primary");
+                element.classList.remove("button-1");
                 element.innerHTML = "You are already interested in this post!";
 
             } else {
                 //User will remove interest
-                element.classList.add("btn-primary");
+                element.classList.add("button-1");
                 element.classList.remove("btn-secondary");
                 element.innerHTML = "I'm Interested!";
 
@@ -364,7 +364,7 @@ function toggleInterest(element) {
 
 function rerouteInterestedButton() {
     interestButton.innerHTML = `
-     <a class="btn btn-primary" href="login.html" role="button">I'm Interested!</a>
+     <a class="button-1" href="login.html" role="button">I'm Interested!</a>
 
     `
 }

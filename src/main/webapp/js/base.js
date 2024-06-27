@@ -137,7 +137,7 @@ function updateNavbar(loggedIn,role) {
             `;
         }else{
             myPostsBtn.innerHTML = `
-            <a class="navbar-btn" role="button">🎙️ Your Sponsored Posts</a>
+            <a class="navbar-btn" role="button">🎙️ My Sponsored Posts</a>
             `;
         }
 

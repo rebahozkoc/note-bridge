@@ -176,3 +176,35 @@
     align-items: center;
     color: white;
 }
+
+#view-interested-btn {
+    display: block;
+    text-align: center;
+    width: 15rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#list-of-usernames {
+    display: flex;
+}
+
+.interestedUser {
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 20%;
+    font-size: 1.2rem;
+}
+
+.interestedUser:hover {
+    cursor: pointer;
+    background: rgb(0,14,35);
+    background: linear-gradient(319deg, rgba(0,14,35,0.7) 0%, rgba(26,22,154,0.7) 49%, rgba(0,14,35,0.7) 100%);
+}
+
+#container-interested-users {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}

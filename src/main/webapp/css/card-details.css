@@ -89,9 +89,10 @@
 }
 
 .comment-image img {
-    width: 100%; /* Make the image fill the container */
-    height: auto; /* Keep the aspect ratio of the image */
+    width: 100px; /* Make the image fill the container */
+    height: 100px; /* Keep the aspect ratio of the image */
     border-radius: 50%; /* Circular image */
+    object-fit: cover;
 }
 
 .comment-body {

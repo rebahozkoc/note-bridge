@@ -1,4 +1,5 @@
 package unitTests;
+
 import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.*;
 import ut.twente.notebridge.dao.BaseUserDao;
@@ -11,13 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
+/**
+ * This class is used to test the SponsorDao class.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
-
 public class SponsorDaoTest {
+    /**
+     * The sponsor to be used in the tests.
+     */
     private static Sponsor sponsor;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeAll
     public static void setUpAll() {
         try {
@@ -36,6 +43,9 @@ public class SponsorDaoTest {
 
     }
 
+    /**
+     * This method is used to tear down the tests.
+     */
     @AfterAll
     public static void tearDownAll() {
 
@@ -51,6 +61,9 @@ public class SponsorDaoTest {
         System.out.println("Notebridge TEST shutdown.");
     }
 
+    /**
+     * This method is used to set up the tests.
+     */
     @BeforeEach
     public void setUp() {
         if (sponsor == null) {
@@ -64,6 +77,10 @@ public class SponsorDaoTest {
         }
 
     }
+
+    /**
+     * This method is used to test the creation of a base user.
+     */
     @Test
     @Order(1)
     public void stage1_testCreateBaseUser() {
@@ -74,6 +91,10 @@ public class SponsorDaoTest {
         assertEquals(createdBaseUser, baseUser, "Base user is created");
         sponsor.setId(createdBaseUser.getId());
     }
+
+    /**
+     * This method is used to test the creation of a sponsor.
+     */
     @Test
     @Order(2)
     public void stage2_testCreateSponsor() {
@@ -82,6 +103,9 @@ public class SponsorDaoTest {
         assertEquals(createdSponsor, sponsor, "Sponsor is created");
     }
 
+    /**
+     * This method is used to test the retrieval of a sponsor.
+     */
     @Test
     @Order(3)
     public void stage2_getSponsor() {
@@ -97,6 +121,9 @@ public class SponsorDaoTest {
         assertEquals(sponsor.getPassword(), newSponsor.getPassword(), "Sponsor is retrieved");
     }
 
+    /**
+     * This method is used to test the update of a sponsor.
+     */
     @Test
     @Order(4)
     public void stage3_updateSponsor() {
@@ -119,6 +146,9 @@ public class SponsorDaoTest {
         assertEquals(updatedSponsor.getPassword(), newSponsor.getPassword(), "Sponsor is updated");
     }
 
+    /**
+     * This method is used to test the deletion of a sponsor.
+     */
     @Test
     @Order(5)
     public void stage4_deleteSponsor() {

@@ -15,9 +15,15 @@ import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * This class is used to test the login page.
+ */
 public class LoginPageTest {
     private static WebDriver driver;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeClass
     public static void setUp() {
         try {
@@ -62,7 +68,7 @@ public class LoginPageTest {
 
         assertTrue(warningMessage.isDisplayed());
 
-        if(warningMessage.isDisplayed()) {
+        if (warningMessage.isDisplayed()) {
             System.out.println("Warning message is displayed, its content is: " + warningMessage.getText());
         } else {
             System.out.println("Warning message is not displayed");
@@ -103,6 +109,9 @@ public class LoginPageTest {
         assertTrue(profileBtn.isDisplayed());
     }
 
+    /**
+     * This method is used to close the browser after all tests are done.
+     */
     @AfterClass
     public static void tearDown() {
         if (driver != null) {

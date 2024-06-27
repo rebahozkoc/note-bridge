@@ -498,7 +498,9 @@ function loadAuthorDetails(personId) {
             }
         }
     ).then(data => {
-        authorUsername.innerHTML = data.username;
+        authorUsername.innerHTML =
+            `<a href="profile.html?id=${data.id}" class="link-primary">@${data.username}</a>`;
+
         authorName.innerHTML = data.name + " " + data.lastname;
         const createDate = new Date(parseInt(data.createDate));
         const formattedDate = createDate.toLocaleDateString();

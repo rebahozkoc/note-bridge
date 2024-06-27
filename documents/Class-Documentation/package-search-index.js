@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"integrationTests"},{"l":"unitTests"},{"l":"ut.twente.notebridge"},{"l":"ut.twente.notebridge.dao"},{"l":"ut.twente.notebridge.dto"},{"l":"ut.twente.notebridge.model"},{"l":"ut.twente.notebridge.routes"},{"l":"ut.twente.notebridge.utils"}];updateSearchResults();

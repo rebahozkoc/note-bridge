@@ -250,9 +250,6 @@ function getAuthor(userId, role) {
             if (role === "person") {
                 displayInterestedButton(userId, data.id, data.personId);
 
-            } else if (role === "sponsor") {
-                sponsorButton.style.display = "block";
-                sponsorButton.style.width = "-webkit-fill-available";
             }
         })
 }
@@ -405,8 +402,22 @@ async function loadPostDetailsAndLikes(cardId) {
         const currentDate = new Date();
         if (postData.sponsoredBy != null && currentDate > new Date(parseInt(postData.sponsoredFrom)) && currentDate < new Date(parseInt(postData.sponsoredUntil))) {
             //console.log("Post is sponsored");
+
             loadSponsorData(postData);
+
+        }else{
+            //Post is not sponsored
+            //if the user is a sponsor, show the sponsor button
+            getStatus().then(data => {
+                if(data.role==="sponsor"){
+                    sponsorButton.style.display="block";
+                }
+            }).catch(err => {
+                console.error("Error getting status:", err);
+
+            })
         }
+
 
         try {
             await updateTotalLikes(cardId);

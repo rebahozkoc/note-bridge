@@ -8,31 +8,44 @@ import ut.twente.notebridge.utils.Utils;
 
 import java.sql.SQLException;
 
+/**
+ * This class is used to initialize the Notebridge application.
+ */
 @WebListener
 public class InitializationListener implements ServletContextListener {
-	@Override
-	public void contextInitialized(ServletContextEvent sce) {
-		System.out.println("Initializing Notebridge...");
-		try {
-			DatabaseConnection.INSTANCE.load(true);
+    /**
+     * This method is used to initialize the Notebridge application.
+     *
+     * @param sce The ServletContextEvent
+     */
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        System.out.println("Initializing Notebridge...");
+        try {
+            DatabaseConnection.INSTANCE.load(true);
 
-			System.out.println("Working Directory = " + System.getProperty("user.dir"));
-		} catch (Exception e) {
-			System.err.println("Error while loading data.");
-			e.printStackTrace();
-		}
-		System.out.println("Notebridge initialized.");
-	}
+            System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        } catch (Exception e) {
+            System.err.println("Error while loading data.");
+            e.printStackTrace();
+        }
+        System.out.println("Notebridge initialized.");
+    }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		System.out.println("Shutting down Notebridge...");
-		try {
-			DatabaseConnection.INSTANCE.getConnection().close();
-		} catch (SQLException e) {
-			System.err.println("Error while closing the database connection.");
-			e.printStackTrace();
-		}
-		System.out.println("Notebridge shutdown.");
-	}
+    /**
+     * This method is used to destroy the Notebridge application.
+     *
+     * @param sce The ServletContextEvent
+     */
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        System.out.println("Shutting down Notebridge...");
+        try {
+            DatabaseConnection.INSTANCE.getConnection().close();
+        } catch (SQLException e) {
+            System.err.println("Error while closing the database connection.");
+            e.printStackTrace();
+        }
+        System.out.println("Notebridge shutdown.");
+    }
 }

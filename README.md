@@ -1,6 +1,8 @@
 # di-1
 
-
+Trello
+https://trello.com/b/wOJEnjiq/note-bridge-1
+https://trello.com/invite/b/wOJEnjiq/ATTI86b8a11560499279f55389802e1d8852EF9423E7/note-bridge-1
 
 ## Getting started
 

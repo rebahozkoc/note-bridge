@@ -70,6 +70,9 @@ public class BaseUserDaoTest {
         System.out.println("Notebridge TEST shutdown.");
     }
 
+    /**
+     * This method is used to set up the tests.
+     */
     @BeforeEach
     public void setUp() {
         if (baseUser == null) {

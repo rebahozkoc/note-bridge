@@ -240,7 +240,7 @@ function fetchContacts(){
                     console.error(`Unable to fetch contacts: ${err.status}`);
                     console.error(err);
                     if (contactElement.querySelector("p")===null) {
-                        contactElement.innerHTML += `<p>No contacts found</p>`;
+                        contactElement.innerHTML += `<p style="color: white;text-align: center">No contacts found</p>`;
                     }else{
 
                     }
@@ -273,7 +273,6 @@ function noChangeInMessages(newMessages, id ,username){
     if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
         messages=newMessages;
         showMessageHistory(id,username);
-        document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
     }
 }
 
@@ -312,7 +311,7 @@ function showMessageLeft(message){
             <div class="left">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
             <div class="dropup-center dropup message" style="justify-self: right">
-                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%" value="${message.content}">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
                     <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
@@ -331,7 +330,7 @@ function showMessageLeft(message){
          <div class="left">
          <p style="color: white;text-align: left; margin: 0;padding: 0;">${username}</p>
          <div class="dropup-center dropup message" style="justify-self: left">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;">
                 ${message.content}
             </button>
          </div>
@@ -356,7 +355,7 @@ function showMessageRight(message, username) {
             <div class="right">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
             <div class="dropup-center dropup message" style="justify-self: right">
-                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%" value="${message.content}">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
                     <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
@@ -376,7 +375,7 @@ function showMessageRight(message, username) {
          <div class="right">
          <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
          <div class="dropup-center dropup message" style="justify-self: right">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%" value="${message.content}">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
                 ${message.content}
             </button>
             <input type="hidden" value=${message.createddate}>

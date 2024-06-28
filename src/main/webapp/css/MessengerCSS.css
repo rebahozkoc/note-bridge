@@ -55,11 +55,12 @@
     flex-direction: column;
     overflow-y: scroll;
     height: 74vh;
+    overflow-x: hidden;
 }
 .message{
     padding: 1vh 0.5vh;
     border-radius: 25px;
-    background: lightblue;
+    background: linear-gradient(319deg, rgba(0, 14, 35, 1) 0%, rgba(26, 22, 154, 1) 49%, rgba(0, 14, 35, 1) 100%);
     width: fit-content;
     max-height: fit-content;
     max-width: 30vh;

@@ -75,7 +75,7 @@ public enum PostDao {
      *
      * @return A list of all posts
      */
-    public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, Integer sponsorId, StringBuilder returnQuery) {
+    public List<PostDto> getPosts(int pageSize, int pageNumber, String sortBy, Integer personId, String search, String filterBy, Integer sponsorId, Boolean isSponsored,StringBuilder returnQuery) {
         System.out.println("GET posts called");
         List<PostDto> list = new ArrayList<>();
 
@@ -91,7 +91,7 @@ public enum PostDao {
         boolean isSponsorIdGiven = sponsorId != null && sponsorId > 0;
         boolean isFilterByGiven = filterBy != null && !filterBy.isEmpty();
         boolean isSortByGiven = sortBy != null && !sortBy.isEmpty() && sortableColumns.contains(sortBy);
-
+        boolean isSponsoredGiven= isSponsored!= null && isSponsored;
         if (isPersonIdGiven) {
             sqlBuilder.append("WHERE personId=?\n");
 
@@ -124,6 +124,14 @@ public enum PostDao {
             }
             sqlBuilder.append("sponsoredBy=?\n");
         }
+        if(isSponsoredGiven){
+            if (isPersonIdGiven || isFilterByGiven || isSponsorIdGiven) {
+                sqlBuilder.append("AND\n");
+            } else {
+                sqlBuilder.append("WHERE ");
+            }
+            sqlBuilder.append("sponsoredBy IS NOT NULL\n");
+        }
 
         if (!isSearchGiven) {
 
@@ -146,7 +154,7 @@ public enum PostDao {
 
         } else {
             //Search is given
-            if (isPersonIdGiven || isFilterByGiven || isSponsorIdGiven) {
+            if (isPersonIdGiven || isFilterByGiven || isSponsorIdGiven || isSponsoredGiven) {
                 sqlBuilder.append("AND\n");
             } else {
                 sqlBuilder.append("WHERE ");

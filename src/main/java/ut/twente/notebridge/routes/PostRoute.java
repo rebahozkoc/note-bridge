@@ -94,7 +94,8 @@ public class PostRoute {
             @QueryParam("personId") Integer personId,
             @QueryParam("search") String search,
             @QueryParam("filterBy") String filterBy,
-            @QueryParam("sponsoredBy") Integer sponsorId
+            @QueryParam("sponsoredBy") Integer sponsorId,
+            @QueryParam("isSponsored") Boolean isSponsored
     ) {
         try {
             int ps = pageSize > 0 ? pageSize : Integer.MAX_VALUE;
@@ -103,7 +104,7 @@ public class PostRoute {
             StringBuilder query = new StringBuilder();
 
 
-            PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, personId, search, filterBy, sponsorId, query).toArray(new PostDto[0]);
+            PostDto[] resources = PostDao.INSTANCE.getPosts(ps, pn, sortBy, personId, search, filterBy, sponsorId, isSponsored, query).toArray(new PostDto[0]);
 
             //Changing json_agg(t) to COUNT in order to get total posts query
             String s = "json_agg(t)";

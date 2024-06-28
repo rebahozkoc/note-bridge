@@ -150,10 +150,19 @@ function filterBy(element) {
     }
 }
 
-function filterSponsored(){
-    cards.innerHTML = `
-        ${sponsoredCardsList.map(card => `${displayCard(card, false)}`).join("\n")}
-    `;
+function isSponsored(element){
+    if(!window.location.href.includes("?")){
+        window.location.href=`?isSponsored=${element.dataset.filterBy}`;
+    }else if(window.location.href.includes("isSponsored")){
+        let baseUrl = window.location.href.split("?")[0]; // Get the base URL without query parameters
+        let queryParams = new URLSearchParams(window.location.search);
+        queryParams.set('isSponsored', element.dataset.filterBy); // Update filterBy parameter value
+        window.location.href = `${baseUrl}?${queryParams.toString()}`;
+
+    }else{
+        window.location.href+=`&isSponsored=${element.dataset.filterBy}`;
+    }
+
 }
 
 function searchBy(){

@@ -3,10 +3,9 @@
 ## Notebridge is a web application that allows musicians to connect with each other. It is a social platform where musicians can share their events, ideas and chat with each other.
 
 **Trello**
+
 - https://trello.com/b/wOJEnjiq/note-bridge-1
 - https://trello.com/invite/b/wOJEnjiq/ATTI86b8a11560499279f55389802e1d8852EF9423E7/note-bridge-1
-
-
 
 ## Contributors
 
@@ -19,14 +18,18 @@ Adham Ehab Magdy Selim
 
 ## Deployed application
 
-Previder link: 
+Previder link:
 
 ***
 
 ### Posts
-The Posts feature allows users to share their musical journey, from jam sessions to selling instruments, and engage with the community. Users can interact with these posts by commenting, liking, and sharing, creating a vibrant and dynamic music network.
+
+The Posts feature allows users to share their musical journey, from jam sessions to selling instruments, and engage with
+the community. Users can interact with these posts by commenting, liking, and sharing, creating a vibrant and dynamic
+music network.
 
 Main Features:
+
 - Create and Share Posts: Users can create posts to share various types of content, such as:
     - Jam Sessions: Share live or recorded jam sessions to showcase your musical talent.
     - Music Events: Announce upcoming gigs, concerts, or music festivals.
@@ -38,24 +41,22 @@ Main Features:
     - Liking: Show appreciation for the content by liking the post.
     - Commenting: Leave comments to start discussions or provide feedback.
     - Sharing: Share posts with other users or on social media platforms to reach a broader audience.
-- Sponsor Posts: Sponsors can promote posts to increase their visibility. This feature helps musicians reach a larger audience and gain more recognition for their work.
+- Sponsor Posts: Sponsors can promote posts to increase their visibility. This feature helps musicians reach a larger
+  audience and gain more recognition for their work.
 
 ### Credentials for testing:
 
 - Person User
 
 
-
 - Sponsor User
 
-
-
 ### Messenger
-
 
 The Messenger requires users to be logged-in into their accounts. After log-in it will show up in the navigation bar.
 
 The main features are:
+
 - Send Messages.
 - Add new Contacts.
 - Share your Events to your contacts.
@@ -66,19 +67,20 @@ To check everything we need 3 users and one post.
 
 #### Credentials:
 
- First User  
-- Username: messenger1  
+First User
+
+- Username: messenger1
 - Password: Simplepass1234!
 
 Second User
+
 - Username: messenger2
 - Password: Simplepass1234!
 
 Third User
+
 - Username: messenger3
 - Password: Simplepass1234!
-
-
 
 ## Designed by UT students.
 

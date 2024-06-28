@@ -1,5 +1,8 @@
 const feedbackForm = document.getElementById("feedback-form");
 
+/**
+ * When the form for sending feedback is submitted, this function is called.
+ */
 feedbackForm.addEventListener("submit", function(e) {
     e.preventDefault();
 

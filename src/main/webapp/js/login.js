@@ -1,5 +1,8 @@
 const form = document.querySelector("#login-form");
 
+/**
+ * When the form used for logging in is submitted by the user, this function is called.
+ */
 form.addEventListener("submit", function(event) {
     event.preventDefault();
 

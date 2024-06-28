@@ -5,6 +5,9 @@ const messengerBtn = document.getElementById("messenger-btn");
 const profileBtn = document.getElementById("profile-btn");
 const myPostsBtn = document.getElementById("myposts-btn");
 
+/**
+ * When 'myPostsBtn' is pressed, the user is redirected to 'cards.html' page which is filled with his posts.
+ */
 myPostsBtn.addEventListener("click", () => {
    getStatus().then(data => {
        if(data.role === "person"){
@@ -19,86 +22,84 @@ myPostsBtn.addEventListener("click", () => {
    });
 });
 
-
+/**
+ * Functions used to play different songs when piano buttons are pressed.
+ */
 function pressPianoBtn1() {
     music.innerHTML = addSoundTag("assets/sounds/sound-1.mp3");
     music.play();
 }
-
 function pressPianoBtn2() {
     music.innerHTML = addSoundTag("assets/sounds/sound-2.mp3");
     music.play();
 }
-
 function pressPianoBtn3() {
     music.innerHTML = addSoundTag("assets/sounds/sound-3.mp3");
     music.play();
 }
-
 function pressPianoBtn4() {
     music.innerHTML = addSoundTag("assets/sounds/sound-4.mp3");
     music.play();
 }
-
 function pressPianoBtn5() {
     music.innerHTML = addSoundTag("assets/sounds/sound-5.mp3");
     music.play();
 }
-
 function pressPianoBtn6() {
     music.innerHTML = addSoundTag("assets/sounds/sound-6.mp3");
     music.play();
 }
-
 function pressPianoBtn7() {
     music.innerHTML = addSoundTag("assets/sounds/sound-7.mp3");
     music.play();
 }
-
 function pressPianoBtn8() {
     music.innerHTML = addSoundTag("assets/sounds/sound-8.mp3");
     music.play();
 }
-
 function pressPianoBtn9() {
     music.innerHTML = addSoundTag("assets/sounds/sound-9.mp3");
     music.play();
 }
-
 function pressPianoBtn10() {
     music.innerHTML = addSoundTag("assets/sounds/sound-10.mp3");
     music.play();
 }
-
 function pressPianoBtn11() {
     music.innerHTML = addSoundTag("assets/sounds/sound-11.mp3");
     music.play();
 }
-
 function pressPianoBtn12() {
     music.innerHTML = addSoundTag("assets/sounds/sound-12.mp3");
     music.play();
 }
-
 function pressPianoBtn13() {
     music.innerHTML = addSoundTag("assets/sounds/sound-13.mp3");
     music.play();
 }
-
 function pressPianoBtn14() {
     music.innerHTML = addSoundTag("assets/sounds/sound-14.mp3");
     music.play();
 }
 
-
+/**
+ * @param sound the mp3 file which is played when a piano button is pressed
+ * @returns {string} a formatted string which can be placed into an audio element of a html file
+ */
 function addSoundTag(sound) {
     return `<source src=` + sound + ` type="audio/mpeg">`;
 }
 
+/**
+ * This function is called when a user wants to log out.
+ */
 function logOut() {
     fetch("/notebridge/api/auth/logout");
 }
 
+/**
+ * Check if the user is logged in.
+ */
 function checkLoggedIn() {
     fetch("/notebridge/api/auth/status", {
         method: "GET"
@@ -117,6 +118,12 @@ function checkLoggedIn() {
         })
 }
 
+/**
+ * Update the navigation bar.
+ * @param loggedIn a boolean value which checks if the user is logged in
+ * @param role the role of the person logged in (person or sponsor)
+ * @param username the username of the person logged in
+ */
 function updateNavbar(loggedIn,role, username) {
     if(loggedIn) {
         logInBtn.innerHTML = `
@@ -151,6 +158,11 @@ function updateNavbar(loggedIn,role, username) {
     }
 }
 
+/**
+ * Update the welcome message on the Home page.
+ * @param loggedIn a boolean value which checks if the user is logged in.
+ * @param username the username of the person logged in.
+ */
 function updateWelcomeMessage(loggedIn, username) {
     if(loggedIn) {
         welcomeMessage.innerHTML = `

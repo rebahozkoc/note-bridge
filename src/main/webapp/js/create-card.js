@@ -4,6 +4,9 @@ window.onload = function() {
     checkLoggedIn();
 }
 
+/**
+ * When the form for creating a post is submitted, this function is called.
+ */
 createPostForm.addEventListener("submit", function(event) {
     event.preventDefault();
 
@@ -32,6 +35,11 @@ createPostForm.addEventListener("submit", function(event) {
         })
 })
 
+/**
+ * A request is sent to the server with the information the user entered in the form.
+ * @param dataObject an object which contains the data entered in the form
+ * @param userId the id of the person who created the post
+ */
 function sendRequestCreatePost(dataObject, userId) {
     dataObject.personId = userId;
 
@@ -48,6 +56,10 @@ function sendRequestCreatePost(dataObject, userId) {
     });
 }
 
+/**
+ * Another request is sent to the server which contains the images uploaded by the user.
+ * @param postId the id of the post which is created
+ */
 function sendRequestAddImagesToPost(postId) {
     let formData = new FormData();
     let images = document.getElementById("images").files;

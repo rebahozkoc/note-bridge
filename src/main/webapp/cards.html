@@ -12,9 +12,11 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/loadingScreen.css">
 </head>
+
 <body class="page-settings">
   <div id="particles-js"> </div>
 
+  <!-- Navigation bar -->
   <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +47,7 @@
     </div>
   </nav>
 
+  <!-- Piano animation -->
   <div class="offcanvas offcanvas-bottom rounded-4" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
     <div class="offcanvas-body d-flex bg-dark rounded-3">
       <button class="btn btn-light white-block rounded-start-2" onclick="pressPianoBtn1()"></button>
@@ -64,6 +67,7 @@
     </div>
   </div>
 
+  <!-- Loading screen-->
   <div class="container-fluid">
     <div id="loading-screen">
       <div class="spinner"></div>
@@ -96,10 +100,8 @@
                       <li><a class="dropdown-item" data-filter-by="find-instrument" onclick="filterBy(this)">Find Instruments</a></li>
                       <li><a class="dropdown-item" data-filter-by="music-discussion" onclick="filterBy(this)">Music Discussions</a></li>
                       <li><a class="dropdown-item" data-filter-by="true" onclick="isSponsored(this)">Sponsored</a></li>
-
               </ul>
             </div>
-
 
                   <div class="dropdown" data-bs-theme="dark" style="margin-top: 19px">
                     <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">

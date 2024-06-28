@@ -21,19 +21,27 @@ loadMoreButton.addEventListener("click", loadMore);
 //hides create post button if user is a sponsor OR not logged in
 hideCreatePostBtnIfSponsor();
 
+/**
+ * Fetch more posts from the database and display them on the screen.
+ */
 function loadMore(){
     pageNumber++;
     fetchPosts(pageSize,pageNumber);
 }
 
 
-
+/**
+ * When the page is opened or refreshed, it is filled with cards, sponsored cards and the navigation bar is updated.
+ */
 window.onload = function() {
     fetchPosts(pageSize,pageNumber);
     fetchSponsoredPosts();
     checkLoggedIn();
 }
 
+/**
+ * Retrieve posts from the database.
+ */
 function fetchPosts(pageSize,pageNumber) {
     requestedUrl = `/notebridge/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if(window.location.href.includes("?")){
@@ -61,6 +69,9 @@ function fetchPosts(pageSize,pageNumber) {
         });
 }
 
+/**
+ * Display on the screen the posts retrieved.
+ */
 function displayAllCards() {
     cardsList.data;
     cards.innerHTML += `
@@ -75,6 +86,12 @@ function displayAllCards() {
     }
 }
 
+/**
+ * Display one card on the screen.
+ * @param card the card information
+ * @param sponsoredCard a boolean value which checks if the card is sponsored
+ * @returns {string} a formatted string which can be placed in the html page.
+ */
 function displayCard(card, sponsoredCard) {
     let imageSource;
     if(card.hasImage){
@@ -103,11 +120,19 @@ function displayCard(card, sponsoredCard) {
         `;
 }
 
+/**
+ * When the user clicks on a card, this function is called.
+ * @param card the card which has been clicked.
+ */
 function selectCard(card) {
     const cardId = card.getAttribute("data-card-id");
     window.location.href = 'card-details.html?id=' + cardId;
 }
 
+/**
+ * When the user uses the sort functionality, this function is called.
+ * @param element the type of sort selected
+ */
 function sortBy(element) {
 
     if(!window.location.href.includes("?") ){
@@ -129,6 +154,10 @@ function sortBy(element) {
     }
 }
 
+/**
+ * When the user uses the filter functionality, this function is called.
+ * @param element the type of filter selected
+ */
 function filterBy(element) {
     if(!window.location.href.includes("?")){
         window.location.href=`?filterBy=${element.dataset.filterBy}`;
@@ -158,6 +187,9 @@ function isSponsored(element){
 
 }
 
+/**
+ * Function called when the user performs a search.
+ */
 function searchBy(){
     const searchInput=searchBar.value;
     console.log(searchInput)
@@ -182,6 +214,9 @@ function searchBy(){
     }
 }
 
+/**
+ * If the user's role is 'sponsor', the button used to create posts is hidden.
+ */
 function hideCreatePostBtnIfSponsor(){
     getStatus().then(data => {
         if(data.role==="sponsor"){
@@ -192,6 +227,10 @@ function hideCreatePostBtnIfSponsor(){
         console.error(`Unable to fetch status: ${err.status}`);
     })
 }
+
+/**
+ * Retrieve sponsored posts from the database.
+ */
 function fetchSponsoredPosts() {
     fetch("/notebridge/api/posts/sponsored")
         .then(res => res.json())
@@ -201,6 +240,10 @@ function fetchSponsoredPosts() {
         })
 }
 
+/**
+ * The sponsored posts are displayed on the right side of the screen. If there are no sponsored posts, a corresponding
+ * message is displayed on screen, and if there are more than 1 sponsored posts, these are displayed in a slideshow.
+ */
 function displaySponsoredPosts() {
     if(sponsoredCardsList.length === 0) {
         sidenavContent.innerHTML = `<h6 class="text-white ms-3">There are no sponsored posts at this moment.</h6>`;

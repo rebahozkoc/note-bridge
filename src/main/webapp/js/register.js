@@ -11,6 +11,10 @@ const capital = document.getElementById("capital");
 const number = document.getElementById("number");
 const length = document.getElementById("length");
 
+/**
+ * This function is called when the form for signing up is submitted. There are checks: the 'password' and 'repeat-password' fields
+ * must contain the same content. Also, the user must enter minimum one special character in the password field.
+ */
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -75,6 +79,9 @@ form.addEventListener("submit", function (event) {
         })
 })
 
+/**
+ * Display the form for signing in a user. The fields 'firstname' and 'lastname' are added.
+ */
 function showRegisterUserForm() {
     firstField.innerHTML = `
     <div class="form-floating mb-3">
@@ -91,6 +98,9 @@ function showRegisterUserForm() {
     `;
 }
 
+/**
+ * Display the form for signing in a sponsor. The fields 'company name' and 'website URL' are added.
+ */
 function showRegisterSponsorForm() {
     firstField.innerHTML = `
     <div class="form-floating mb-3">
@@ -107,6 +117,9 @@ function showRegisterSponsorForm() {
     `;
 }
 
+/**
+ * Update the animations which indicate if the password entered by the user meets all requirements.
+ */
 myInput.onkeyup = function() {
     let specialCharacters = "!@#$%^&*()-_+=.";
     let hasSpecialCharacter = false;

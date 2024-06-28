@@ -62,15 +62,15 @@ Project for a social music forum to help musicians connect. You can find new eve
 
 ## Usage
 
-# Messenger
+> Messenger
 The Messenger requires users to be logged-in into their accounts. After log-in it will show up in the navigation bar.
 
 The main features are:
--Send Messages.
--Add new Contacts.
--Share your Events to your contacts.
--Automatic update of received messages.
--For chats which aren't the selected chat you can see the number of received messages which haven't been seen yet.
+- Send Messages.
+- Add new Contacts.
+- Share your Events to your contacts.
+- Automatic update of received messages.
+- For chats which aren't the selected chat you can see the number of received messages which haven't been seen yet.
 
 To check everything we need 3 users and one post.
 

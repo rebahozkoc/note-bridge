@@ -22,6 +22,11 @@ Previder link:
 
 ***
 
+## Database
+
+- Database name: dab_di23242b_134
+- Deployed app uses the schema: notebridge 
+
 ### Posts
 
 The Posts feature allows users to share their musical journey, from jam sessions to selling instruments, and engage with

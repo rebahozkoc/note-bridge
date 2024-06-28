@@ -116,6 +116,7 @@ function selectCard(card) {
 }
 
 function sortBy(element) {
+
     if(!window.location.href.includes("?") ){
         window.location.href=`?sortBy=${element.dataset.sortBy}`;
     }else if(window.location.href.includes("search")){
@@ -147,6 +148,12 @@ function filterBy(element) {
     }else{
         window.location.href+=`&filterBy=${element.dataset.filterBy}`;
     }
+}
+
+function filterSponsored(){
+    cards.innerHTML = `
+        ${sponsoredCardsList.map(card => `${displayCard(card, false)}`).join("\n")}
+    `;
 }
 
 function searchBy(){

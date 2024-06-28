@@ -62,8 +62,8 @@ Project for a social music forum to help musicians connect. You can find new eve
 
 ## Usage
 
-Messenger
----
+### Messenger
+
 
 The Messenger requires users to be logged-in into their accounts. After log-in it will show up in the navigation bar.
 
@@ -76,11 +76,9 @@ The main features are:
 
 To check everything we need 3 users and one post.
 
-> Credentials:
+#### Credentials:
 
-First User
-- Username: messenger1
-- Password: Simplepass1234!
+>First User  - Username: messenger1  - Password: Simplepass1234!
 
 Second User
 - Username: messenger2

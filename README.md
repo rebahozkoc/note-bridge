@@ -62,7 +62,8 @@ Project for a social music forum to help musicians connect. You can find new eve
 
 ## Usage
 
-> Messenger
+Messenger
+---
 
 The Messenger requires users to be logged-in into their accounts. After log-in it will show up in the navigation bar.
 

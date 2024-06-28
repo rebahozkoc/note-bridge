@@ -15,9 +15,15 @@ import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * This class is used to test the register page.
+ */
 public class RegisterPageTest {
     private static WebDriver driver;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeClass
     public static void setUp() {
         try {
@@ -200,6 +206,9 @@ public class RegisterPageTest {
         }
     }
 
+    /**
+     * This method is used to tear down the tests after all tests.
+     */
     @AfterClass
     public static void tearDown() {
         if (driver != null) {

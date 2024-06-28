@@ -81,6 +81,13 @@ CREATE TABLE PersonLikesPost (
 );
 
 
+CREATE TABLE PersonShowInterestPost (
+    personId INT REFERENCES Person(id) ON DELETE CASCADE,
+    postId INT REFERENCES Post(id) ON DELETE CASCADE,
+    PRIMARY KEY (personId, postId)
+);
+
+
 CREATE TABLE PrivateMessage (
     id SERIAL PRIMARY KEY,
     content TEXT,

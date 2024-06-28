@@ -54,7 +54,6 @@
     height: 15vh;
     font-size: 3vh;
     box-shadow: rgba(138,62,183,0.3) 1px -5px 50px;
-    font-family: Georgia, sans-serif;
 }
 
 .hide {
@@ -86,12 +85,6 @@ fade-in {
     animation: fade-in 3s;
 }
 
-.top-text-style {
-    font-family: Georgia, sans-serif;
-    text-shadow: rgb(17, 24, 39) 0.5vh 0.5vh;
-}
-
-.middle-text-style {
-    font-family: Georgia, sans-serif;
-    text-shadow: midnightblue 0.4vh 0.4vh;
+.text-style {
+    text-shadow: rgb(17, 24, 39) 5px 5px;
 }

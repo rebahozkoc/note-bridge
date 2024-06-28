@@ -14,9 +14,18 @@ import java.time.Duration;
 
 import static org.junit.Assert.*;
 
+/**
+ * This class is used to test the home page.
+ */
 public class HomePageTest {
+    /**
+     * The driver to be used in the tests.
+     */
     private static WebDriver driver;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeClass
     public static void setUp() {
         try {
@@ -76,7 +85,7 @@ public class HomePageTest {
 
         assertFalse(profileBtn.isDisplayed());
 
-        if(profileBtn.isDisplayed()){
+        if (profileBtn.isDisplayed()) {
             System.out.println("Profile button is displayed.");
         } else {
             System.out.println("Profile button is not displayed.");
@@ -93,7 +102,7 @@ public class HomePageTest {
 
         assertFalse(messengerBtn.isDisplayed());
 
-        if(messengerBtn.isDisplayed()){
+        if (messengerBtn.isDisplayed()) {
             System.out.println("Messenger button is displayed.");
         } else {
             System.out.println("Messenger button is not displayed.");
@@ -141,6 +150,9 @@ public class HomePageTest {
         }
     }
 
+    /**
+     * This method is used to tear down the tests after all tests.
+     */
     @AfterClass
     public static void tearDown() {
         if (driver != null) {

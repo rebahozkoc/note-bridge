@@ -6,14 +6,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class is used to interact with the database for the Like model.
+ */
 public enum LikeDao {
+    /**
+     * The instance of the LikeDao to achieve the singleton pattern.
+     */
     INSTANCE;
 
+    /**
+     * Checks if a person liked a post.
+     *
+     * @param postId   The id of the post
+     * @param personId The id of the person
+     * @return true if the person liked the post, false otherwise
+     */
     // Check if the user with given id, liked the post with given id
     public Boolean isLiked(int postId, int personId) {
         String sql = """
-            SELECT EXISTS(SELECT* FROM personlikespost WHERE postid=? AND personid=?);
-        """;
+                    SELECT EXISTS(SELECT* FROM personlikespost WHERE postid=? AND personid=?);
+                """;
 
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
             statement.setInt(1, postId);
@@ -21,7 +34,7 @@ public enum LikeDao {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return rs.getBoolean(1);
-            }else{
+            } else {
                 throw new SQLException();
             }
 
@@ -32,17 +45,22 @@ public enum LikeDao {
 
     }
 
+    /**
+     * Extracts the total number of likes for a post.
+     *
+     * @param postId The id of the post
+     */
     public int getTotalLikes(int postId) {
         String sql = """
-            SELECT COUNT(*) FROM personlikespost WHERE postid=? GROUP BY postid;
-        """;
+                    SELECT COUNT(*) FROM personlikespost WHERE postid=? GROUP BY postid;
+                """;
 
         try (PreparedStatement statement = DatabaseConnection.INSTANCE.getConnection().prepareStatement(sql)) {
             statement.setInt(1, postId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
-            }else{
+            } else {
                 return 0;
             }
 

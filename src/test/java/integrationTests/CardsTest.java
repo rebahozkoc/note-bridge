@@ -16,10 +16,19 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * This class is used to test the card overview page.
+ */
 public class CardsTest {
 
+    /**
+     * The driver to be used in the tests.
+     */
     private static WebDriver driver;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeClass
     public static void setUp() {
         try {
@@ -32,6 +41,9 @@ public class CardsTest {
     }
 
 
+    /**
+     * This method is used to test the interested button.
+     */
     @Test
     @Order(1)
     public void InterestedTest() throws InterruptedException {
@@ -47,7 +59,9 @@ public class CardsTest {
     }
 
 
-
+    /**
+     * This method is used to view the card.
+     */
     @Test
     public void openCardTest() throws InterruptedException {
         driver.get("http://localhost:8080/notebridge/cards.html");
@@ -64,6 +78,9 @@ public class CardsTest {
     }
 
 
+    /**
+     * This method is used to test the edit and delete buttons.
+     */
     @Test
     @Order(2)
     public void editCardTest() throws InterruptedException {
@@ -97,6 +114,9 @@ public class CardsTest {
 
     }
 
+    /**
+     * This method is used to test the "load more" button in the cards page.
+     */
     @Test
     public void loadCardsTest() throws InterruptedException {
         driver.get("http://localhost:8080/notebridge/cards.html");
@@ -115,6 +135,9 @@ public class CardsTest {
 
     }
 
+    /**
+     * This method is used to test the like button.
+     */
     @Test
     public void likesTest() throws InterruptedException {
 
@@ -155,14 +178,15 @@ public class CardsTest {
     }
 
 
-
+    /**
+     * This method is used to tear down the tests after all tests.
+     */
     @AfterClass
     public static void tearDown() {
         if (driver != null) {
             driver.quit();
         }
     }
-
 
 
 }

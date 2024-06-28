@@ -14,9 +14,18 @@ import java.time.Duration;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This class is used to test the create card page.
+ */
 public class CreateCardPageTest {
+    /**
+     * The driver to be used in the tests.
+     */
     private static WebDriver driver;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeClass
     public static void setUp() {
         try {
@@ -105,6 +114,9 @@ public class CreateCardPageTest {
     }
 
 
+    /**
+     * This method is used to tear down the tests after all tests.
+     */
     @AfterClass
     public static void tearDown() {
         if (driver != null) {

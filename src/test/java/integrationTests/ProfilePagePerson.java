@@ -18,9 +18,15 @@ import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * This class is used to test the profile page for persons.
+ */
 public class ProfilePagePerson {
     private static WebDriver driver;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeClass
     public static void setUpAndLogIn() {
         try {
@@ -44,10 +50,12 @@ public class ProfilePagePerson {
     }
 
 
-
+    /**
+     * Tests if the username is displayed correctly on the profile page.
+     */
     @Test
     @Order(1)
-    public void accessProfilePage(){
+    public void accessProfilePage() {
 
         driver.get("http://localhost:8080/notebridge/profile.html");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -57,14 +65,17 @@ public class ProfilePagePerson {
 
         //If user does not log in successfully, then the profile page prints out default username
         //Being not equal to this, means the user has logged in successfully
-        assertTrue(profileUsername.getText()!="@username");
+        assertTrue(profileUsername.getText() != "@username");
 
 
     }
 
+    /**
+     * Tests if the user can edit their name.
+     */
     @Test
     @Order(2)
-    public void tryEditingName(){
+    public void tryEditingName() {
 
         driver.get("http://localhost:8080/notebridge/profile.html");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -74,8 +85,8 @@ public class ProfilePagePerson {
         editBtn.click();
 
         WebElement nameInput = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#nameInput")));
-        WebElement lastnameInput=wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#lastnameInput")));
-        WebElement saveChangesBtn=wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#editHeaderModal .modal-footer button")));
+        WebElement lastnameInput = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#lastnameInput")));
+        WebElement saveChangesBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#editHeaderModal .modal-footer button")));
 
 
         // Clear and interact with nameInput
@@ -88,16 +99,17 @@ public class ProfilePagePerson {
         //alert showing up saying update successfull
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
-        String alertText= alert.getText();
+        String alertText = alert.getText();
         driver.switchTo().alert().accept();
         assertTrue(alertText.contains("Update successful"));
-
 
 
     }
 
 
-
+    /**
+     * Tests if the user can edit their email.
+     */
     @AfterClass
     public static void tearDown() {
         if (driver != null) {

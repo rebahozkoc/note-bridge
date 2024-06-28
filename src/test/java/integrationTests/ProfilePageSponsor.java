@@ -18,9 +18,15 @@ import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * This class is used to test the profile page for sponsors.
+ */
 public class ProfilePageSponsor {
     private static WebDriver driver;
 
+    /**
+     * This method is used to set up the tests before all tests.
+     */
     @BeforeClass
     public static void setUpAndLogIn() {
         try {
@@ -45,6 +51,9 @@ public class ProfilePageSponsor {
 
 
 
+    /**
+     * Tests if the username is displayed correctly on the profile page.
+     */
     @Test
     @Order(1)
     public void accessProfilePage(){
@@ -62,10 +71,11 @@ public class ProfilePageSponsor {
 
     }
 
+    /**
+     * Tests if the user can edit their name.
+     */
     @Test
     @Order(2)
-    //This is companyName and websiteURL for Sponsors,
-    //eventhough id names are name-lastname, since the profile is designed initially for Persons
     public void tryEditingName(){
 
         driver.get("http://localhost:8080/notebridge/profile.html");
@@ -97,6 +107,9 @@ public class ProfilePageSponsor {
     }
 
 
+    /**
+     * This method is used to tear down the tests after all tests.
+     */
     @AfterClass
     public static void tearDown() {
         if (driver != null) {

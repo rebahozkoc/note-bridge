@@ -46,6 +46,7 @@ Main Features:
     - Liking: Show appreciation for the content by liking the post.
     - Commenting: Leave comments to start discussions or provide feedback.
     - Sharing: Share posts with other users or on social media platforms to reach a broader audience.
+    - Show Interest: Users can press the "I'm Interested" button to indicate their interest for a specific post.
 - Sponsor Posts: Sponsors can promote posts to increase their visibility. This feature helps musicians reach a larger
   audience and gain more recognition for their work.
 
@@ -55,6 +56,8 @@ Main Features:
 
 
 - Sponsor User
+
+A Person or Sponsor account can be created through the Sign up form.
 
 ### Messenger
 

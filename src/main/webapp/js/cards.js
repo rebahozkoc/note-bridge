@@ -82,7 +82,7 @@ function displayCard(card, sponsoredCard) {
         imageSource="data:image/png;base64,";
         imageSource += card.image;
     }else{
-        imageSource = "assets/images/image-placeholder.jpg";
+        imageSource = "assets/images/cards_placeholder.png";
     }
 
     if(sponsoredCard) {

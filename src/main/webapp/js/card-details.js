@@ -283,7 +283,7 @@ function saveSponsorshipDates() {
 function checkPostBelongsToUser(userId, author) {
     if (author === userId) {
         deleteIcon.innerHTML = `
-        <span class="button"  data-bs-toggle="modal" data-bs-target="#deleteModal" style="cursor: pointer; background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 20px; height: 20px"> </span>
+        <span class="button ms-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" style="cursor: pointer; background-color: transparent; border: transparent; visibility: visible" id="delete-button" ><img src="assets/images/trash.png" style="width: 25px; height: 25px"> </span>
         `
         editIcon.innerHTML = `
         <span class="edit-icon" data-bs-toggle="modal" data-bs-target="#editPostModal" style="visibility: visible" id="edit-button">&#9998;</span>

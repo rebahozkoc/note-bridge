@@ -672,25 +672,22 @@ function appendActiveCarousel(card) {
     const activeCarousel = innerCarousel.querySelector(".active");
 
     if (!card.hasImage) {
-        imageSource = "assets/images/placeholder.jpg";
+        imageSource = "assets/images/cards_placeholder.png";
     } else {
         imageSource = "data:image/png;base64,";
         imageSource += card.image;
     }
 
     activeCarousel.innerHTML += `
-                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="overflow: hidden; white-space: nowrap; width: 20rem; height: 27rem; margin: 35px 15px 15px;" id="displayed-card">
-                    <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
-                    <div class="card-body">
+                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="overflow: hidden; white-space: nowrap; width: 20rem; height: 25rem; margin: 35px 15px 15px" id="displayed-card">
+                    <img src="${imageSource}" class="card-img-top" alt="card image">
+                    <div class="card-body" style="height: 12rem">
                         <h5 class="card-title">${card.title}</h5>
                         <p class="card-text">${card.description}</p>
-                        <p class="card-text">Event type: ${card.eventType}</p>
-                        <p class="card-text">Location: ${card.location}</p>
+                        <p class="card-text">${card.eventType}</p>
                     </div>
                 </div>
-                            `;
-
-
+                `;
 }
 
 function appendRegularCarousel(cards) {
@@ -702,22 +699,21 @@ function appendRegularCarousel(cards) {
 
         for (card of cards) {
             if (!card.hasImage) {
-                imageSource = "assets/images/placeholder.jpg";
+                imageSource = "assets/images/cards_placeholder.png";
             } else {
                 imageSource = "data:image/png;base64,";
                 imageSource += card.image;
             }
             regularCarousel.innerHTML += `
-                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="overflow: hidden; white-space: nowrap; width: 20rem; height: 27rem; margin: 35px 15px 15px;" id="displayed-card">
-                    <img src="${imageSource}" height="250" class="card-img-top"  alt="card image">
-                    <div class="card-body">
+                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="overflow: hidden; white-space: nowrap; width: 20rem; height: 25rem; margin: 35px 15px 15px" id="displayed-card">
+                    <img src="${imageSource}" class="card-img-top" alt="card image">
+                    <div class="card-body" style="height: 12rem">
                         <h5 class="card-title">${card.title}</h5>
                         <p class="card-text">${card.description}</p>
-                        <p class="card-text">Event type: ${card.eventType}</p>
-                        <p class="card-text">Location: ${card.location}</p>
+                        <p class="card-text">${card.eventType}</p>
                     </div>
                 </div>
-                            `;
+                `;
         }
         innerCarousel.appendChild(regularCarousel);
     }

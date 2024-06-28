@@ -76,7 +76,16 @@ The main features are:
 
 To check everything we need 3 users and one post.
 
-Credentials:
+> Credentials:
+First User
+- Username: messenger1
+- Password: Simplepass1234!
+Second User
+- Username: messenger2
+- Password: Simplepass1234!
+Third User
+- Username: messenger3
+- Password: Simplepass1234!
 
 
 ## Support

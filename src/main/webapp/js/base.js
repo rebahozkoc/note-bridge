@@ -107,7 +107,7 @@ function checkLoggedIn() {
             if (res.status === 200) {
 
                 return res.json().then(data => {
-                    updateNavbar(true, data.role);
+                    updateNavbar(true, data.role, data.username);
                     updateWelcomeMessage(true, data.username);
                 });
             } else {
@@ -117,10 +117,10 @@ function checkLoggedIn() {
         })
 }
 
-function updateNavbar(loggedIn,role) {
+function updateNavbar(loggedIn,role, username) {
     if(loggedIn) {
         logInBtn.innerHTML = `
-        <a href="home.html" id="log-out-btn" class="button-1 mt-1 ms-1" role="button" onclick="logOut()">Log out</a>
+        <a href="home.html" id="log-out-btn" class="button-1 mt-1 ms-2" role="button" onclick="logOut()">Log out</a>
         `
 
         messengerBtn.innerHTML = `
@@ -128,7 +128,7 @@ function updateNavbar(loggedIn,role) {
         `;
 
         profileBtn.innerHTML = `
-        <a class="nav-link" href="profile.html"><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
+        <a class="nav-link" href="profile.html"><span class="text-white me-1">${username}</span><img src="assets/images/user-icon.png" width="35px" height="35px"></a>
         `;
 
         if(role==="person"){

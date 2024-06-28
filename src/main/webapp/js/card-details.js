@@ -111,10 +111,9 @@ function deletePost() {
 
 function viewInterested(element) {
 
-    if (element.classList.contains("button-1")) {
+    if (!element.classList.contains("already-pressed-btn")) {
 
-        element.classList.remove("button-1");
-        element.classList.add("btn-secondary");
+        element.classList.add("already-pressed-btn");
         element.innerHTML = "Hide Interested Users";
         if (listOfUsernames.hasChildNodes()) {
             fetch("/notebridge/api/posts/" + cardId + "/interestedusers")
@@ -153,8 +152,7 @@ function viewInterested(element) {
         }
 
     } else {
-        element.classList.add("button-1");
-        element.classList.remove("btn-secondary");
+        element.classList.remove("already-pressed-btn");
         element.innerHTML = "View Interested Users";
         for (let liElement of listOfUsernames.children) {
             liElement.style.display = "none";
@@ -311,7 +309,7 @@ function displayInterestedButton(userId, postId, author) {
             }).then(data => {
                 if (data.isInterested) {
                     interestButton.innerHTML = `
-                    <a class="btn btn-secondary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">You are already interested in this post!</a>
+                    <a class="button-1 already-pressed-btn" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">You are already interested!</a>
                     `;
                 } else {
                     interestButton.innerHTML = `
@@ -337,16 +335,14 @@ function toggleInterest(element) {
         method: "POST"
     }).then(res => {
         if (res.status === 200) {
-            if (element.classList.contains("button-1")) {
+            if (!element.classList.contains("already-pressed-btn")) {
                 //User will show interest
-                element.classList.add("btn-secondary");
-                element.classList.remove("button-1");
-                element.innerHTML = "You are already interested in this post!";
+                element.classList.add("already-pressed-btn");
+                element.innerHTML = "You are already interested!";
 
             } else {
                 //User will remove interest
-                element.classList.add("button-1");
-                element.classList.remove("btn-secondary");
+                element.classList.remove("already-pressed-btn");
                 element.innerHTML = "I'm Interested!";
 
             }

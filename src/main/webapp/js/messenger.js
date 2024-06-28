@@ -273,7 +273,9 @@ function noChangeInMessages(newMessages, id ,username){
     if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
         messages=newMessages;
         showMessageHistory(id,username);
+        document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
     }
+
 }
 
 function showMessageHistory(id, username){

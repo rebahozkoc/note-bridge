@@ -91,11 +91,14 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark">
                       <li><span class="mg-text">Filter By</span><li>
+                      <li><a class="dropdown-item" data-filter-by="none" href="cards.html">None</a></li>
                       <li><a class="dropdown-item" data-filter-by="jam-session" onclick="filterBy(this)">Jam Sessions</a></li>
                       <li><a class="dropdown-item" data-filter-by="live-event" onclick="filterBy(this)">Live Events</a></li>
                       <li><a class="dropdown-item" data-filter-by="find-band-member" onclick="filterBy(this)">Find Band Members</a></li>
                       <li><a class="dropdown-item" data-filter-by="find-instrument" onclick="filterBy(this)">Find Instruments</a></li>
                       <li><a class="dropdown-item" data-filter-by="music-discussion" onclick="filterBy(this)">Music Discussions</a></li>
+                      <li><a class="dropdown-item" data-filter-by="sponsoredBy" onclick="filterSponsored()">Sponsored</a></li>
+
                     </ul>
                   </div>
 
@@ -126,7 +129,7 @@
       </div>
       <div class="col-3">
         <div class="sidenav">
-          <div id="sidenav-title" class="text-white my-3">Sponsored Posts</div>
+          <div id="sidenav-title" class="text-white my-3 fw-medium">Sponsored Posts</div>
           <div id="sidenav-content">
             <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
               <div id="sponsored-cards" class="carousel-inner"></div>

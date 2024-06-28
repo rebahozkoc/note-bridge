@@ -155,6 +155,7 @@
 
 .sponsor-button {
     display: none;
+    margin: 0 auto;
 }
 
 .sponsor-header {
@@ -174,4 +175,52 @@
     justify-content: center;
     align-items: center;
     color: white;
+}
+
+#view-interested-btn {
+    display: block;
+    text-align: center;
+    width: 15rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#list-of-usernames {
+    display: flex;
+}
+
+.interestedUser {
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 20%;
+    font-size: 1.2rem;
+}
+
+.interestedUser:hover {
+    cursor: pointer;
+    background: rgb(0,14,35);
+    background: linear-gradient(319deg, rgba(0,14,35,0.7) 0%, rgba(26,22,154,0.7) 49%, rgba(0,14,35,0.7) 100%);
+}
+
+#container-interested-users {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.already-pressed-btn {
+    background-image: radial-gradient(100% 100% at 100% 0, yellowgreen 0, green 100%);
+}
+
+.already-pressed-btn:focus {
+    box-shadow: green 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, green 0 -3px 0 inset;
+}
+
+.already-pressed-btn:hover {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, darkgreen 0 -3px 0 inset;
+}
+
+.already-pressed-btn:active {
+    box-shadow: green 0 3px 7px inset;
 }

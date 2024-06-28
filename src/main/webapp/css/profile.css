@@ -361,5 +361,24 @@ footer {
     border-bottom: none;
 }
 
+#delete-button {
+    display: none;
+    text-align: center;
+    align-content: center;
+    width: 12rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-image: radial-gradient(100% 100% at 100% 0, red 0, orange 100%);
+}
 
+#delete-button:focus {
+    box-shadow: red 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, orange 0 -3px 0 inset;
+}
 
+#delete-button:hover {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, orangered 0 -3px 0 inset;
+}
+
+#delete-button:active {
+    box-shadow: darkorange 0 3px 7px inset;
+}

@@ -111,10 +111,9 @@ function deletePost() {
 
 function viewInterested(element) {
 
-    if (element.classList.contains("btn-primary")) {
+    if (!element.classList.contains("already-pressed-btn")) {
 
-        element.classList.remove("btn-primary");
-        element.classList.add("btn-secondary");
+        element.classList.add("already-pressed-btn");
         element.innerHTML = "Hide Interested Users";
         if (listOfUsernames.hasChildNodes()) {
             fetch("/notebridge/api/posts/" + cardId + "/interestedusers")
@@ -136,7 +135,7 @@ function viewInterested(element) {
                         window.location.href = "profile.html?id=" + user.id;
                     };
                     anchorElement.innerHTML = user.username;
-                    anchorElement.classList.add("link-primary");
+                    anchorElement.classList.add("interestedUser");
                     listElement.append(anchorElement);
                     listOfUsernames.appendChild(listElement);
                 })
@@ -153,8 +152,7 @@ function viewInterested(element) {
         }
 
     } else {
-        element.classList.add("btn-primary");
-        element.classList.remove("btn-secondary");
+        element.classList.remove("already-pressed-btn");
         element.innerHTML = "View Interested Users";
         for (let liElement of listOfUsernames.children) {
             liElement.style.display = "none";
@@ -250,9 +248,6 @@ function getAuthor(userId, role) {
             if (role === "person") {
                 displayInterestedButton(userId, data.id, data.personId);
 
-            } else if (role === "sponsor") {
-                sponsorButton.style.display = "block";
-                sponsorButton.style.width = "-webkit-fill-available";
             }
         })
 }
@@ -314,11 +309,11 @@ function displayInterestedButton(userId, postId, author) {
             }).then(data => {
                 if (data.isInterested) {
                     interestButton.innerHTML = `
-                    <a class="btn btn-secondary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">You are already interested in this post!</a>
+                    <a class="button-1 already-pressed-btn" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">You are already interested!</a>
                     `;
                 } else {
                     interestButton.innerHTML = `
-                        <a class="btn btn-primary" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">I'm Interested!</a>
+                        <a class="button-1" data-post-id="${postId}" href="#" role="button" onclick="toggleInterest(this)">I'm Interested!</a>
 
                         `
                 }
@@ -340,16 +335,14 @@ function toggleInterest(element) {
         method: "POST"
     }).then(res => {
         if (res.status === 200) {
-            if (element.classList.contains("btn-primary")) {
+            if (!element.classList.contains("already-pressed-btn")) {
                 //User will show interest
-                element.classList.add("btn-secondary");
-                element.classList.remove("btn-primary");
-                element.innerHTML = "You are already interested in this post!";
+                element.classList.add("already-pressed-btn");
+                element.innerHTML = "You are already interested!";
 
             } else {
                 //User will remove interest
-                element.classList.add("btn-primary");
-                element.classList.remove("btn-secondary");
+                element.classList.remove("already-pressed-btn");
                 element.innerHTML = "I'm Interested!";
 
             }
@@ -367,7 +360,7 @@ function toggleInterest(element) {
 
 function rerouteInterestedButton() {
     interestButton.innerHTML = `
-     <a class="btn btn-primary" href="login.html" role="button">I'm Interested!</a>
+     <a class="button-1" href="login.html" role="button">I'm Interested!</a>
 
     `
 }
@@ -405,8 +398,22 @@ async function loadPostDetailsAndLikes(cardId) {
         const currentDate = new Date();
         if (postData.sponsoredBy != null && currentDate > new Date(parseInt(postData.sponsoredFrom)) && currentDate < new Date(parseInt(postData.sponsoredUntil))) {
             //console.log("Post is sponsored");
+
             loadSponsorData(postData);
+
+        }else{
+            //Post is not sponsored
+            //if the user is a sponsor, show the sponsor button
+            getStatus().then(data => {
+                if(data.role==="sponsor"){
+                    sponsorButton.style.display="block";
+                }
+            }).catch(err => {
+                console.error("Error getting status:", err);
+
+            })
         }
+
 
         try {
             await updateTotalLikes(cardId);

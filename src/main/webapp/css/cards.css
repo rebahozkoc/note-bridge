@@ -22,6 +22,13 @@
 }
 
 .card,
+.sponsored-card {
+    width: 17rem;
+    height: 22rem;
+    margin-left: 3rem;
+    margin-bottom: 3rem;
+}
+
 .card-text {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -45,12 +52,10 @@
     width: 26ch;
 }
 
-.card,
 .card-title {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    width: 13.5rem;
+    height: 4.5rem;
     overflow: hidden;
-    width: 24ch;
 }
 
 .card:hover {
@@ -61,16 +66,14 @@
     cursor: pointer;
 }
 
-.card-img-top {
-    width: 100%;
-    height: 13rem;
-    object-fit: cover;
+.card .card-img-top {
+    margin-top: 1.5vh;
 }
 
-.card,
-.trending {
-    background-color:rgb(17, 24, 39);
-    color: rgb(225, 225, 225);
+.card-img-top {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
 }
 
 body,
@@ -99,17 +102,14 @@ html {
 }
 
 .sidenav {
-    height: 86%; /* Full-height: remove this if you want "auto" height */
-    width: 375px; /* Set the width of the sidebar */
+    height: 28rem; /* Full-height: remove this if you want "auto" height */
+    width: 27rem; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 0; /* Stay on top */
     bottom: 0; /* Stay at the bottom */
     right: 0;
-    background-color: rgba(17, 24, 39, 0.8);
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
-    border-top-left-radius: 20px;
-
 }
 
 .sidenav h5, hr {
@@ -204,16 +204,8 @@ a:link {
     line-height: 14px;
 }
 
-#sidenav-title {
-    color: white;
-    font-size: 4vh;
-    text-align: center;
-    margin-bottom: 1vh;
-}
-
 #sidenav-content {
     padding-top: 0.5vh;
-    margin-left: 1.2vh;
 }
 
 .sponsored-card {
@@ -228,8 +220,12 @@ a:link {
     background: linear-gradient(319deg, rgba(0,0,0,0.8) 0%, rgba(231,255,0,0.8) 100%);
 }
 
-.card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+#main-logo-image {
+    display: block;
+    width: 17rem;
+    border-radius: 50%;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: rgba(138,62,183,0.3) 8px 8px 15px;
 }

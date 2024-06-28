@@ -70,66 +70,69 @@
       <p>Loading...</p>
     </div>
 
+    <div class="container mb-5">
+      <img src="assets/images/NoteBridge.png" id="main-logo-image" alt="note-bridge logo">
+
+      <!-- Search bar -->
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-9 mt-3">
+          <div class="d-flex justify-content-center px-5">
+            <div class="search w-75">
+              <input type="text" class="search-input" id="search-bar" placeholder="Search..." name="">
+              <a  id="search-btn" onclick="searchBy()" class="search-icon">
+                <i class="fa fa-search"></i>
+              </a>
+
+            </div>
+            <div class="dropdown ms-2" data-bs-theme="dark" style="margin-top: 20px">
+              <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                <img src="assets/images/filter.png" alt="filter" style="width: 20px; height: 20px">
+              </button>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li><span class="mg-text">Filter By</span><li>
+                <li><a class="dropdown-item" data-filter-by="none" href="cards.html">None</a></li>
+                <li><a class="dropdown-item" data-filter-by="jam-session" onclick="filterBy(this)">Jam Sessions</a></li>
+                <li><a class="dropdown-item" data-filter-by="live-event" onclick="filterBy(this)">Live Events</a></li>
+                <li><a class="dropdown-item" data-filter-by="find-band-member" onclick="filterBy(this)">Find Band Members</a></li>
+                <li><a class="dropdown-item" data-filter-by="find-instrument" onclick="filterBy(this)">Find Instruments</a></li>
+                <li><a class="dropdown-item" data-filter-by="music-discussion" onclick="filterBy(this)">Music Discussions</a></li>
+                <li><a class="dropdown-item" data-filter-by="sponsoredBy" onclick="filterSponsored()">Sponsored</a></li>
+
+              </ul>
+            </div>
+
+            <div class="dropdown" data-bs-theme="dark" style="margin-top: 19px">
+              <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                <img src="assets/images/sort.png" alt="filter" style="width: 25px; height: 25px">
+              </button>
+              <ul class="dropdown-menu dropdown-menu-dark" >
+                <li><span class="mg-text">Sort By</span><li>
+                <li><a class="dropdown-item" data-sort-by="latest" onclick="sortBy(this)">Latest</a></li>
+                <li><a class="dropdown-item" data-sort-by="oldest" onclick="sortBy(this)">Oldest</a></li>
+                <li><a class="dropdown-item" data-sort-by="mostlikes" onclick="sortBy(this)">Most Likes</a></li>
+                <li><a class="dropdown-item" data-sort-by="mostinterested" onclick="sortBy(this)">Most Interested</a></li>
+
+              </ul>
+            </div>
+            <button type="button" id="createPostBtn" class="button-1 mt-3 ms-3" onclick="window.location.href = 'create-card.html'">Create Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-9">
 
-        <!-- Search bar -->
-        <div class="container">
-          <div class="row d-flex justify-content-center">
-            <div class="col-md-9 mt-4">
-                <div class="d-flex justify-content-center px-5">
-                  <div class="search w-75">
-                    <input type="text" class="search-input" id="search-bar" placeholder="Search..." name="">
-                    <a  id="search-btn" onclick="searchBy()" class="search-icon">
-                      <i class="fa fa-search"></i>
-                    </a>
-
-                  </div>
-                  <div class="dropdown" data-bs-theme="dark" style="margin-top: 20px">
-                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
-                      <img src="assets/images/filter.png" alt="filter" style="width: 20px; height: 20px">
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                      <li><span class="mg-text">Filter By</span><li>
-                      <li><a class="dropdown-item" data-filter-by="none" href="cards.html">None</a></li>
-                      <li><a class="dropdown-item" data-filter-by="jam-session" onclick="filterBy(this)">Jam Sessions</a></li>
-                      <li><a class="dropdown-item" data-filter-by="live-event" onclick="filterBy(this)">Live Events</a></li>
-                      <li><a class="dropdown-item" data-filter-by="find-band-member" onclick="filterBy(this)">Find Band Members</a></li>
-                      <li><a class="dropdown-item" data-filter-by="find-instrument" onclick="filterBy(this)">Find Instruments</a></li>
-                      <li><a class="dropdown-item" data-filter-by="music-discussion" onclick="filterBy(this)">Music Discussions</a></li>
-                      <li><a class="dropdown-item" data-filter-by="sponsoredBy" onclick="filterSponsored()">Sponsored</a></li>
-
-                    </ul>
-                  </div>
-
-                  <div class="dropdown" data-bs-theme="dark" style="margin-top: 19px">
-                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
-                      <img src="assets/images/sort.png" alt="filter" style="width: 25px; height: 25px">
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-dark" >
-                      <li><span class="mg-text">Sort By</span><li>
-                      <li><a class="dropdown-item" data-sort-by="latest" onclick="sortBy(this)">Latest</a></li>
-                      <li><a class="dropdown-item" data-sort-by="oldest" onclick="sortBy(this)">Oldest</a></li>
-                      <li><a class="dropdown-item" data-sort-by="mostlikes" onclick="sortBy(this)">Most Likes</a></li>
-                      <li><a class="dropdown-item" data-sort-by="mostinterested" onclick="sortBy(this)">Most Interested</a></li>
-
-                    </ul>
-                  </div>
-                  <button type="button" id="createPostBtn" class="button-1 mt-3 ms-3" onclick="window.location.href = 'create-card.html'">Create Post</button>
-                </div>
-            </div>
-          </div>
-        </div>
-
         <!-- Cards -->
-        <div id="cards" class="row"></div>
+        <div id="cards" class="row ms-5"></div>
 
         <button id="load-more-btn" class="button-1 mb-4 mt-3" style="margin-left: 45%">Load More</button>
 
       </div>
+
+      <!-- Sponsored posts slideshow -->
       <div class="col-3">
         <div class="sidenav">
-          <div id="sidenav-title" class="text-white my-3 fw-medium">Sponsored Posts</div>
           <div id="sidenav-content">
             <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
               <div id="sponsored-cards" class="carousel-inner"></div>
@@ -137,6 +140,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 

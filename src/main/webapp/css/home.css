@@ -6,15 +6,15 @@
 
 #top-content {
     display: flex;
-    margin-top: 12vh;
+    margin-top: 2rem;
     margin-bottom: 20vh;
     justify-content: center;
 }
 
 #main-logo-image {
-    width: 45vh;
+    width: 19rem;
     border-radius: 50%;
-    margin-bottom: 35vh;
+    margin-bottom: 20rem;
 }
 
 #categories {
@@ -87,4 +87,10 @@ fade-in {
 
 .text-style {
     text-shadow: rgb(17, 24, 39) 5px 5px;
+}
+
+#main-btn {
+    font-size: 1rem;
+    width: 12rem;
+    height: 3rem;
 }

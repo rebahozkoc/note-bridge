@@ -85,29 +85,22 @@ function displayCard(card, sponsoredCard) {
         imageSource = "assets/images/cards_placeholder.png";
     }
 
+    let cardClass;
     if(sponsoredCard) {
-        return `
-        <div class="sponsored-card mt-1" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 30rem; margin: 35px 15px 15px;" id="displayed-card">
-            <img src="${imageSource}" class="card-img-top"  alt="card image" style="height: 16rem">
-            <div class="card-body" style="height: 14rem">
-                <h5 class="sponsored-card-title fs-5">${card.title}</h5>
-                <p class="sponsored-card-text ms-3">${card.description}</p>
-                <p class="card-text ms-3">${card.eventType}</p>
-            </div>
-        </div>
-        `;
+        cardClass = "sponsored-card";
     } else {
-        return `
-        <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="width: 20rem; height: 25rem; margin: 35px 15px 15px;" id="displayed-card">
-            <img src="${imageSource}" class="card-img-top" style="margin-top: 1.5vh" alt="card image">
-            <div class="card-body" style="height: 12rem">
-                <h5 class="card-title">${card.title}</h5>
-                <p class="card-text">${card.description}</p>
-                <p class="card-text">${card.eventType}</p>
+        cardClass = "card";
+    }
+
+    return `
+        <div class=${cardClass} data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
+            <img src="${imageSource}" class="card-img-top" alt="card image">
+            <div class="card-body" style="height: 10rem">
+                <h5 class="card-title fs-5">${card.title}</h5>
+                <p class="card-text ms-5">${card.eventType}</p>
             </div>
         </div>
         `;
-    }
 }
 
 function selectCard(card) {

@@ -19,7 +19,7 @@ Adham Ehab Magdy Selim
 ## Deployed application
 
 Previder link:
-
+https://notebridge1.paas.hosted-by-previder.com/notebridge/
 ***
 
 ## Database

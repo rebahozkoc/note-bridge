@@ -83,34 +83,34 @@
                 <i class="fa fa-search"></i>
               </a>
 
-            </div>
-            <div class="dropdown ms-2" data-bs-theme="dark" style="margin-top: 20px">
-              <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
-                <img src="assets/images/filter.png" alt="filter" style="width: 20px; height: 20px">
-              </button>
-              <ul class="dropdown-menu dropdown-menu-dark">
-                <li><span class="mg-text">Filter By</span><li>
-                <li><a class="dropdown-item" data-filter-by="none" href="cards.html">None</a></li>
-                <li><a class="dropdown-item" data-filter-by="jam-session" onclick="filterBy(this)">Jam Sessions</a></li>
-                <li><a class="dropdown-item" data-filter-by="live-event" onclick="filterBy(this)">Live Events</a></li>
-                <li><a class="dropdown-item" data-filter-by="find-band-member" onclick="filterBy(this)">Find Band Members</a></li>
-                <li><a class="dropdown-item" data-filter-by="find-instrument" onclick="filterBy(this)">Find Instruments</a></li>
-                <li><a class="dropdown-item" data-filter-by="music-discussion" onclick="filterBy(this)">Music Discussions</a></li>
-                <li><a class="dropdown-item" data-filter-by="sponsoredBy" onclick="filterSponsored()">Sponsored</a></li>
+                  </div>
+                  <div class="dropdown ms-2" data-bs-theme="dark" style="margin-top: 20px">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                      <img src="assets/images/filter.png" alt="filter" style="width: 20px; height: 20px">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                      <li><span class="mg-text">Filter By</span><li>
+                      <li><a class="dropdown-item" data-filter-by="jam-session" onclick="filterBy(this)">Jam Sessions</a></li>
+                      <li><a class="dropdown-item" data-filter-by="live-event" onclick="filterBy(this)">Live Events</a></li>
+                      <li><a class="dropdown-item" data-filter-by="find-band-member" onclick="filterBy(this)">Find Band Members</a></li>
+                      <li><a class="dropdown-item" data-filter-by="find-instrument" onclick="filterBy(this)">Find Instruments</a></li>
+                      <li><a class="dropdown-item" data-filter-by="music-discussion" onclick="filterBy(this)">Music Discussions</a></li>
+                      <li><a class="dropdown-item" data-filter-by="true" onclick="isSponsored(this)">Sponsored</a></li>
 
               </ul>
             </div>
 
-            <div class="dropdown" data-bs-theme="dark" style="margin-top: 19px">
-              <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
-                <img src="assets/images/sort.png" alt="filter" style="width: 25px; height: 25px">
-              </button>
-              <ul class="dropdown-menu dropdown-menu-dark" >
-                <li><span class="mg-text">Sort By</span><li>
-                <li><a class="dropdown-item" data-sort-by="latest" onclick="sortBy(this)">Latest</a></li>
-                <li><a class="dropdown-item" data-sort-by="oldest" onclick="sortBy(this)">Oldest</a></li>
-                <li><a class="dropdown-item" data-sort-by="mostlikes" onclick="sortBy(this)">Most Likes</a></li>
-                <li><a class="dropdown-item" data-sort-by="mostinterested" onclick="sortBy(this)">Most Interested</a></li>
+
+                  <div class="dropdown" data-bs-theme="dark" style="margin-top: 19px">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border-color: transparent">
+                      <img src="assets/images/sort.png" alt="filter" style="width: 25px; height: 25px">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" >
+                      <li><span class="mg-text">Sort By</span><li>
+                      <li><a class="dropdown-item" data-sort-by="latest" onclick="sortBy(this)">Latest</a></li>
+                      <li><a class="dropdown-item" data-sort-by="oldest" onclick="sortBy(this)">Oldest</a></li>
+                      <li><a class="dropdown-item" data-sort-by="mostlikes" onclick="sortBy(this)">Most Likes</a></li>
+                      <li><a class="dropdown-item" data-sort-by="mostinterested" onclick="sortBy(this)">Most Interested</a></li>
 
               </ul>
             </div>

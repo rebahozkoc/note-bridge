@@ -1,8 +1,0 @@
-integrationTests
-unitTests
-ut.twente.notebridge
-ut.twente.notebridge.dao
-ut.twente.notebridge.dto
-ut.twente.notebridge.model
-ut.twente.notebridge.routes
-ut.twente.notebridge.utils

@@ -78,7 +78,9 @@ To check everything we need 3 users and one post.
 
 #### Credentials:
 
->First User  - Username: messenger1  - Password: Simplepass1234!
+ First User  
+- Username: messenger1  
+- Password: Simplepass1234!
 
 Second User
 - Username: messenger2

@@ -21,6 +21,15 @@ Adham Ehab Magdy Selim
 Previder link:
 https://notebridge1.paas.hosted-by-previder.com/notebridge/
 ***
+## To test the application on local, follow the steps below:
+in src/main/resources/ create a file called app.properties and add the following lines:
+
+- USER=dab_di23242b_134
+- PASSWORD=DZk0UGLbRstkxNwW
+- PROD_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridge
+- TEST_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridgetest
+- PERSISTENCE_FOLDER_PATH =[choose a path for the folder where the images will be stored]
+```
 
 ## Database
 

@@ -15,6 +15,7 @@ const loadingScreen = document.getElementById("loading-screen");
 const loadMoreButton = document.getElementById("load-more-btn");
 const searchBar= document.getElementById("search-bar");
 const createPostBtn = document.getElementById("createPostBtn");
+const eventBadge = document.getElementById("card-event");
 
 loadMoreButton.addEventListener("click", loadMore);
 //Getting status data and modifying URL
@@ -110,17 +111,48 @@ function displayCard(card, sponsoredCard) {
         cardClass = "card";
     }
 
+    let badge;
+    if(card.eventType === "Jam Session") {
+        badge = `
+        <p class="badge text-bg-info">Jam Session</p>
+        `;
+    }
+
     return `
         <div class=${cardClass} data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
             <img src="${imageSource}" class="card-img-top" alt="card image">
             <div class="card-body">
                 <h5 class="card-title">${card.title}</h5>
-                <p class="card-text">${card.eventType}</p>
+                ${badge}
             </div>
         </div>
         `;
 }
 
+function showCardEvent(card) {
+    if (card.eventType === "Jam Session") {
+        eventBadge.innerHTML = `
+        <span class="badge text-bg-primary">Jam session</span>
+        `
+    } else if (card.eventType === "Live Event") {
+        eventBadge.innerHTML = `
+        <span class="badge text-bg-success">Live Event</span>
+        `
+    }else if (card.eventType === "find band member") {
+        eventBadge.innerHTML = `
+        <span class="badge text-bg-danger">Find Members</span>
+        `
+    }else if (card.eventType === "find instrument") {
+        eventBadge.innerHTML = `
+        <span class="badge text-bg-info">Find Instruments</span>
+        `
+    }else if (card.eventType === "music discussion") {
+        eventBadge.innerHTML = `
+        <span class="badge text-bg-light">Discussions</span>
+        `
+    }
+
+}
 /**
  * When the user clicks on a card, this function is called.
  * @param card the card which has been clicked.

@@ -104,19 +104,40 @@ function displayCard(card, sponsoredCard) {
         imageSource = "assets/images/cards_placeholder.png";
     }
 
+    let badge;
+    if(card.eventType === "Jam Session") {
+        badge = `
+        <p class="badge text-bg-primary">Jam Session</p>
+        `;
+    }else if (card.eventType === "Live Event") {
+        badge = `
+        <p class="badge text-bg-success">Live Event</p>
+        `;
+    }else if (card.eventType === "Find Band Member") {
+        badge = `
+        <p class="badge text-bg-danger">Find Members</p>
+        `;
+    }else if (card.eventType === "Find Instrument") {
+        badge = `
+        <p class="badge text-bg-info">Find Instruments</p>
+        `;
+    }else if (card.eventType === "Music Discussion") {
+        badge = `
+        <p class="badge text-bg-light">Discussions</p>
+        `;
+    }
+
     let cardClass;
     if(sponsoredCard) {
         cardClass = "sponsored-card";
+        badge += `
+        <p class="badge text-bg-warning">Sponsored</p>
+        `;
     } else {
         cardClass = "card";
     }
 
-    let badge;
-    if(card.eventType === "Jam Session") {
-        badge = `
-        <p class="badge text-bg-info">Jam Session</p>
-        `;
-    }
+    let interestedCount = countInterested(card.id)
 
     return `
         <div class=${cardClass} data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
@@ -124,35 +145,42 @@ function displayCard(card, sponsoredCard) {
             <div class="card-body">
                 <h5 class="card-title">${card.title}</h5>
                 ${badge}
+                <p>Interested: ${interestedCount}</p>
             </div>
         </div>
         `;
 }
 
-function showCardEvent(card) {
-    if (card.eventType === "Jam Session") {
-        eventBadge.innerHTML = `
-        <span class="badge text-bg-primary">Jam session</span>
-        `
-    } else if (card.eventType === "Live Event") {
-        eventBadge.innerHTML = `
-        <span class="badge text-bg-success">Live Event</span>
-        `
-    }else if (card.eventType === "find band member") {
-        eventBadge.innerHTML = `
-        <span class="badge text-bg-danger">Find Members</span>
-        `
-    }else if (card.eventType === "find instrument") {
-        eventBadge.innerHTML = `
-        <span class="badge text-bg-info">Find Instruments</span>
-        `
-    }else if (card.eventType === "music discussion") {
-        eventBadge.innerHTML = `
-        <span class="badge text-bg-light">Discussions</span>
-        `
-    }
+function countInterested(id) {
+    let interested = [];
+
+    fetch("/notebridge/api/posts/" + id + "/interestedusers")
+        .then(res => {
+            if (res.status === 200) {
+                return res.json();
+            } else {
+                return res.text().then(errorText => {
+                    throw new Error(`${errorText}`);
+                });
+            }
+
+        }).then(data => {
+
+        data.forEach(user => {
+            interested.push(user)
+        })
+
+
+    }).catch(
+        err => {
+            console.error(err);
+        }
+    )
+
+    return interested.length;
 
 }
+
 /**
  * When the user clicks on a card, this function is called.
  * @param card the card which has been clicked.

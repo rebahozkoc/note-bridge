@@ -67,6 +67,12 @@
     color: rgb(17, 24, 39);
     box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
 }
+.content-right{
+    background: linear-gradient(319deg, rgba(0, 14, 35, 1) 0%, rgba(26, 22, 154, 1) 49%, rgba(0, 14, 35, 1) 100%);
+}
+.content-left{
+    background: linear-gradient(319deg, rgba(0, 14, 35, 1) 0%, rgb(201, 0, 255) 49%, rgba(0, 14, 35, 1) 100%);
+}
 .left{
     align-self: flex-start;
     margin-bottom: 0.3vh;

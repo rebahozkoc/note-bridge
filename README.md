@@ -19,8 +19,25 @@ Adham Ehab Magdy Selim
 ## Deployed application
 
 Previder link:
-
+https://notebridge1.paas.hosted-by-previder.com/notebridge/
 ***
+## To run the application on local, follow the steps below:
+in src/main/resources/ create a file called app.properties and add the following lines:
+
+- USER=dab_di23242b_134
+- PASSWORD=DZk0UGLbRstkxNwW
+- PROD_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridge
+- TEST_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridgetest
+- PERSISTENCE_FOLDER_PATH =[choose a path for the folder where the images will be stored]
+
+## To do the testings, follow the steps below:
+- Similarly under test folder, create resources folder if there is not any and create a file called app.properties and add the following lines:
+    - USER=dab_di23242b_134
+    - PASSWORD=DZk0UGLbRstkxNwW
+    - PROD_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridge
+    - TEST_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridgetest
+    - PERSISTENCE_FOLDER_PATH = [your path for the folder where the images will be stored]
+    - SELENIUM_DRIVER_PATH = [your path for the driver]
 
 ## Database
 
@@ -46,6 +63,7 @@ Main Features:
     - Liking: Show appreciation for the content by liking the post.
     - Commenting: Leave comments to start discussions or provide feedback.
     - Sharing: Share posts with other users or on social media platforms to reach a broader audience.
+    - Show Interest: Users can press the "I'm Interested" button to indicate their interest for a specific post.
 - Sponsor Posts: Sponsors can promote posts to increase their visibility. This feature helps musicians reach a larger
   audience and gain more recognition for their work.
 
@@ -55,6 +73,8 @@ Main Features:
 
 
 - Sponsor User
+
+A Person or Sponsor account can be created through the Sign up form.
 
 ### Messenger
 

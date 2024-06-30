@@ -104,7 +104,7 @@ function showRegisterUserForm() {
 function showRegisterSponsorForm() {
     firstField.innerHTML = `
     <div class="form-floating mb-3">
-        <textarea class="form-control" placeholder="Company name" id="companyName" name="companyName"></textarea>
+        <textarea class="form-control" placeholder="Company name" id="companyName" name="companyName" required></textarea>
         <label for="companyName">Company name</label>
     </div>
     `;

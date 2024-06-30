@@ -112,9 +112,9 @@ function displayCard(card, sponsoredCard) {
     return `
         <div class=${cardClass} data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
             <img src="${imageSource}" class="card-img-top" alt="card image">
-            <div class="card-body" style="height: 10rem">
-                <h5 class="card-title fs-5">${card.title}</h5>
-                <p class="card-text ms-5">${card.eventType}</p>
+            <div class="card-body">
+                <h5 class="card-title">${card.title}</h5>
+                <p class="card-text">${card.eventType}</p>
             </div>
         </div>
         `;

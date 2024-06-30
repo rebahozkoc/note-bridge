@@ -81,7 +81,7 @@
       <div class="row d-flex justify-content-center">
         <div class="col-md-9 mt-3">
           <div class="d-flex justify-content-center px-5">
-            <div class="search w-75">
+            <div class="search w-50">
               <input type="text" class="search-input" id="search-bar" placeholder="Search..." name="">
               <a  id="search-btn" onclick="searchBy()" class="search-icon">
                 <i class="fa fa-search"></i>
@@ -116,7 +116,6 @@
 
               </ul>
             </div>
-            <button type="button" id="createPostBtn" class="button-1 mt-3 ms-3" onclick="window.location.href = 'create-card.html'">Create Post</button>
           </div>
         </div>
       </div>
@@ -135,8 +134,9 @@
       <!-- Sponsored posts slideshow -->
       <div class="col-3">
         <div class="sidenav">
-          <div id="sidenav-content">
-            <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
+          <button type="button" id="createPostBtn" class="button-1 custom-button mb-3 fs-5 fw-bold" onclick="window.location.href = 'create-card.html'">Create Post</button>
+          <div id="sidenav-content" class="main-content rounded-4">
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
               <div id="sponsored-cards" class="carousel-inner"></div>
             </div>
           </div>

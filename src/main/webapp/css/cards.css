@@ -19,14 +19,15 @@
     background: rgb(0,0,0);
     background: linear-gradient(319deg, rgba(0,0,0,0.8) 24%, rgba(3,0,149,0.8) 100%);
     color: rgb(225, 225, 225);
+    margin-left: 3rem;
+    margin-bottom: 3rem;
+    width: 17rem;
+    height: 22rem;
 }
 
-.card,
 .sponsored-card {
     width: 17rem;
     height: 22rem;
-    margin-left: 3rem;
-    margin-bottom: 3rem;
 }
 
 .card-text {
@@ -35,6 +36,11 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     width: 30ch;
+}
+
+.card-body {
+    align-content: center;
+    height: 10rem;
 }
 
 .sponsored-card-text {
@@ -53,6 +59,7 @@
 }
 
 .card-title {
+    font-size: 2rem;
     width: 13.5rem;
     height: 4.5rem;
     overflow: hidden;
@@ -102,7 +109,7 @@ html {
 }
 
 .sidenav {
-    height: 28rem; /* Full-height: remove this if you want "auto" height */
+    height: 40rem; /* Full-height: remove this if you want "auto" height */
     width: 27rem; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 0; /* Stay on top */
@@ -205,19 +212,25 @@ a:link {
 }
 
 #sidenav-content {
-    padding-top: 0.5vh;
+    text-align: center;
+    margin: 4rem 2rem 2rem 3rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    padding-left: 2.4rem;
 }
 
 .sponsored-card {
-    background: rgb(0,0,0);
-    background: linear-gradient(319deg, rgba(0,0,0,0.8) 24%, rgba(231,255,0,0.8) 100%);
+    background: rgb(227,255,0);
+    background: linear-gradient(187deg, rgba(227,255,0,0.5) 0%, rgba(239,255,0,0.5) 100%);
     color: rgb(225, 225, 225);
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .sponsored-card:hover {
-    background: rgb(0,0,0);
-    background: linear-gradient(319deg, rgba(0,0,0,0.8) 0%, rgba(231,255,0,0.8) 100%);
+    background: rgb(227,255,0);
+    background: linear-gradient(187deg, rgba(227,255,0,0.8711134111847865) 0%, rgba(172,193,0,0.8234943635657388) 50%, rgba(138,147,0,0.784278677291229) 100%);
+    box-shadow: rgba(227,255,0, 3) 1px 0 20px;
 }
 
 #main-logo-image {
@@ -228,4 +241,8 @@ a:link {
     margin-left: auto;
     margin-right: auto;
     box-shadow: rgba(138,62,183,0.3) 8px 8px 15px;
+}
+
+#createPostBtn {
+    margin-left: 7rem;
 }

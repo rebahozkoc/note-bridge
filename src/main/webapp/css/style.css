@@ -221,6 +221,25 @@ html {
     transform: translateY(2px);
 }
 
+/* Custom button */
+.custom-button {
+    padding: 30px;
+    background: rgb(255,255,255);
+    background: linear-gradient(187deg, rgba(255,255,255,0.9) 0%, rgba(147,120,255,0.9) 50%, rgba(0,30,255,0.8) 100%);
+}
+
+.custom-button:focus {
+    box-shadow: midnightblue 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, darkblue 0 -3px 0 inset;
+}
+
+.custom-button:hover {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, royalblue 0 -3px 0 inset;
+}
+
+.custom-button:active {
+    box-shadow: blue 0 3px 7px inset;
+}
+
 #log-in-btn,
 #log-out-btn {
     font-size: 2.3vh;

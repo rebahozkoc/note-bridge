@@ -1,5 +1,6 @@
 let cards = document.querySelector("#cards");
 let sidenavContent = document.querySelector("#sidenav-content");
+let sponsoredCards = document.querySelector("#sponsored-cards");
 let cardsList = {};
 const pageSize=12;
 let pageNumber=1;
@@ -248,10 +249,12 @@ function displaySponsoredPosts() {
     if(sponsoredCardsList.length === 0) {
         sidenavContent.innerHTML = `<h6 class="text-white ms-3">There are no sponsored posts at this moment.</h6>`;
     } else if (sponsoredCardsList.length === 1) {
-        sidenavContent.innerHTML = `${displayCard(sponsoredCardsList[0], true)}`;
+        sponsoredCards.innerHTML = `
+        <div class="carousel-item active">
+            ${displayCard(sponsoredCardsList[0], true)}
+        </div>
+        `;
     } else {
-        let sponsoredCards = document.querySelector("#sponsored-cards");
-
         sponsoredCards.innerHTML = `
         <div class="carousel-item active">
             ${displayCard(sponsoredCardsList.shift(), true)}

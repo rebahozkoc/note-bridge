@@ -8,6 +8,7 @@ const messageElement=document.getElementById("messageBox");
 const message=document.getElementById("but");
 const loadingScreen = document.getElementById("loading-screen");
 const modalBody=document.getElementById("contactModal").childNodes[1].childNodes[1].childNodes[3];
+const modalBodyOfInvite = document.getElementById("exampleModal").childNodes[1].childNodes[1].childNodes[3];
 
 window.onload = function() {
     checkLoggedIn();
@@ -59,16 +60,21 @@ function updateSeenMessages(){
 
 function loadPosts(){
     fetch(`/notebridge/api/posts/person/${userID}`, {method: "GET"})
-        .then(res => res.json())
-        .then(data => {
-            posts=data;
-            fillPosts();
+        .then(res => {
+            if (res.status === 500) {
+
+            }else {
+                res.json()
+                    .then(data => {
+                    posts=data;
+                    fillPosts();
+                })
+            }
         })
 }
 
 function fillPosts(){
     let inputElement=document.getElementById("inputGroupSelect");
-    console.log(posts);
     inputElement.innerHTML = `
                 ${posts.map(post => `${inputPosts(post)}`).join("\n")}`
 }
@@ -80,31 +86,57 @@ function inputPosts(post){
         `
 }
 
+function returnNewInviteToNormal(){
+    modalBodyOfInvite.innerHTML=`<label for="input-event">Choose event</label>
+                    <div class="input-group mb-3" id="input-event">
+                        <select class="form-select" id="inputGroupSelect">
+                            <option selected>No events to invite to</option>
+                        </select>
+                    </div>
+                    <form>
+                        <label for="sponsor_description">Send a message</label>
+                        <textarea class="form-control" id="sponsor_description" rows="1" placeholder="Message"></textarea>
+                    </form>`;
+}
+
 function newInvite(){
     let content=document.getElementById("sponsor_description").value;
     let post=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-1];
     let tag=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-2];
     let title=document.getElementById("inputGroupSelect").value.split("-")[document.getElementById("inputGroupSelect").value.split("-").length-3];
     let postLink= 'card-details.html?id=' + post;
-    getStatus()
-        .then(data => {
-            let dataObject = {};
-            let message = content+"-"+title+"-"+tag+"-"+postLink;
-            dataObject.user_id = data.userId;
-            dataObject.content = message;
-            let encodedMessage = encodeURIComponent(message);
-            fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${encodedMessage}`, {
-                method: "POST",
-                body: JSON.stringify(dataObject),
-                headers: {
-                    "Content-type": "application/json"
-                }
-            }).then(r => {
-                document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
-                loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
+    if (post==="No events to invite to" || tag===undefined || title===undefined){
+        if (modalBodyOfInvite.querySelector(".alert") === null) {
+            modalBodyOfInvite.innerHTML += `
+                                                <br>
+                                                <div class="alert alert-danger" role="alert">
+                                                    Select event please!
+                                                </div>`
+            console.log("we went through new alert");
+        }else{
+            modalBodyOfInvite.innerHTML=modalBodyOfInvite.innerHTML;
+            console.log("we didnt go through the new alert");
+        }
+    }else {
+        getStatus()
+            .then(data => {
+                let dataObject = {};
+                let message = content + "-" + title + "-" + tag + "-" + postLink;
+                dataObject.user_id = data.userId;
+                dataObject.content = message;
+                let encodedMessage = encodeURIComponent(message);
+                fetch(`/notebridge/api/message/newmessage/${data.userId}/${selectedContact}/${encodedMessage}`, {
+                    method: "POST",
+                    body: JSON.stringify(dataObject),
+                    headers: {
+                        "Content-type": "application/json"
+                    }
+                }).then(r => {
+                    document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
+                    loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
+                })
             })
-        })
-
+    }
 }
 
 function newContact() {
@@ -119,7 +151,7 @@ function newContact() {
                 .then(res => {
                     if (res.status === 404) {
                         if (modalBody.querySelector(".alert") === null) {
-                            modalBody.innerHTML += `<div class="alert alert-danger" role="alert">
+                            modalBody.innerHTML += `<br><div class="alert alert-danger" role="alert">
                                                     User was not found.
                                                 </div>`
                             message.value = '';
@@ -161,7 +193,7 @@ function newContact() {
                                                     loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
                                                 })
                                             }
-                                            modalBody.innerHTML = `<div class="alert alert-success" role="alert">
+                                            modalBody.innerHTML = `<br><div class="alert alert-success" role="alert">
                                                     User added to contacts.
                                                 </div>`;
                                         }
@@ -312,7 +344,7 @@ function showMessageLeft(message){
         return `
             <div class="left">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-            <div class="dropup-center dropup message" style="justify-self: right">
+            <div class="dropup-center dropup message content-left" style="justify-self: right">
                 <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
@@ -331,7 +363,7 @@ function showMessageLeft(message){
         return `
          <div class="left">
          <p style="color: white;text-align: left; margin: 0;padding: 0;">${username}</p>
-         <div class="dropup-center dropup message" style="justify-self: left">
+         <div class="dropup-center dropup message content-left" style="justify-self: left">
             <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;">
                 ${message.content}
             </button>
@@ -356,7 +388,7 @@ function showMessageRight(message, username) {
         return `
             <div class="right">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-            <div class="dropup-center dropup message" style="justify-self: right">
+            <div class="dropup-center dropup message content-right" style="justify-self: right">
                 <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
@@ -376,7 +408,7 @@ function showMessageRight(message, username) {
         return `
          <div class="right">
          <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-         <div class="dropup-center dropup message" style="justify-self: right">
+         <div class="dropup-center dropup message content-right" style="justify-self: right">
             <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
                 ${message.content}
             </button>

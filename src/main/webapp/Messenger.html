@@ -110,7 +110,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Invite this person to one of your Events</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="returnNewInviteToNormal()"></button>
                 </div>
                 <div class="modal-body">
                     <label for="input-event">Choose event</label>
@@ -125,8 +125,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="newInvite()">Send Invite</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="returnNewInviteToNormal()">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="newInvite()">Send Invite</button>
                 </div>
             </div>
         </div>

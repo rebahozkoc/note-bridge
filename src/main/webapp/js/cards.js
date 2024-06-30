@@ -137,7 +137,7 @@ function displayCard(card, sponsoredCard) {
         cardClass = "card";
     }
 
-    let interestedCount = countInterested(card.id)
+    countInterested(card.id);
 
     return `
         <div class=${cardClass} data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
@@ -145,40 +145,28 @@ function displayCard(card, sponsoredCard) {
             <div class="card-body">
                 <h5 class="card-title">${card.title}</h5>
                 ${badge}
-                <p>Interested: ${interestedCount}</p>
+                <p>Interested: </p>
             </div>
         </div>
         `;
 }
 
-function countInterested(id) {
-    let interested = [];
-
-    fetch("/notebridge/api/posts/" + id + "/interestedusers")
+function countInterested(cardId) {
+    fetch("/notebridge/api/posts/" + cardId + "/interestedusers")
         .then(res => {
             if (res.status === 200) {
                 return res.json();
-            } else {
-                return res.text().then(errorText => {
-                    throw new Error(`${errorText}`);
-                });
-            }
-
-        }).then(data => {
-
-        data.forEach(user => {
-            interested.push(user)
-        })
-
-
-    }).catch(
-        err => {
+            }})
+        .then(data => {
+            updateInterestedUsers(cardId, data.length);
+    }).catch(err => {
             console.error(err);
         }
     )
+}
 
-    return interested.length;
-
+function updateInterestedUsers(cardId, countInterestedUsers) {
+    document.querySelector("[data-card-id='" + cardId + "']").children[1].children[2].innerHTML += `${countInterestedUsers}`;
 }
 
 /**

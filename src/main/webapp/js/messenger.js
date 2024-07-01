@@ -307,11 +307,24 @@ function noChangeInContacts(newContacts){
 
 function noChangeInMessages(newMessages, id ,username){
     if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
+        checkifMessagesOutOfOrder(newMessages);
         messages=newMessages;
         showMessageHistory(id,username);
         document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
     }
 
+}
+
+function checkifMessagesOutOfOrder(newMessages){
+    for (let i = 0; i < newMessages["data"].length; i++) {
+        for (let j = i; j < newMessages["data"].length; j++) {
+            if (newMessages["data"][i].id>newMessages["data"][j].id && newMessages["data"][i].id!==newMessages["data"][j].id){
+                let swap=newMessages["data"][j].id;
+                newMessages["data"][j].id=newMessages["data"][i].id;
+                newMessages["data"][i].id=swap;
+            }
+        }
+    }
 }
 
 function showMessageHistory(id, username){

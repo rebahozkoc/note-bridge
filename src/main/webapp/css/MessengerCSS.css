@@ -58,19 +58,25 @@
     overflow-x: hidden;
 }
 .message{
-    padding: 1vh 0.5vh;
-    border-radius: 25px;
-    background: linear-gradient(319deg, rgba(0, 14, 35, 1) 0%, rgba(26, 22, 154, 1) 49%, rgba(0, 14, 35, 1) 100%);
+    /*border-radius: 25px;*/
+    /*background: linear-gradient(319deg, rgba(0, 14, 35, 1) 0%, rgba(26, 22, 154, 1) 49%, rgba(0, 14, 35, 1) 100%);*/
     width: fit-content;
     max-height: fit-content;
-    max-width: 30vh;
+    max-width: 80vh;
     color: rgb(17, 24, 39);
     box-shadow: rgba(138,62,183,0.3) 5px 5px 15px;
 }
+
+.invite{
+    width: 30vh;
+}
+
 .content-right{
+    border-radius: 25px;
     background: linear-gradient(319deg, rgba(0, 14, 35, 1) 0%, rgba(26, 22, 154, 1) 49%, rgba(0, 14, 35, 1) 100%);
 }
 .content-left{
+    border-radius: 25px;
     background: linear-gradient(319deg, rgba(0, 14, 35, 1) 0%, rgb(201, 0, 255) 49%, rgba(0, 14, 35, 1) 100%);
 }
 .left{

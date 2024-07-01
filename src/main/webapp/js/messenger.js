@@ -110,12 +110,10 @@ function newInvite(){
             modalBodyOfInvite.innerHTML += `
                                                 <br>
                                                 <div class="alert alert-danger" role="alert">
-                                                    Select event please!
+                                                    Please select an event!
                                                 </div>`
-            console.log("we went through new alert");
         }else{
             modalBodyOfInvite.innerHTML=modalBodyOfInvite.innerHTML;
-            console.log("we didnt go through the new alert");
         }
     }else {
         getStatus()
@@ -134,6 +132,12 @@ function newInvite(){
                 }).then(r => {
                     document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
                     loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
+                    modalBodyOfInvite.innerHTML = `
+                                                <br>
+                                                <div class="alert alert-success" role="alert">
+                                                    Invite sent!
+                                                </div>`
+
                 })
             })
     }
@@ -344,8 +348,8 @@ function showMessageLeft(message){
         return `
             <div class="left">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-            <div class="dropup-center dropup message content-left" style="justify-self: right">
-                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
+            <div class="dropup-center dropup message content-left invite" style="justify-self: right">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;padding: 2vh 1.7vh;border-color: transparent;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
                     <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
@@ -364,7 +368,7 @@ function showMessageLeft(message){
          <div class="left">
          <p style="color: white;text-align: left; margin: 0;padding: 0;">${username}</p>
          <div class="dropup-center dropup message content-left" style="justify-self: left">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;border-color: transparent;padding: 2vh 1.7vh;">
                 ${message.content}
             </button>
          </div>
@@ -388,8 +392,8 @@ function showMessageRight(message, username) {
         return `
             <div class="right">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-            <div class="dropup-center dropup message content-right" style="justify-self: right">
-                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
+            <div class="dropup-center dropup message content-right invite" style="justify-self: right">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;border-color: transparent;padding: 2vh 1.7vh;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
                     <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
@@ -409,7 +413,7 @@ function showMessageRight(message, username) {
          <div class="right">
          <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
          <div class="dropup-center dropup message content-right" style="justify-self: right">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;border-color: transparent;padding: 2vh 1.7vh;" value="${message.content}">
                 ${message.content}
             </button>
             <input type="hidden" value=${message.createddate}>

@@ -182,7 +182,6 @@ function newContact() {
                                                                             </div>`
                                                 message.value = '';
                                             } else {
-                                                console.log(modalBody.querySelector(".alert").innerHTML);
                                                 modalBody.querySelector(".alert").innerHTML = `User is already a contact.`;
                                                 modalBody.innerHTML=modalBody.innerHTML;
                                             }
@@ -317,8 +316,6 @@ function noChangeInContacts(newContacts){
 function noChangeInMessages(newMessages, id ,username){
     checkifMessagesOutOfOrder(newMessages);
     if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
-        console.log(newMessages);
-        console.log(messages);
         messages=newMessages;
         showMessageHistory(id,username);
         document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
@@ -330,9 +327,9 @@ function checkifMessagesOutOfOrder(newMessages){
     for (let i = 0; i < newMessages["data"].length; i++) {
         for (let j = i; j < newMessages["data"].length; j++) {
             if (newMessages["data"][i].id>newMessages["data"][j].id && newMessages["data"][i].id!==newMessages["data"][j].id){
-                let swap=newMessages["data"][j].id;
-                newMessages["data"][j].id=newMessages["data"][i].id;
-                newMessages["data"][i].id=swap;
+                let swap=newMessages["data"][j];
+                newMessages["data"][j]=newMessages["data"][i];
+                newMessages["data"][i]=swap;
             }
         }
     }
@@ -544,13 +541,11 @@ function deleteMessage(x){
     let idElement=x.querySelector("input[type='hidden']");
     let timestamp=idElement.value;
     const date = new Date(parseInt(timestamp));
-    console.log(parseInt(timestamp));
     let time=formatDate(date);
     let user_id=userID;
     let contentElement=x.querySelector("button");
     let content=contentElement.value;
     let encodedMessage = encodeURIComponent(content);
-    console.log(content);
     fetch(`/notebridge/api/message/deletemessage/${user_id}/${time}/${encodedMessage}`, { method: "DELETE" })
         .then(() => {
             getStatus()

@@ -7,8 +7,10 @@ const contactElement=document.getElementById("contacts");
 const messageElement=document.getElementById("messageBox");
 const message=document.getElementById("but");
 const loadingScreen = document.getElementById("loading-screen");
-const modalBody=document.getElementById("contactModal").childNodes[1].childNodes[1].childNodes[3];
-const modalBodyOfInvite = document.getElementById("exampleModal").childNodes[1].childNodes[1].childNodes[3];
+const modalBody= document.querySelector("#contactModal > div > div > div.modal-body");
+const modalButton= document.querySelector("#contactModal > div > div > div.modal-footer > button.btn.btn-primary");
+const modalBodyOfInvite = document.querySelector("#exampleModal > div > div > div.modal-body");
+const modalInviteButton = document.querySelector("#exampleModal > div > div > div.modal-footer > button.btn.btn-primary");
 
 window.onload = function() {
     checkLoggedIn();
@@ -31,6 +33,10 @@ function returnModalToNormal(){
                     <label for="newContactMessage">Want to send a first message?</label>
                     <textarea class="form-control" id="newContactMessage" rows="1" placeholder="Message"></textarea>
                 </form>`
+    document.querySelector("#contactModal > div > div > div.modal-footer").innerHTML=`
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="returnModalToNormal()">Close</button>
+    <button type="button" class="btn btn-primary" onclick="newContact()">Add Contact</button>
+    `
 }
 
 
@@ -97,6 +103,10 @@ function returnNewInviteToNormal(){
                         <label for="sponsor_description">Send a message</label>
                         <textarea class="form-control" id="sponsor_description" rows="1" placeholder="Message"></textarea>
                     </form>`;
+    document.querySelector("#exampleModal > div > div > div.modal-footer").innerHTML=`
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="returnNewInviteToNormal()">Close</button>
+    <button type="button" class="btn btn-primary" onclick="newInvite()">Send Invite</button>
+    `;
 }
 
 function newInvite(){
@@ -137,7 +147,7 @@ function newInvite(){
                                                 <div class="alert alert-success" role="alert">
                                                     Invite sent!
                                                 </div>`
-
+                    modalInviteButton.remove();
                 })
             })
     }
@@ -146,8 +156,6 @@ function newInvite(){
 function newContact() {
     const username = document.getElementById("usernameContact").value;
     const message = document.getElementById("newContactMessage").value;
-    let modalElement=document.getElementById("contactModal");
-    console.log(modalBody);
     let dataObject = {};
     getStatus()
         .then(data => {
@@ -200,6 +208,7 @@ function newContact() {
                                             modalBody.innerHTML = `<br><div class="alert alert-success" role="alert">
                                                     User added to contacts.
                                                 </div>`;
+                                            modalButton.remove();
                                         }
                                     })
                             })
@@ -306,8 +315,10 @@ function noChangeInContacts(newContacts){
 }
 
 function noChangeInMessages(newMessages, id ,username){
+    checkifMessagesOutOfOrder(newMessages);
     if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
-        checkifMessagesOutOfOrder(newMessages);
+        console.log(newMessages);
+        console.log(messages);
         messages=newMessages;
         showMessageHistory(id,username);
         document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;

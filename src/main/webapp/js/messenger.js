@@ -7,8 +7,10 @@ const contactElement=document.getElementById("contacts");
 const messageElement=document.getElementById("messageBox");
 const message=document.getElementById("but");
 const loadingScreen = document.getElementById("loading-screen");
-const modalBody=document.getElementById("contactModal").childNodes[1].childNodes[1].childNodes[3];
-const modalBodyOfInvite = document.getElementById("exampleModal").childNodes[1].childNodes[1].childNodes[3];
+const modalBody= document.querySelector("#contactModal > div > div > div.modal-body");
+const modalButton= document.querySelector("#contactModal > div > div > div.modal-footer > button.btn.btn-primary");
+const modalBodyOfInvite = document.querySelector("#exampleModal > div > div > div.modal-body");
+const modalInviteButton = document.querySelector("#exampleModal > div > div > div.modal-footer > button.btn.btn-primary");
 
 window.onload = function() {
     checkLoggedIn();
@@ -31,6 +33,10 @@ function returnModalToNormal(){
                     <label for="newContactMessage">Want to send a first message?</label>
                     <textarea class="form-control" id="newContactMessage" rows="1" placeholder="Message"></textarea>
                 </form>`
+    document.querySelector("#contactModal > div > div > div.modal-footer").innerHTML=`
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="returnModalToNormal()">Close</button>
+    <button type="button" class="btn btn-primary" onclick="newContact()">Add Contact</button>
+    `
 }
 
 
@@ -97,6 +103,10 @@ function returnNewInviteToNormal(){
                         <label for="sponsor_description">Send a message</label>
                         <textarea class="form-control" id="sponsor_description" rows="1" placeholder="Message"></textarea>
                     </form>`;
+    document.querySelector("#exampleModal > div > div > div.modal-footer").innerHTML=`
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="returnNewInviteToNormal()">Close</button>
+    <button type="button" class="btn btn-primary" onclick="newInvite()">Send Invite</button>
+    `;
 }
 
 function newInvite(){
@@ -110,12 +120,10 @@ function newInvite(){
             modalBodyOfInvite.innerHTML += `
                                                 <br>
                                                 <div class="alert alert-danger" role="alert">
-                                                    Select event please!
+                                                    Please select an event!
                                                 </div>`
-            console.log("we went through new alert");
         }else{
             modalBodyOfInvite.innerHTML=modalBodyOfInvite.innerHTML;
-            console.log("we didnt go through the new alert");
         }
     }else {
         getStatus()
@@ -134,6 +142,12 @@ function newInvite(){
                 }).then(r => {
                     document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
                     loadMessagesWithID(selectedContact, dataObject.user_id, data.username);
+                    modalBodyOfInvite.innerHTML = `
+                                                <br>
+                                                <div class="alert alert-success" role="alert">
+                                                    Invite sent!
+                                                </div>`
+                    modalInviteButton.remove();
                 })
             })
     }
@@ -142,8 +156,6 @@ function newInvite(){
 function newContact() {
     const username = document.getElementById("usernameContact").value;
     const message = document.getElementById("newContactMessage").value;
-    let modalElement=document.getElementById("contactModal");
-    console.log(modalBody);
     let dataObject = {};
     getStatus()
         .then(data => {
@@ -170,7 +182,6 @@ function newContact() {
                                                                             </div>`
                                                 message.value = '';
                                             } else {
-                                                console.log(modalBody.querySelector(".alert").innerHTML);
                                                 modalBody.querySelector(".alert").innerHTML = `User is already a contact.`;
                                                 modalBody.innerHTML=modalBody.innerHTML;
                                             }
@@ -196,6 +207,7 @@ function newContact() {
                                             modalBody.innerHTML = `<br><div class="alert alert-success" role="alert">
                                                     User added to contacts.
                                                 </div>`;
+                                            modalButton.remove();
                                         }
                                     })
                             })
@@ -302,12 +314,25 @@ function noChangeInContacts(newContacts){
 }
 
 function noChangeInMessages(newMessages, id ,username){
+    checkifMessagesOutOfOrder(newMessages);
     if (JSON.stringify(newMessages)!==JSON.stringify(messages)){
         messages=newMessages;
         showMessageHistory(id,username);
         document.getElementById("messageBox").scrollTop=document.getElementById("messageBox").scrollHeight;
     }
 
+}
+
+function checkifMessagesOutOfOrder(newMessages){
+    for (let i = 0; i < newMessages["data"].length; i++) {
+        for (let j = i; j < newMessages["data"].length; j++) {
+            if (newMessages["data"][i].id>newMessages["data"][j].id && newMessages["data"][i].id!==newMessages["data"][j].id){
+                let swap=newMessages["data"][j];
+                newMessages["data"][j]=newMessages["data"][i];
+                newMessages["data"][i]=swap;
+            }
+        }
+    }
 }
 
 function showMessageHistory(id, username){
@@ -344,8 +369,8 @@ function showMessageLeft(message){
         return `
             <div class="left">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-            <div class="dropup-center dropup message content-left" style="justify-self: right">
-                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
+            <div class="dropup-center dropup message content-left invite" style="justify-self: right">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;padding: 2vh 1.7vh;border-color: transparent;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
                     <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
@@ -364,7 +389,7 @@ function showMessageLeft(message){
          <div class="left">
          <p style="color: white;text-align: left; margin: 0;padding: 0;">${username}</p>
          <div class="dropup-center dropup message content-left" style="justify-self: left">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;border-color: transparent;padding: 2vh 1.7vh;">
                 ${message.content}
             </button>
          </div>
@@ -388,8 +413,8 @@ function showMessageRight(message, username) {
         return `
             <div class="right">
             <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
-            <div class="dropup-center dropup message content-right" style="justify-self: right">
-                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
+            <div class="dropup-center dropup message content-right invite" style="justify-self: right">
+                <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;border-color: transparent;padding: 2vh 1.7vh;" value="${message.content}">
                     ${username} has invited you to their event:
                     <h1>${title}</h1>
                     <div style="border-radius: 25px; background-color: pink; padding-left: 1vh;padding-right: 1vh; width: fit-content">${tag}</div>
@@ -409,7 +434,7 @@ function showMessageRight(message, username) {
          <div class="right">
          <p style="color: white;text-align: right; margin: 0;padding: 0;">${username}</p>
          <div class="dropup-center dropup message content-right" style="justify-self: right">
-            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-all;" value="${message.content}">
+            <button class="btn data-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;width: 100%; color: white; word-break: break-word;border-color: transparent;padding: 2vh 1.7vh;" value="${message.content}">
                 ${message.content}
             </button>
             <input type="hidden" value=${message.createddate}>
@@ -516,13 +541,11 @@ function deleteMessage(x){
     let idElement=x.querySelector("input[type='hidden']");
     let timestamp=idElement.value;
     const date = new Date(parseInt(timestamp));
-    console.log(parseInt(timestamp));
     let time=formatDate(date);
     let user_id=userID;
     let contentElement=x.querySelector("button");
     let content=contentElement.value;
     let encodedMessage = encodeURIComponent(content);
-    console.log(content);
     fetch(`/notebridge/api/message/deletemessage/${user_id}/${time}/${encodedMessage}`, { method: "DELETE" })
         .then(() => {
             getStatus()

@@ -97,7 +97,6 @@ function displayAllCards() {
 function displayCard(card, sponsoredCard) {
     let imageSource;
     if(card.hasImage){
-        console.log(card)
         imageSource="data:image/png;base64,";
         imageSource += card.image;
     }else{
@@ -130,43 +129,32 @@ function displayCard(card, sponsoredCard) {
     let cardClass;
     if(sponsoredCard) {
         cardClass = "sponsored-card";
-        badge += `
-        <p class="badge text-bg-warning">Sponsored</p>
-        `;
     } else {
         cardClass = "card";
     }
 
-    countInterested(card.id);
+    if(card.sponsoredBy !== null) {
+        badge += `
+        <p class="badge text-bg-warning ms-2">Sponsored</p>
+        `;
+    }
+
+    getAuthor(card.id, card.personId);
 
     return `
         <div class=${cardClass} data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
             <img src="${imageSource}" class="card-img-top" alt="card image">
             <div class="card-body">
                 <h5 class="card-title">${card.title}</h5>
-                ${badge}
-                <p>Interested: </p>
+                <div class="d-flex justify-content-between">
+                    <div><i class="bi bi-heart-fill heart" id="heart-icon"></i> ${card.totalLikes}</div>
+                    <div>Interested: ${card.totalInterested}</div>
+                </div>
+                <div class="d-flex justify-content-center mb-2">Author: </div>
+                <div class="d-flex justify-content-center">${badge}</div>
             </div>
         </div>
         `;
-}
-
-function countInterested(cardId) {
-    fetch("/notebridge/api/posts/" + cardId + "/interestedusers")
-        .then(res => {
-            if (res.status === 200) {
-                return res.json();
-            }})
-        .then(data => {
-            updateInterestedUsers(cardId, data.length);
-    }).catch(err => {
-            console.error(err);
-        }
-    )
-}
-
-function updateInterestedUsers(cardId, countInterestedUsers) {
-    document.querySelector("[data-card-id='" + cardId + "']").children[1].children[2].innerHTML += `${countInterestedUsers}`;
 }
 
 /**
@@ -295,7 +283,7 @@ function fetchSponsoredPosts() {
  */
 function displaySponsoredPosts() {
     if(sponsoredCardsList.length === 0) {
-        sidenavContent.innerHTML = `<h6 class="text-white ms-3">There are no sponsored posts at this moment.</h6>`;
+        sidenavContent.innerHTML = `<h6 class="text-white py-3 pe-2 ms-3">There are no sponsored posts at this moment.</h6>`;
     } else if (sponsoredCardsList.length === 1) {
         sponsoredCards.innerHTML = `
         <div class="carousel-item active">
@@ -313,4 +301,13 @@ function displaySponsoredPosts() {
         ${sponsoredCardsList.map(sponsoredCard => `<div class="carousel-item">${displayCard(sponsoredCard, true)}</div>`).join("\n")}
         `;
     }
+}
+
+function getAuthor(cardId, authorId) {
+    fetch("/notebridge/api/persons/" + authorId)
+        .then(res => res.json())
+        .then(data => {
+            const author = document.querySelector("[data-card-id='" + cardId + "']").children[1].children[2];
+            author.innerHTML += `${data.username}`;
+        })
 }

@@ -25,14 +25,6 @@
     height: 22rem;
 }
 
-.sponsored-card {
-    width: 17rem;
-    height: 22rem;
-    margin-left: 2.4rem;
-    margin-top: 2.5rem;
-    margin-bottom: 2.5rem;
-}
-
 .card-text {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -44,28 +36,16 @@
 .card-body {
     align-content: center;
     height: 10rem;
-}
-
-.sponsored-card-text {
-    align-content: center;
-    width: 18rem;
-    height: 9rem;
-    overflow: hidden;
-
-}
-
-.sponsored-card-title {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 26ch;
+    padding-bottom: 2rem;
 }
 
 .card-title {
-    font-size: 1.3rem;
+    align-content: center;
+    font-size: 1rem;
     width: 13.5rem;
-    height: 4.5rem;
+    height: 3rem;
     overflow: hidden;
+    font-weight: bold;
 }
 
 .card:hover {
@@ -225,12 +205,24 @@ a:link {
     color: rgb(225, 225, 225);
     cursor: pointer;
     border-radius: 10px;
+    width: 17rem;
+    height: 22rem;
+    margin-left: 2.4rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .sponsored-card:hover {
     background: rgb(227,255,0);
     background: linear-gradient(187deg, rgba(227,255,0,0.8711134111847865) 0%, rgba(172,193,0,0.8234943635657388) 50%, rgba(138,147,0,0.784278677291229) 100%);
     box-shadow: rgba(227,255,0, 3) 1px 0 20px;
+}
+
+.sponsored-card > .card-body > .card-title {
+    font-size: 1rem;
+    width: 15rem;
+    height: 3rem;
+    overflow: hidden;
 }
 
 #main-logo-image {
@@ -245,4 +237,15 @@ a:link {
 
 #createPostBtn {
     margin-left: 7rem;
+}
+
+.heart {
+    transition: color 0.25s;
+    color: red;
+}
+
+#badge {
+    width: 3rem;
+    margin-right: auto;
+    margin-left: auto;
 }

@@ -47,7 +47,7 @@ CREATE TABLE Post (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     location VARCHAR(255),
-    sponsoredBy INT REFERENCES Sponsor(id),
+    sponsoredBy INT REFERENCES Sponsor(id) ON DELETE SET NULL,
     sponsoredFrom TIMESTAMP,
     sponsoredUntil TIMESTAMP,
     eventType VARCHAR(255) REFERENCES EventType(name),

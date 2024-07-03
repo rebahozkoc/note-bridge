@@ -273,37 +273,51 @@ function fetchContacts(){
     getStatus()
         .then(data=> {
             fetch(`/notebridge/api/message/contact/${data.userId}`, {method: "GET"})
-                .then(res => res.json())
-                .then(data2 => {
-                    userID=data.userId;
-                    noChangeInContacts(data2);
-                    loadMessages(userID,data.username);
-                    loadingScreen.style.display = "none";
-                })
-                .catch(err => {
-                    console.error(`Unable to fetch contacts: ${err.status}`);
-                    console.error(err);
-                    if (contactElement.querySelector("p")===null) {
-                        contactElement.innerHTML += `<p style="color: white;text-align: center">No contacts found</p>`;
-                    }else{
+                .then(res => {
+                    if (res.status === 500) {
+                        loadingScreen.style.display = "none";
+                    }else {
+                        res.json()
+                            .then(data2 => {
+                                userID=data.userId;
+                                noChangeInContacts(data2);
+                                loadMessages(userID,data.username);
+                                loadingScreen.style.display = "none";
+                            })
+                            .catch(err => {
+                                console.error(`Unable to fetch contacts: ${err.status}`);
+                                console.error(err);
+                                if (contactElement.querySelector("p")===null) {
+                                    contactElement.innerHTML += `<p style="color: white;text-align: center">No contacts found</p>`;
+                                }else{
 
+                                }
+                                loadingScreen.style.display = "none";
+                            });
                     }
-                    loadingScreen.style.display = "none";
-                });
+                })
+
         })
 }
 
 function fetchMessages(x, id, username){
     fetch(`/notebridge/api/message/messages/${x}/${id}`, {method: "GET"})
-        .then(res => res.json())
-        .then(data => {
-            noChangeInMessages(data,id,username);
-        }).then(r=>{
-        updateSeenMessages();
-    }).catch(err => {
-        console.error(`Unable to fetch messages: ${err.status}`);
-        console.error(err);
-    })
+        .then(res => {
+            if (res.status===500){
+                document.querySelector("#messageBox").innerHTML=``;
+            }else {
+                res.json()
+                    .then(data => {
+                        noChangeInMessages(data, id, username);
+                    }).then(r => {
+                    updateSeenMessages();
+                }).catch(err => {
+                    console.error(`Unable to fetch messages: ${err.status}`);
+                    console.error(err);
+                })
+            }
+        })
+
 }
 
 function noChangeInContacts(newContacts){

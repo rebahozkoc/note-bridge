@@ -678,16 +678,46 @@ function appendActiveCarousel(card) {
         imageSource += card.image;
     }
 
+    let badge;
+    if(card.eventType === "Jam Session") {
+        badge = `
+        <p class="badge text-bg-primary">Jam Session</p>
+        `;
+    }else if (card.eventType === "Live Event") {
+        badge = `
+        <p class="badge text-bg-success">Live Event</p>
+        `;
+    }else if (card.eventType === "Find Band Member") {
+        badge = `
+        <p class="badge text-bg-danger">Find Members</p>
+        `;
+    }else if (card.eventType === "Find Instrument") {
+        badge = `
+        <p class="badge text-bg-info">Find Instruments</p>
+        `;
+    }else if (card.eventType === "Music Discussion") {
+        badge = `
+        <p class="badge text-bg-light">Discussions</p>
+        `;
+    }
+    if(card.sponsoredBy !== null) {
+        badge += `
+        <p class="badge text-bg-warning ms-2">Sponsored</p>
+        `;
+    }
+
+    displayAuthorProfilePage(card.id, card.personId);
+
     activeCarousel.innerHTML += `
-                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="overflow: hidden; white-space: nowrap; width: 20rem; height: 25rem; margin: 35px 15px 15px" id="displayed-card">
-                    <img src="${imageSource}" class="card-img-top" alt="card image">
-                    <div class="card-body" style="height: 12rem">
-                        <h5 class="card-title">${card.title}</h5>
-                        <p class="card-text">${card.description}</p>
-                        <p class="card-text">${card.eventType}</p>
-                    </div>
-                </div>
-                `;
+        <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
+            <img src="${imageSource}" class="card-img-top" style="margin-top: 0" alt="card image">
+            <div class="card-body">
+                <h5 class="card-title">${card.title}</h5>
+                <div class="d-flex justify-content-center mb-2">Author:&nbsp;<div></div></div>
+                <div class="d-flex justify-content-center">${badge}</div>
+            </div>
+        </div>
+        `;
 }
 
 function appendRegularCarousel(cards) {
@@ -704,19 +734,57 @@ function appendRegularCarousel(cards) {
                 imageSource = "data:image/png;base64,";
                 imageSource += card.image;
             }
-            regularCarousel.innerHTML += `
-                <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" style="overflow: hidden; white-space: nowrap; width: 20rem; height: 25rem; margin: 35px 15px 15px" id="displayed-card">
-                    <img src="${imageSource}" class="card-img-top" alt="card image">
-                    <div class="card-body" style="height: 12rem">
-                        <h5 class="card-title">${card.title}</h5>
-                        <p class="card-text">${card.description}</p>
-                        <p class="card-text">${card.eventType}</p>
-                    </div>
-                </div>
+
+            let badge;
+            if(card.eventType === "Jam Session") {
+                badge = `
+                <p class="badge text-bg-primary">Jam Session</p>
                 `;
+            } else if (card.eventType === "Live Event") {
+                badge = `
+                <p class="badge text-bg-success">Live Event</p>
+                `;
+            } else if (card.eventType === "Find Band Member") {
+                badge = `
+                <p class="badge text-bg-danger">Find Members</p>
+                `;
+            } else if (card.eventType === "Find Instrument") {
+                badge = `
+                <p class="badge text-bg-info">Find Instruments</p>
+                `;
+            } else if (card.eventType === "Music Discussion") {
+                badge = `
+                <p class="badge text-bg-light">Discussions</p>
+                `;
+            }
+            if(card.sponsoredBy !== null) {
+                badge += `
+                <p class="badge text-bg-warning ms-2">Sponsored</p>
+                `;
+            }
+
+            displayAuthorProfilePage(card.id, card.personId);
+
+            regularCarousel.innerHTML += `
+            <div class="card" data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
+                <img src="${imageSource}" class="card-img-top" style="margin-top: 0" alt="card image">
+                <div class="card-body">
+                    <h5 class="card-title">${card.title}</h5>
+                    <div class="d-flex justify-content-center mb-2">Author:&nbsp;<div></div></div>
+                    <div class="d-flex justify-content-center">${badge}</div>
+                </div>
+            </div>
+            `;
         }
         innerCarousel.appendChild(regularCarousel);
     }
+}
 
-
+function displayAuthorProfilePage(cardId, authorId) {
+    fetch("/notebridge/api/persons/" + authorId)
+        .then(res => res.json())
+        .then(data => {
+            const author = document.querySelector("[data-card-id='" + cardId + "']").children[1].children[1].children[0];
+            author.innerHTML = `${data.username}`;
+        })
 }

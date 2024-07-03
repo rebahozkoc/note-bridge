@@ -141,7 +141,7 @@ function displayCard(card, sponsoredCard) {
         `;
     }
 
-    getAuthor(card.id, card.personId);
+    displayAuthor(card.id, card.personId);
 
     return `
         <div class=${cardClass} data-card-id="${card.id}" onclick="selectCard(this)" id="displayed-card">
@@ -152,7 +152,7 @@ function displayCard(card, sponsoredCard) {
                     <div><i class="bi bi-heart-fill heart" id="heart-icon"></i> ${card.totalLikes}</div>
                     <div><img src="assets/images/interested-hand.png" alt="Interested" style="width: 1.25rem; height: 1.25rem"> ${card.totalInterested}</div>
                 </div>
-                <div class="d-flex justify-content-center mb-2">Author: </div>
+                <div class="d-flex justify-content-center mb-2">Author:&nbsp;<div></div></div>
                 <div class="d-flex justify-content-center">${badge}</div>
             </div>
         </div>
@@ -305,11 +305,11 @@ function displaySponsoredPosts() {
     }
 }
 
-function getAuthor(cardId, authorId) {
+function displayAuthor(cardId, authorId) {
     fetch("/notebridge/api/persons/" + authorId)
         .then(res => res.json())
         .then(data => {
-            const author = document.querySelector("[data-card-id='" + cardId + "']").children[1].children[2];
-            author.innerHTML += `${data.username}`;
+            const author = document.querySelector("[data-card-id='" + cardId + "']").children[1].children[2].children[0];
+            author.innerHTML = `${data.username}`;
         })
 }

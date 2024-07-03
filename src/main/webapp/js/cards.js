@@ -88,6 +88,8 @@ function displayAllCards() {
     }
 }
 
+
+
 /**
  * Display one card on the screen.
  * @param card the card information
@@ -148,7 +150,7 @@ function displayCard(card, sponsoredCard) {
                 <h5 class="card-title">${card.title}</h5>
                 <div class="d-flex justify-content-between">
                     <div><i class="bi bi-heart-fill heart" id="heart-icon"></i> ${card.totalLikes}</div>
-                    <div>Interested: ${card.totalInterested}</div>
+                    <div><img src="assets/images/interested-hand.png" alt="Interested" style="width: 1.25rem; height: 1.25rem> ${card.totalInterested}</div>
                 </div>
                 <div class="d-flex justify-content-center mb-2">Author: </div>
                 <div class="d-flex justify-content-center">${badge}</div>

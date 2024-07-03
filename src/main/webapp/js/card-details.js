@@ -512,7 +512,7 @@ function loadAuthorDetails(personId) {
         const createDate = new Date(parseInt(data.createDate));
         const formattedDate = createDate.toLocaleDateString();
         const formattedTime = createDate.toLocaleTimeString();
-        authorCreateDate.innerHTML = `Account Created on: ${formattedDate} ${formattedTime}`;
+        authorCreateDate.innerHTML = `${formattedDate} ${formattedTime}`;
 
     }).catch(err => {
         console.error(err);

@@ -10,10 +10,15 @@
 ## Contributors
 
 Rebah Ozkoc
+
 Anil Sen
+
 Ilgin Simay Ozcan
+
 Enescu Alexandru-Cristian
+
 Simeon Nikolov
+
 Adham Ehab Magdy Selim
 
 ## Deployed application
@@ -21,28 +26,37 @@ Adham Ehab Magdy Selim
 Previder link:
 https://notebridge1.paas.hosted-by-previder.com/notebridge/
 ***
+
 ## To run the application on local, follow the steps below:
+
 in src/main/resources/ create a file called app.properties and add the following lines:
 
-- USER=dab_di23242b_134
-- PASSWORD=DZk0UGLbRstkxNwW
-- PROD_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridge
-- TEST_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridgetest
-- PERSISTENCE_FOLDER_PATH =[choose a path for the folder where the images will be stored]
+```
+USER=dab_di23242b_134
+PASSWORD=DZk0UGLbRstkxNwW
+PROD_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridge
+TEST_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridgetest
+PERSISTENCE_FOLDER_PATH =[choose a path for the folder where the images will be stored]
+```
 
 ## To do the testings, follow the steps below:
-- Similarly under test folder, create resources folder if there is not any and create a file called app.properties and add the following lines:
-    - USER=dab_di23242b_134
-    - PASSWORD=DZk0UGLbRstkxNwW
-    - PROD_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridge
-    - TEST_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridgetest
-    - PERSISTENCE_FOLDER_PATH = [your path for the folder where the images will be stored]
-    - SELENIUM_DRIVER_PATH = [your path for the driver]
+
+- Similarly under test folder, create resources folder if there is not any and create a file called app.properties and
+  add the following lines:
+
+```
+USER=dab_di23242b_134
+PASSWORD=DZk0UGLbRstkxNwW
+PROD_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridge
+TEST_URL=jdbc:postgresql://bronto.ewi.utwente.nl:5432/dab_di23242b_134?currentSchema=notebridgetest
+PERSISTENCE_FOLDER_PATH = [your path for the folder where the images will be stored]
+SELENIUM_DRIVER_PATH = [your path for the driver]
+```
 
 ## Database
 
 - Database name: dab_di23242b_134
-- Deployed app uses the schema: notebridge 
+- Deployed app uses the schema: notebridge
 
 ### Posts
 
@@ -52,25 +66,24 @@ music network.
 
 Main Features:
 
-- Create and Share Posts: Users can create posts to share various types of content, such as:
-    - Jam Sessions: Share live or recorded jam sessions to showcase your musical talent.
-    - Music Events: Announce upcoming gigs, concerts, or music festivals.
-    - Music Discussion: Offer discussion places on ranging topics.
-    - Find Musicians: Connect with other musicians to form bands or collaborate on projects.
-    - Sell Instruments: Advertise musical instruments for sale or trade.
-- Engage with Posts: Users can interact with posts by:
+- **Create and Share Posts:** Users can create posts to share various types of content, such as:
+    - **Jam Sessions:** Share live or recorded jam sessions to showcase your musical talent.
+    - **Music Events:** Announce upcoming gigs, concerts, or music festivals.
+    - **Music Discussion:** Offer discussion places on ranging topics.
+    - **Find Musicians:** Connect with other musicians to form bands or collaborate on projects.
+    - **Sell Instruments:** Advertise musical instruments for sale or trade.
+- **Engage with Posts:** Users can interact with posts by:
 
-    - Liking: Show appreciation for the content by liking the post.
-    - Commenting: Leave comments to start discussions or provide feedback.
-    - Sharing: Share posts with other users or on social media platforms to reach a broader audience.
-    - Show Interest: Users can press the "I'm Interested" button to indicate their interest for a specific post.
+    - **Liking:** Show appreciation for the content by liking the post.
+    - **Commenting:** Leave comments to start discussions or provide feedback.
+    - **Sharing:** Share posts with other users or on social media platforms to reach a broader audience.
+    - **Show Interest:** Users can press the "I'm Interested" button to indicate their interest for a specific post.
 - Sponsor Posts: Sponsors can promote posts to increase their visibility. This feature helps musicians reach a larger
   audience and gain more recognition for their work.
 
 ### Credentials for testing:
 
 - Person User
-
 
 - Sponsor User
 
